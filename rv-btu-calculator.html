@@ -1,0 +1,2725 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A friendly RV air-conditioner and furnace BTU planning calculator.">
+  <title>Dometic Climate Sizer Concept</title>
+  <style>
+    :root {
+      --ink: #0d0d0d;
+      --paper: #ffffff;
+      --soft: #f3f3f0;
+      --soft-2: #ecece8;
+      --line: #d7d7d3;
+      --muted: #656563;
+      --quiet: #8b8b87;
+      --red: #e51d2a;
+      --red-dark: #c91420;
+      --warning: #ffce49;
+      --radius: 4px;
+      --shadow: 0 8px 24px rgba(13, 13, 13, 0.08);
+      --page-pad: clamp(20px, 3.2vw, 52px);
+      --font: Arial, Helvetica, sans-serif;
+      --mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--paper);
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+      color: inherit;
+    }
+
+    button,
+    select,
+    input[type="range"] { cursor: pointer; }
+
+    button { border: 0; }
+
+    a { color: inherit; }
+
+    svg {
+      display: block;
+      flex: 0 0 auto;
+    }
+
+    :focus-visible {
+      outline: 3px solid rgba(229, 29, 42, 0.34);
+      outline-offset: 3px;
+    }
+
+    [hidden] { display: none !important; }
+
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    .icon {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .icon-lg { width: 34px; height: 34px; }
+    .icon-xl { width: 44px; height: 44px; }
+
+    .utility-bar {
+      min-height: 32px;
+      padding: 6px var(--page-pad);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: #fff;
+      background: var(--ink);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.035em;
+      text-transform: uppercase;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      min-height: 68px;
+      padding: 0 var(--page-pad);
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      width: max-content;
+      text-decoration: none;
+    }
+
+    .brand svg {
+      width: clamp(166px, 14vw, 205px);
+      height: auto;
+    }
+
+    .main-nav {
+      align-self: stretch;
+      display: flex;
+      align-items: stretch;
+      gap: clamp(26px, 4vw, 66px);
+    }
+
+    .main-nav a {
+      position: relative;
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .main-nav a.active::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background: var(--red);
+    }
+
+    .locale {
+      justify-self: end;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .mobile-menu { display: none; }
+
+    .page-shell {
+      width: min(100%, 1536px);
+      margin: 0 auto;
+      padding: 34px var(--page-pad) 72px;
+    }
+
+    .calculator-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.22fr) minmax(380px, 0.92fr);
+      gap: clamp(28px, 3vw, 44px);
+      align-items: start;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1,
+    h2,
+    h3,
+    .display-label {
+      font-weight: 900;
+      letter-spacing: -0.035em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: none;
+      margin-bottom: 2px;
+      font-size: clamp(38px, 3vw, 48px);
+      line-height: 0.98;
+    }
+
+    .lede {
+      margin-bottom: 5px;
+      color: #343433;
+      font-size: clamp(17px, 1.5vw, 21px);
+    }
+
+    .help-links {
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .help-link {
+      padding: 2px 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--muted);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    .help-link:hover,
+    .help-link:focus-visible { color: var(--ink); }
+
+    .help-link .icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .info-modal {
+      width: min(calc(100% - 36px), 560px);
+      max-height: min(82vh, 680px);
+      padding: 0;
+      color: var(--ink);
+      background: #fff;
+      border: 0;
+      border-radius: var(--radius);
+      box-shadow: 0 24px 80px rgba(13, 13, 13, 0.28);
+    }
+
+    .info-modal::backdrop { background: rgba(13, 13, 13, 0.62); }
+
+    .info-modal.detail-modal {
+      width: min(calc(100% - 36px), 820px);
+      max-height: calc(100dvh - 36px);
+      overflow-y: auto;
+    }
+
+    .info-modal-card { padding: 26px; }
+
+    .info-modal-head {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .info-modal-kicker {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--red);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .info-modal h2 {
+      margin-bottom: 0;
+      font-size: 27px;
+      line-height: 1;
+    }
+
+    .modal-close {
+      flex: 0 0 auto;
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--ink);
+      border-radius: 50%;
+    }
+
+    .modal-close .icon { width: 19px; height: 19px; }
+
+    .info-modal p,
+    .info-modal li {
+      color: #3f3f3d;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .info-modal ol,
+    .info-modal ul {
+      margin: 14px 0 0;
+      padding-left: 20px;
+    }
+
+    .info-modal li + li { margin-top: 8px; }
+
+    .info-modal li strong {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .info-modal-note {
+      margin-top: 18px;
+      padding: 13px 14px;
+      color: #363634;
+      background: var(--soft);
+      border-left: 3px solid var(--red);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .how-flow {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .how-step {
+      padding: 15px;
+      background: var(--soft);
+      border-top: 3px solid var(--ink);
+    }
+
+    .how-step-number {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--red);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .how-step h3,
+    .how-section h3 {
+      margin: 0 0 5px;
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .how-step p { margin: 0; }
+
+    .how-section {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .assumption-grid {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      overflow: hidden;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .assumption-item {
+      padding: 11px 12px;
+      color: #3f3f3d;
+      background: #fff;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .assumption-item strong {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--ink);
+    }
+
+    body:has(dialog[open]) { overflow: hidden; }
+
+    .mode-switch {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      margin-bottom: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .mode-button {
+      min-height: 50px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      background: #fff;
+      border-right: 1px solid var(--line);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .mode-button:last-child { border-right: 0; }
+
+    .mode-button[aria-pressed="true"] {
+      position: relative;
+      z-index: 1;
+      color: var(--ink);
+      box-shadow: inset 0 0 0 2px var(--red);
+    }
+
+    .mode-check {
+      display: none;
+      width: 22px;
+      height: 22px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--red);
+    }
+
+    .mode-label-short { display: none; }
+
+    .mode-button[aria-pressed="true"] .mode-check { display: inline-flex; }
+    .mode-button[aria-pressed="true"] > .mode-icon { display: none; }
+
+    .guided-form {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .question-row {
+      display: grid;
+      grid-template-columns: minmax(170px, 0.36fr) minmax(0, 1fr);
+      align-items: center;
+      min-height: 60px;
+      border-top: 1px solid var(--line);
+    }
+
+    .question-row:first-child { border-top: 0; }
+
+    .question-label {
+      padding: 15px 18px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .question-label small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .question-control {
+      min-width: 0;
+      padding: 9px 14px 9px 0;
+    }
+
+    .vehicle-row { align-items: stretch; }
+
+    .vehicle-options {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      min-height: 82px;
+    }
+
+    .choice-button {
+      position: relative;
+      min-width: 0;
+      min-height: 52px;
+      padding: 9px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      background: #fff;
+      border-left: 1px solid var(--line);
+      font-size: 13px;
+      line-height: 1.15;
+      text-align: center;
+    }
+
+    .choice-button:first-child { border-left: 0; }
+
+    .choice-button[aria-pressed="true"] {
+      z-index: 1;
+      color: var(--red);
+      box-shadow: inset 0 0 0 2px var(--red);
+    }
+
+    .choice-button[aria-pressed="true"] span { color: var(--ink); }
+
+    .range-group {
+      display: grid;
+      grid-template-columns: minmax(140px, 1fr) 112px;
+      gap: 20px;
+      align-items: center;
+    }
+
+    input[type="range"] {
+      --progress: 50%;
+      width: 100%;
+      height: 20px;
+      margin: 0;
+      appearance: none;
+      background: transparent;
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 5px;
+      border-radius: 999px;
+      background: linear-gradient(to right, var(--red) 0 var(--progress), #cbcbc8 var(--progress) 100%);
+    }
+
+    input[type="range"]::-moz-range-track {
+      height: 5px;
+      border-radius: 999px;
+      background: #cbcbc8;
+    }
+
+    input[type="range"]::-moz-range-progress {
+      height: 5px;
+      border-radius: 999px;
+      background: var(--red);
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      width: 19px;
+      height: 19px;
+      margin-top: -7px;
+      appearance: none;
+      border: 0;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 0 3px #fff;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 19px;
+      height: 19px;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      background: var(--red);
+    }
+
+    .unit-input {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .unit-input input {
+      width: 100%;
+      min-height: 42px;
+      padding: 7px 10px;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      font-weight: 800;
+      text-align: right;
+      appearance: textfield;
+    }
+
+    .unit-input input::-webkit-inner-spin-button,
+    .unit-input input::-webkit-outer-spin-button { appearance: none; margin: 0; }
+
+    .unit-input span {
+      min-width: 43px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-left: 1px solid var(--line);
+      color: #30302f;
+      background: #fafafa;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .select-wrap { position: relative; }
+
+    .select-wrap::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 16px;
+      width: 8px;
+      height: 8px;
+      border-right: 1.8px solid var(--ink);
+      border-bottom: 1.8px solid var(--ink);
+      pointer-events: none;
+      transform: translateY(-70%) rotate(45deg);
+    }
+
+    select {
+      width: 100%;
+      min-height: 44px;
+      padding: 9px 42px 9px 14px;
+      appearance: none;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      outline: 0;
+      background: #fff;
+      font-size: 14px;
+    }
+
+    .construction-control { width: min(100%, 390px); }
+
+    .stepper {
+      display: inline-grid;
+      grid-template-columns: 44px 58px 44px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .stepper button {
+      min-height: 44px;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      font-size: 25px;
+      line-height: 1;
+    }
+
+    .stepper output {
+      min-height: 44px;
+      display: grid;
+      place-items: center;
+      border-right: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .basic-toolbar {
+      min-height: 44px;
+      padding-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .advanced-applied-status {
+      min-height: 40px;
+      padding: 8px 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #174829;
+      background: #edf6ef;
+      border: 1px solid #b9d9c0;
+      border-radius: var(--radius);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .advanced-applied-status .icon {
+      width: 17px;
+      height: 17px;
+    }
+
+    .clear-advanced {
+      margin-left: 3px;
+      padding: 2px 0;
+      color: inherit;
+      background: transparent;
+      font-size: 11px;
+      font-weight: 900;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-transform: uppercase;
+    }
+
+    .advanced-shortcut {
+      min-height: 40px;
+      padding: 9px 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #fff;
+      background: var(--ink);
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.015em;
+      text-transform: uppercase;
+    }
+
+    .advanced-shortcut:hover { background: #30302f; }
+
+    .primary-cta {
+      width: 100%;
+      min-height: 52px;
+      margin-top: 7px;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border-radius: var(--radius);
+      color: #fff;
+      background: var(--red);
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+
+    .primary-cta:hover { background: var(--red-dark); }
+    .primary-cta:active { transform: translateY(1px); }
+
+    .result-panel {
+      position: static;
+      align-self: start;
+      min-height: 520px;
+      padding: clamp(24px, 2.5vw, 38px);
+      color: #fff;
+      background: #050505;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .result-panel h2 {
+      margin-bottom: 22px;
+      font-size: 21px;
+      line-height: 1;
+    }
+
+    .result-block {
+      padding: 0 0 22px;
+      border-bottom: 1px solid #656565;
+    }
+
+    .result-block + .result-block { padding-top: 22px; }
+
+    .result-main {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      gap: 16px;
+      align-items: center;
+    }
+
+    .result-kicker {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .result-number-line {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .result-number {
+      font-size: clamp(48px, 5.3vw, 78px);
+      font-weight: 900;
+      line-height: 0.88;
+      letter-spacing: -0.045em;
+    }
+
+    .result-unit {
+      font-size: 17px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .scenario-header {
+      margin-top: 20px;
+      padding-top: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-top: 1px solid #777;
+      color: #c8c8c8;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .scenario-range {
+      margin-top: 8px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      overflow: hidden;
+      border: 1px solid #626262;
+      border-radius: var(--radius);
+    }
+
+    .scenario-value {
+      min-width: 0;
+      padding: 9px 8px;
+      text-align: center;
+    }
+
+    .scenario-value + .scenario-value { border-left: 1px solid #626262; }
+
+    .scenario-value.expected { background: #242424; }
+
+    .scenario-value span {
+      display: block;
+      margin-bottom: 2px;
+      color: #bdbdbd;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .scenario-value.expected span { color: #fff; }
+
+    .scenario-value strong {
+      display: block;
+      overflow: hidden;
+      font-size: 13px;
+      font-weight: 900;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .match-line {
+      margin-top: 16px;
+      padding-top: 13px;
+      border-top: 1px solid #777;
+    }
+
+    .match-line strong {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .match-line span {
+      display: block;
+      margin-top: 2px;
+      font-size: 15px;
+    }
+
+    .confidence {
+      padding: 17px 0 14px;
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 12px;
+      align-items: start;
+      border-bottom: 1px solid #474747;
+    }
+
+    .confidence strong {
+      display: block;
+      font-size: 17px;
+    }
+
+    .confidence p {
+      margin: 2px 0 0;
+      color: #d5d5d5;
+      font-size: 13px;
+    }
+
+    .result-advisory {
+      min-height: 52px;
+      margin: 0 calc(clamp(24px, 2.5vw, 38px) * -1) calc(clamp(24px, 2.5vw, 38px) * -1);
+      padding: 15px clamp(24px, 2.5vw, 38px);
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: #dedede;
+      border-top: 1px solid #474747;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .alert-box {
+      margin-top: 14px;
+      padding: 12px 14px;
+      color: var(--ink);
+      background: var(--warning);
+      border-radius: var(--radius);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .comparison-section {
+      padding-top: 28px;
+      scroll-margin-top: 92px;
+    }
+
+    .section-heading {
+      margin-bottom: 4px;
+      font-size: clamp(28px, 2.6vw, 36px);
+      line-height: 1;
+    }
+
+    .section-intro {
+      max-width: 760px;
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .compare-shell {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .compare-row {
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      min-height: 112px;
+      border-top: 1px solid var(--line);
+    }
+
+    .compare-row:first-child { border-top: 0; }
+
+    .compare-label {
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border-right: 1px solid var(--line);
+      font-size: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .compare-label small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.25;
+      text-transform: none;
+    }
+
+    .compare-options {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .capacity-card {
+      position: relative;
+      min-height: 110px;
+      padding: 15px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      background: #fff;
+      border-left: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .capacity-card.unavailable {
+      color: var(--muted);
+      background: var(--soft);
+      cursor: default;
+    }
+
+    .capacity-card:first-child { border-left: 0; }
+
+    .capacity-card[aria-pressed="true"] {
+      z-index: 1;
+      box-shadow: inset 0 0 0 2px var(--ink);
+    }
+
+    .capacity-card.recommended {
+      z-index: 2;
+      box-shadow: inset 0 0 0 2px var(--red);
+    }
+
+    .capacity-card.recommended[aria-pressed="true"] {
+      box-shadow: inset 0 0 0 3px var(--red);
+    }
+
+    .capacity-value {
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .capacity-tier {
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+    }
+
+    .capacity-card.recommended .capacity-tier { color: var(--red); }
+
+    .capacity-detail {
+      color: #383837;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .capacity-status {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .recommended .capacity-status { color: var(--red); }
+
+    .product-cta {
+      margin-top: 14px;
+      padding: 17px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .product-cta-copy strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .product-cta-copy span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .product-cta-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
+    .product-cta-button {
+      min-height: 44px;
+      padding: 10px 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      flex: 0 0 auto;
+      color: #fff;
+      background: var(--ink);
+      border-radius: var(--radius);
+      font-size: 12px;
+      font-weight: 900;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+
+    .product-cta-button:hover,
+    .product-cta-button:focus-visible { background: #2a2a29; }
+
+    .product-cta-button.secondary {
+      color: var(--ink);
+      background: #fff;
+      box-shadow: inset 0 0 0 1px var(--ink);
+    }
+
+    .product-cta-button.secondary:hover,
+    .product-cta-button.secondary:focus-visible { background: #e7e7e2; }
+
+    .product-cta-button .icon { width: 19px; height: 19px; }
+
+    .capacity-check {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--red);
+      opacity: 0;
+      transform: scale(0.8);
+      transition: 160ms ease;
+    }
+
+    .capacity-card[aria-pressed="true"] .capacity-check {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .chevron { transition: transform 200ms ease; }
+
+    .advanced-modal {
+      width: min(calc(100% - 36px), 1240px);
+      max-height: calc(100dvh - 36px);
+      padding: 0;
+      overflow-y: auto;
+      color: var(--ink);
+      background: #fff;
+      border: 0;
+      border-radius: var(--radius);
+      box-shadow: 0 24px 80px rgba(13, 13, 13, 0.32);
+      overscroll-behavior: contain;
+    }
+
+    .advanced-modal::backdrop { background: rgba(13, 13, 13, 0.68); }
+
+    .advanced-modal-shell { padding: clamp(22px, 3vw, 38px); }
+
+    .advanced-panel {
+      padding: 0;
+    }
+
+    .advanced-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+
+    .advanced-head h2 {
+      margin-bottom: 3px;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .advanced-head p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .advanced-head-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .text-button {
+      padding: 6px 0;
+      color: var(--ink);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 900;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .advanced-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 34px;
+    }
+
+    .advanced-group {
+      min-width: 0;
+      padding-right: 34px;
+      border-right: 1px solid var(--line);
+    }
+
+    .advanced-group:last-child {
+      padding-right: 0;
+      border-right: 0;
+    }
+
+    .advanced-group h3 {
+      margin-bottom: 7px;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+
+    .advanced-field {
+      display: grid;
+      grid-template-columns: minmax(150px, 1fr) minmax(145px, 0.72fr);
+      align-items: center;
+      min-height: 53px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .advanced-field label {
+      padding-right: 14px;
+      font-size: 13px;
+    }
+
+    .advanced-field label small {
+      display: block;
+      color: var(--quiet);
+      font-size: 10px;
+    }
+
+    .advanced-field select,
+    .advanced-field .unit-input input { min-height: 38px; }
+
+    .advanced-actions {
+      margin-top: 22px;
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .advanced-actions .primary-cta {
+      width: min(100%, 380px);
+      margin: 0;
+    }
+
+    .form-error {
+      max-width: 760px;
+      margin: 14px auto 0;
+      padding: 10px 12px;
+      color: #8d111a;
+      background: #fff0f1;
+      border-left: 4px solid var(--red);
+      font-size: 13px;
+    }
+
+    .drivers {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .drivers h2 {
+      margin-bottom: 12px;
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .driver-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .driver-chart h3 {
+      margin-bottom: 8px;
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+
+    .driver-bar {
+      height: 10px;
+      display: flex;
+      overflow: hidden;
+      background: var(--soft-2);
+      border-radius: 2px;
+    }
+
+    .driver-bar span:nth-child(1) { background: var(--ink); }
+    .driver-bar span:nth-child(2) { background: var(--red); }
+    .driver-bar span:nth-child(3) { background: #6e6e6b; }
+    .driver-bar span:nth-child(4) { background: #bcbcb8; }
+
+    .driver-legend {
+      margin-top: 9px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    .driver-legend strong {
+      display: block;
+      margin-top: 2px;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .uncertainty-note {
+      margin: 18px 0 0;
+      padding: 12px 0;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      border-top: 1px solid var(--line);
+      color: #30302f;
+      font-size: 13px;
+    }
+
+    .technical-details {
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .technical-details summary {
+      min-height: 68px;
+      padding: 14px 18px;
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) 24px;
+      gap: 14px;
+      align-items: center;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .technical-details summary::-webkit-details-marker { display: none; }
+
+    .technical-details summary strong {
+      display: block;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    .technical-details summary span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .technical-details[open] summary .chevron { transform: rotate(180deg); }
+
+    .technical-content {
+      padding: 0 20px 22px;
+      border-top: 1px solid var(--line);
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      padding-top: 20px;
+    }
+
+    .method-grid h3 {
+      margin-bottom: 8px;
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+
+    .method-grid p,
+    .method-grid li {
+      color: #444442;
+      font-size: 12px;
+    }
+
+    .formula {
+      padding: 12px;
+      overflow-x: auto;
+      color: #fff;
+      background: var(--ink);
+      border-radius: var(--radius);
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .load-table {
+      width: 100%;
+      margin-top: 14px;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .load-table th,
+    .load-table td {
+      padding: 7px 8px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+    }
+
+    .load-table th:last-child,
+    .load-table td:last-child { text-align: right; }
+
+    .source-links {
+      margin: 16px 0 0;
+      padding-left: 18px;
+    }
+
+    .source-links a { text-underline-offset: 3px; }
+
+    .footer-note {
+      margin-top: 34px;
+      padding: 18px 0 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    @media (max-width: 1080px) {
+      .calculator-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .result-panel {
+        position: static;
+        min-height: auto;
+      }
+
+      .site-header {
+        grid-template-columns: 1fr auto;
+      }
+
+      .main-nav {
+        position: absolute;
+        top: 68px;
+        right: 0;
+        left: 0;
+        display: none;
+        height: auto;
+        padding: 10px var(--page-pad) 16px;
+        flex-direction: column;
+        gap: 0;
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+      }
+
+      .main-nav.open { display: flex; }
+
+      .main-nav a {
+        min-height: 46px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .main-nav a.active::after { display: none; }
+      .locale { display: none; }
+
+      .mobile-menu {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        background: #fff;
+      }
+
+      .mobile-menu .close-line { display: none; }
+      .mobile-menu[aria-expanded="true"] .menu-line { display: none; }
+      .mobile-menu[aria-expanded="true"] .close-line { display: block; }
+    }
+
+    @media (max-width: 820px) {
+      .page-shell { padding-top: 28px; }
+      .utility-bar { font-size: 10px; }
+      h1 { font-size: clamp(36px, 9vw, 52px); }
+
+      .compare-row {
+        grid-template-columns: 1fr;
+      }
+
+      .compare-label {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .advanced-grid,
+      .driver-grid,
+      .method-grid { grid-template-columns: 1fr; }
+
+      .advanced-group {
+        padding-right: 0;
+        border-right: 0;
+      }
+    }
+
+    @media (max-width: 620px) {
+      :root { --page-pad: 18px; }
+      .utility-bar { min-height: 28px; }
+      .site-header { min-height: 62px; }
+      .brand svg { width: 158px; }
+      .main-nav { top: 62px; }
+      .page-shell { padding-top: 30px; padding-bottom: 48px; }
+      h1 { margin-bottom: 8px; font-size: 39px; line-height: 0.98; }
+      .lede { margin-bottom: 5px; font-size: 17px; }
+      .help-links { margin-bottom: 18px; }
+      .info-modal-card { padding: 21px; }
+      .info-modal h2 { font-size: 24px; }
+      .how-flow,
+      .assumption-grid { grid-template-columns: 1fr; }
+      .advanced-modal { width: min(calc(100% - 20px), 1240px); max-height: calc(100dvh - 20px); }
+      .advanced-modal-shell { padding: 20px; }
+
+      .mode-button {
+        min-height: 58px;
+        padding: 8px 4px;
+        gap: 5px;
+        font-size: 11px;
+      }
+
+      .mode-button .mode-label-long { display: none; }
+      .mode-button .mode-label-short { display: inline; }
+      .question-row { grid-template-columns: 1fr; }
+
+      .question-label {
+        padding: 13px 14px 5px;
+      }
+
+      .question-control { padding: 7px 14px 14px; }
+      .basic-toolbar { align-items: stretch; }
+      .advanced-applied-status { flex: 1 1 100%; justify-content: center; }
+
+      .vehicle-options {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 4px 14px 14px;
+      }
+
+      .choice-button {
+        min-height: 92px;
+        border: 1px solid var(--line) !important;
+        border-radius: var(--radius);
+      }
+
+      .choice-button[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--red); }
+      .range-group { grid-template-columns: minmax(120px, 1fr) 106px; gap: 14px; }
+
+      .primary-cta { min-height: 56px; }
+      .result-panel { padding: 24px; }
+      .result-panel h2 { font-size: 20px; }
+      .result-number { font-size: clamp(48px, 15vw, 68px); }
+      .result-main { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
+      .result-unit { font-size: 15px; }
+      .result-advisory { margin-right: -24px; margin-bottom: -24px; margin-left: -24px; padding-right: 24px; padding-left: 24px; }
+      .comparison-section { padding-top: 30px; }
+      .section-heading { font-size: 31px; }
+
+      .compare-options {
+        grid-template-columns: 1fr;
+      }
+
+      .capacity-card {
+        min-height: 88px;
+        border-top: 1px solid var(--line);
+        border-left: 0;
+      }
+
+      .capacity-card:first-child { border-top: 0; }
+      .product-cta { align-items: stretch; flex-direction: column; gap: 12px; }
+      .product-cta-actions { align-items: stretch; flex-direction: column; }
+      .product-cta-button { width: 100%; }
+      .advanced-head { flex-direction: column; gap: 8px; }
+      .advanced-head-actions { width: 100%; justify-content: space-between; }
+      .advanced-field { grid-template-columns: minmax(120px, 1fr) minmax(124px, 0.9fr); }
+      .advanced-actions { flex-direction: column; gap: 8px; }
+      .driver-legend { grid-template-columns: 1fr 1fr; gap: 10px; text-align: left; }
+      .technical-details summary { grid-template-columns: 30px minmax(0, 1fr) 20px; padding: 13px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <svg class="visually-hidden" aria-hidden="true">
+    <symbol id="icon-snow" viewBox="0 0 24 24"><path d="M12 2v20M4.5 6.3l15 11.4M19.5 6.3l-15 11.4M9.5 3.5 12 6l2.5-2.5M9.5 20.5 12 18l2.5 2.5M3.8 9.3 7.2 9l.7-3.2M20.2 14.7l-3.4.3-.7 3.2M20.2 9.3 16.8 9l-.7-3.2M3.8 14.7l3.4.3.7 3.2"/></symbol>
+    <symbol id="icon-flame" viewBox="0 0 24 24"><path d="M13.4 2.7c.4 3.1-1.2 4.5-2.4 5.8-1.5 1.7-2.6 3.1-1.4 5.4.3-2.1 1.7-3 3.2-4.5 3.1 2.2 4.7 5 3.6 8.1-.6 2.8-2.9 4.5-5.5 4.5-3.9 0-6.9-2.8-6.9-6.7 0-5 4.6-7.1 5.1-11.6 1.6.9 2.5 2.1 2.8 3.4.8-1.3 1.1-2.7 1.5-4.4Z"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24"><path d="m6.5 12.4 3.4 3.4 7.7-8"/></symbol>
+    <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10.7v5.6M12 7.5h.01"/></symbol>
+    <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m5 9 7 7 7-7"/></symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M4 12h15M14 6l6 6-6 6"/></symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="icon-cloud" viewBox="0 0 24 24"><path d="M7 18h10.5a4.5 4.5 0 0 0 .4-9 6.5 6.5 0 0 0-12.5 1.8A3.7 3.7 0 0 0 7 18Z"/></symbol>
+    <symbol id="icon-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.3"/><path d="M19 13.5v-3l-2.1-.7a8 8 0 0 0-.7-1.7l1-2-2.1-2.1-2 .9a8 8 0 0 0-1.7-.7L10.5 2h-3l-.7 2.2a8 8 0 0 0-1.7.7l-2-.9L1 6.1l.9 2a8 8 0 0 0-.7 1.7L-1 10.5v3l2.2.7a8 8 0 0 0 .7 1.7l-.9 2L3.1 20l2-.9a8 8 0 0 0 1.7.7l.7 2.2h3l.7-2.2a8 8 0 0 0 1.7-.7l2 .9 2.1-2.1-1-2a8 8 0 0 0 .7-1.7Z" transform="translate(3 0) scale(.75)"/></symbol>
+    <symbol id="icon-calc" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="1"/><path d="M8 5h8v4H8zM8 13h2M14 13h2M8 17h2M14 17h2"/></symbol>
+    <symbol id="icon-trailer" viewBox="0 0 48 30"><path d="M3 22V7h28a7 7 0 0 1 7 7v8H3Z"/><path d="M38 19h5l3 3M10 7V3h10v4M8 11h8v6H8zM21 11h8v6h-8z"/><circle cx="12" cy="23" r="3"/><circle cx="32" cy="23" r="3"/></symbol>
+    <symbol id="icon-fifth" viewBox="0 0 48 30"><path d="M3 7h28l8 8v7H18v-8H3V7Z"/><path d="M5 10h8v5H5zM18 10h8v5h-8zM39 22h6M16 22H8"/><circle cx="27" cy="23" r="3"/><circle cx="35" cy="23" r="3"/></symbol>
+    <symbol id="icon-motorhome" viewBox="0 0 48 30"><path d="M3 6h33l8 8v8H3V6Z"/><path d="m34 9 6 6h-7V9M7 10h8v6H7zM19 10h8v6h-8z"/><circle cx="12" cy="23" r="3"/><circle cx="36" cy="23" r="3"/></symbol>
+    <symbol id="icon-van" viewBox="0 0 48 30"><path d="M4 10h25l8 4 6 8H4V10Z"/><path d="M29 11v7h9M8 13h9v5H8z"/><circle cx="13" cy="23" r="3"/><circle cx="36" cy="23" r="3"/></symbol>
+  </svg>
+
+  <div class="utility-bar"><span>RV &amp; VAN&nbsp;&nbsp; | &nbsp;&nbsp;CLIMATE CONTROL</span><span>SIZING SUPPORT</span></div>
+  <header class="site-header">
+    <a class="brand" href="#calculator" aria-label="Dometic Climate Sizer home">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 181 24" role="img" aria-label="Dometic">
+        <g fill="#0D0D0D">
+          <path d="M53.582 1.365h-7.277a1.365 1.365 0 00-1.365 1.364V23.2h8.645a10.918 10.918 0 000-21.835h-.003zM50.397 17.74V6.824h3.185c3.002 0 5.295 2.456 5.295 5.459 0 3.002-2.285 5.458-5.295 5.458h-3.185zm57.61-16.375a1.364 1.364 0 00-1.286.909l-4.64 12.282-4.64-12.282a1.365 1.365 0 00-1.264-.91H89.8V23.2h5.459V10.462l5.014 12.575h3.641l4.992-12.572V23.2h5.459V1.365h-6.357zM153.952 23.2h5.914V1.365h-5.914V23.2zM117.093 1.365v20.47a1.365 1.365 0 001.365 1.365h14.103v-5.459h-10.009v-3.638h8.188v-4.55h-8.188v-2.73h10.009V1.366h-15.468zm17.297 0v4.094a1.364 1.364 0 001.364 1.365h4.539V23.2h5.915V6.824h5.912v-5.46h-17.73zm-57.318-.273c-6.09 0-11.02 5.011-11.02 11.19 0 6.18 4.936 11.191 11.025 11.191 6.09 0 11.027-5.011 11.027-11.19 0-6.18-4.943-11.191-11.032-11.191zm0 16.813c-3.003 0-5.46-2.522-5.46-5.623 0-3.1 2.457-5.622 5.46-5.622 3.002 0 5.458 2.522 5.458 5.623 0 3.1-2.448 5.622-5.459 5.622zM23.337 3.862a1.365 1.365 0 000 1.93l6.493 6.49-7.449 7.457 3.852 3.86a1.365 1.365 0 001.93 0l11.316-11.316L27.196 0l-3.86 3.862z" />
+          <path d="M23.602 11.319L12.282 0 0 12.283l3.862 3.859a1.365 1.365 0 001.93 0l6.49-6.49 7.46 7.456 3.857-3.862a1.365 1.365 0 00.003-1.927zm149-4.659a5.378 5.378 0 014.129 1.951l3.958-3.946a10.913 10.913 0 00-8.087-3.573c-6.087 0-11.019 5.011-11.019 11.19 0 6.18 4.938 11.191 11.024 11.191a10.919 10.919 0 008.082-3.573l-3.958-3.944a5.382 5.382 0 01-4.129 1.95c-3.003 0-5.459-2.523-5.459-5.623 0-3.101 2.451-5.623 5.459-5.623z" />
+        </g>
+      </svg>
+    </a>
+    <span class="locale">US / EN</span>
+  </header>
+
+  <main class="page-shell" id="calculator">
+    <section class="calculator-grid" aria-labelledby="pageTitle">
+      <div>
+        <h1 id="pageTitle">Find the right comfort system</h1>
+        <p class="lede">Size your RV air conditioner and furnace in a few simple steps.</p>
+        <div class="help-links" aria-label="Calculator help">
+          <button class="help-link" type="button" data-modal-target="howModal"><svg class="icon" aria-hidden="true"><use href="#icon-info"/></svg>How it works</button>
+          <button class="help-link" type="button" data-modal-target="sizingModal"><svg class="icon" aria-hidden="true"><use href="#icon-calc"/></svg>Sizing guide</button>
+        </div>
+
+        <div class="mode-switch" aria-label="Equipment to size" data-testid="mode-switch">
+          <button class="mode-button" type="button" data-mode="ac" aria-pressed="false">
+            <svg class="icon mode-icon" aria-hidden="true"><use href="#icon-snow"/></svg>
+            <span class="mode-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg></span>
+            <span><span class="mode-label-long">Air conditioning</span><span class="mode-label-short" aria-hidden="true">A/C</span><span class="visually-hidden">Air conditioning</span></span>
+          </button>
+          <button class="mode-button" type="button" data-mode="furnace" aria-pressed="false">
+            <svg class="icon mode-icon" aria-hidden="true"><use href="#icon-flame"/></svg>
+            <span class="mode-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg></span>
+            <span>Furnace</span>
+          </button>
+          <button class="mode-button" type="button" data-mode="both" aria-pressed="true">
+            <span class="mode-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg></span>
+            <span>Size both</span>
+          </button>
+        </div>
+
+        <div class="guided-form" aria-label="Basic RV information">
+          <div class="question-row vehicle-row">
+            <div class="question-label">1. What do you travel in?</div>
+            <div class="vehicle-options" role="group" aria-label="RV type">
+              <button class="choice-button" type="button" data-vehicle="travel" aria-pressed="true">
+                <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-trailer"/></svg><span>Travel trailer</span>
+              </button>
+              <button class="choice-button" type="button" data-vehicle="fifth" aria-pressed="false">
+                <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-fifth"/></svg><span>Fifth wheel</span>
+              </button>
+              <button class="choice-button" type="button" data-vehicle="motorhome" aria-pressed="false">
+                <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-motorhome"/></svg><span>Motorhome</span>
+              </button>
+              <button class="choice-button" type="button" data-vehicle="van" aria-pressed="false">
+                <svg class="icon icon-lg" aria-hidden="true"><use href="#icon-van"/></svg><span>Camper van</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="question-row">
+            <label class="question-label" for="lengthRange" title="Use the conditioned RV body length, excluding the hitch or tongue.">2. RV length</label>
+            <div class="question-control range-group">
+              <input id="lengthRange" data-testid="length-range" type="range" min="8" max="60" step="1" value="28" aria-label="RV length in feet">
+              <label class="unit-input"><span class="visually-hidden">RV length</span><input id="lengthNumber" type="number" min="8" max="60" step="1" value="28"><span>ft</span></label>
+            </div>
+          </div>
+
+          <div class="question-row">
+            <label class="question-label" for="widthRange">3. RV width</label>
+            <div class="question-control range-group">
+              <input id="widthRange" data-testid="width-range" type="range" min="5.5" max="10" step="0.1" value="8" aria-label="RV width in feet">
+              <label class="unit-input"><span class="visually-hidden">RV width</span><input id="widthNumber" type="number" min="5.5" max="10" step="0.1" value="8"><span>ft</span></label>
+            </div>
+          </div>
+
+          <div class="question-row">
+            <label class="question-label" for="heightRange">4. Interior height</label>
+            <div class="question-control range-group">
+              <input id="heightRange" data-testid="height-range" type="range" min="5" max="10" step="0.1" value="8" aria-label="Interior height in feet">
+              <label class="unit-input"><span class="visually-hidden">Interior height</span><input id="heightNumber" data-testid="height-input" type="number" min="5" max="10" step="0.1" value="8"><span>ft</span></label>
+            </div>
+          </div>
+
+          <div class="question-row">
+            <label class="question-label" for="construction">5. Construction</label>
+            <div class="question-control select-wrap construction-control">
+              <select id="construction" data-testid="construction-select">
+                <option value="well">Newer / well insulated</option>
+                <option value="typical" selected>Typical / not sure</option>
+                <option value="older">Older / drafty</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="question-row">
+            <div class="question-label">6. Number of windows</div>
+            <div class="question-control">
+              <div class="stepper">
+                <button id="windowsMinus" type="button" aria-label="Remove one window">−</button>
+                <output id="windowsOutput" aria-live="polite">10</output>
+                <button id="windowsPlus" type="button" aria-label="Add one window">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="question-row">
+            <div class="question-label">7. Travelers</div>
+            <div class="question-control">
+              <div class="stepper">
+                <button id="peopleMinus" type="button" aria-label="Remove one traveler">−</button>
+                <output id="peopleOutput" aria-live="polite">2</output>
+                <button id="peoplePlus" type="button" aria-label="Add one traveler">+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="basic-toolbar">
+          <div class="advanced-applied-status" id="advancedAppliedStatus" hidden>
+            <svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg>
+            <span role="status">Advanced settings applied</span>
+            <button class="clear-advanced" id="clearAdvanced" type="button">Clear</button>
+          </div>
+          <button class="advanced-shortcut" id="advancedShortcut" type="button" aria-expanded="false" aria-controls="advancedModal" aria-haspopup="dialog">Advanced <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></button>
+        </div>
+        <button class="primary-cta" id="seeRecommendation" type="button">See my recommendation <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></button>
+      </div>
+
+      <aside class="result-panel" id="results" aria-labelledby="resultTitle" aria-live="polite" data-testid="results-panel">
+        <h2 id="resultTitle">Your comfort match</h2>
+
+        <div class="result-block" id="coolingResult">
+          <div class="result-main">
+            <svg class="icon icon-xl" aria-hidden="true"><use href="#icon-snow"/></svg>
+            <div>
+              <span class="result-kicker">Cooling match</span>
+              <div class="result-number-line"><span class="result-number" id="coolingMatch">15,000</span><span class="result-unit">BTU/hr</span></div>
+            </div>
+          </div>
+          <div class="scenario-header"><span>Continuous load scenarios</span><span>BTU/hr</span></div>
+          <div class="scenario-range" aria-label="Cooling load scenarios">
+            <div class="scenario-value"><span>Low</span><strong id="coolingLow">10,500</strong></div>
+            <div class="scenario-value expected"><span>Expected</span><strong id="coolingExpected">13,600</strong></div>
+            <div class="scenario-value"><span>High</span><strong id="coolingHigh">19,000</strong></div>
+          </div>
+        </div>
+
+        <div class="result-block" id="heatingResult">
+          <div class="result-main">
+            <svg class="icon icon-xl" aria-hidden="true"><use href="#icon-flame"/></svg>
+            <div>
+              <span class="result-kicker">Required heat</span>
+              <div class="result-number-line"><span class="result-number" id="heatingExpected">15,400</span><span class="result-unit">BTU/hr</span></div>
+            </div>
+          </div>
+          <div class="scenario-header"><span>Required-load scenarios</span><span>BTU/hr</span></div>
+          <div class="scenario-range" aria-label="Heating load scenarios">
+            <div class="scenario-value"><span>Low</span><strong id="heatingLow">12,200</strong></div>
+            <div class="scenario-value expected"><span>Expected</span><strong id="heatingExpectedRange">15,400</strong></div>
+            <div class="scenario-value"><span>High</span><strong id="heatingHigh">21,900</strong></div>
+          </div>
+          <div class="match-line"><strong>Furnace match</strong><span id="furnaceMatch">25K input · 19K published output</span></div>
+        </div>
+
+        <div class="confidence">
+          <svg class="icon" aria-hidden="true"><circle cx="12" cy="12" r="9"/><use href="#icon-check"/></svg>
+          <div><strong id="confidenceLabel">Good estimate</strong></div>
+        </div>
+        <div class="alert-box" id="capacityAlert" hidden></div>
+        <div class="result-advisory"><svg class="icon" aria-hidden="true"><use href="#icon-info"/></svg><span>Planning estimate—not a substitute for a professional load calculation. Installation compatibility and safety still need expert verification.</span></div>
+      </aside>
+    </section>
+
+    <section class="comparison-section" id="comparison" aria-labelledby="compareTitle">
+      <h2 class="section-heading" id="compareTitle">Suggestion based on selection</h2>
+      <p class="section-intro">Each row shows one lower option, the recommended capacity, and one higher option. Edge cases are left empty instead of showing two misleading choices on the same side.</p>
+      <div class="compare-shell">
+        <div class="compare-row" id="acCompareRow">
+          <div class="compare-label"><svg class="icon icon-lg" aria-hidden="true"><use href="#icon-snow"/></svg><div>Air conditioning<small>Nameplate cooling capacity</small></div></div>
+          <div class="compare-options" id="acCompareOptions" role="group" aria-label="Compare air-conditioner capacities"></div>
+        </div>
+        <div class="compare-row" id="furnaceCompareRow">
+          <div class="compare-label"><svg class="icon icon-lg" aria-hidden="true"><use href="#icon-flame"/></svg><div>Furnace<small>Input label and published output</small></div></div>
+          <div class="compare-options" id="furnaceCompareOptions" role="group" aria-label="Compare furnace capacities"></div>
+        </div>
+      </div>
+      <div class="product-cta">
+        <div class="product-cta-copy"><strong>Ready to explore your options?</strong><span>Browse Dometic RV air conditioners and furnaces.</span></div>
+        <div class="product-cta-actions">
+          <a class="product-cta-button" id="acProductCta" href="https://www.dometic.com/en-us/lp/rv-ac" target="_blank" rel="noopener noreferrer">Explore RV A/Cs <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></a>
+          <a class="product-cta-button secondary" id="furnaceProductCta" href="https://www.dometic.com/en-us/lp/rv-furnaces" target="_blank" rel="noopener noreferrer">Explore RV furnaces <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></a>
+        </div>
+      </div>
+    </section>
+
+    <dialog class="advanced-modal" id="advancedModal" aria-labelledby="advancedModalTitle">
+      <div class="advanced-modal-shell">
+      <div class="advanced-panel" id="advancedPanel">
+        <div class="advanced-head">
+          <div>
+            <span class="info-modal-kicker">Fine-tune your estimate</span>
+            <h2 id="advancedModalTitle">Advanced options</h2>
+            <p>Enter any specifications you know. After Apply, these values override the matching basic assumptions until you choose Clear.</p>
+          </div>
+          <div class="advanced-head-actions">
+            <button class="modal-close" id="closeAdvanced" type="button" aria-label="Close advanced options"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 14 14M19 5 5 19"/></svg></button>
+          </div>
+        </div>
+
+        <div class="advanced-grid">
+          <div class="advanced-group">
+            <h3>Dimensions &amp; construction</h3>
+            <div class="advanced-field"><label for="advWidth">RV width</label><label class="unit-input"><input id="advWidth" type="number" min="5.5" max="10" step="0.1"><span>ft</span></label></div>
+            <div class="advanced-field"><label for="advHeight">Interior height</label><label class="unit-input"><input id="advHeight" type="number" min="5" max="10" step="0.1"><span>ft</span></label></div>
+            <div class="advanced-field"><label for="advSlides">Slide-outs <small>Prototype area factor</small></label><label class="unit-input"><input id="advSlides" type="number" min="0" max="5" step="1"><span>qty</span></label></div>
+            <div class="advanced-field"><label for="advWallR">Wall insulation</label><label class="unit-input"><input id="advWallR" type="number" min="1" max="30" step="0.5"><span>R</span></label></div>
+            <div class="advanced-field"><label for="advRoofR">Roof insulation</label><label class="unit-input"><input id="advRoofR" type="number" min="1" max="30" step="0.5"><span>R</span></label></div>
+            <div class="advanced-field"><label for="advFloorR">Floor insulation</label><label class="unit-input"><input id="advFloorR" type="number" min="1" max="30" step="0.5"><span>R</span></label></div>
+            <div class="advanced-field"><label for="advWindowArea">Window area</label><label class="unit-input"><input id="advWindowArea" type="number" min="0" max="400" step="1"><span>sq ft</span></label></div>
+            <div class="advanced-field"><label for="advWindowType">Window type</label><div class="select-wrap"><select id="advWindowType"><option value="single">Single pane</option><option value="double">Double pane</option><option value="premium">Low-E / premium</option></select></div></div>
+          </div>
+
+          <div class="advanced-group">
+            <h3>Air &amp; design conditions</h3>
+            <div class="advanced-field"><label for="advAch">Air leakage <small id="advAchHint">From basic construction</small></label><label class="unit-input"><input id="advAch" type="number" min="0.2" max="3" step="0.05"><span>ACH</span></label></div>
+            <div class="advanced-field"><label for="advCoolTemp">Cooling design temp</label><label class="unit-input"><input id="advCoolTemp" type="number" min="50" max="125" step="1"><span>°F</span></label></div>
+            <div class="advanced-field"><label for="advOutdoorRh">Outdoor humidity</label><label class="unit-input"><input id="advOutdoorRh" type="number" min="0" max="100" step="1"><span>% RH</span></label></div>
+            <div class="advanced-field"><label for="advHeatTemp">Heating design temp</label><label class="unit-input"><input id="advHeatTemp" type="number" min="-40" max="70" step="1"><span>°F</span></label></div>
+            <div class="advanced-field"><label for="advVentCfm">Outside ventilation</label><label class="unit-input"><input id="advVentCfm" type="number" min="0" max="150" step="1"><span>CFM</span></label></div>
+            <div class="advanced-field"><label for="advCoolDuct">Cooling duct loss</label><label class="unit-input"><input id="advCoolDuct" type="number" min="0" max="25" step="1"><span>%</span></label></div>
+            <div class="advanced-field"><label for="advHeatDuct">Heating duct loss</label><label class="unit-input"><input id="advHeatDuct" type="number" min="0" max="25" step="1"><span>%</span></label></div>
+            <div class="advanced-field"><label for="advInternalWatts">Appliances &amp; lights</label><label class="unit-input"><input id="advInternalWatts" type="number" min="0" max="2500" step="10"><span>watts</span></label></div>
+            <div class="advanced-field"><label for="advAltitude">Altitude <small>Advisory only; no automatic derate</small></label><label class="unit-input"><input id="advAltitude" type="number" min="0" max="14000" step="100"><span>ft</span></label></div>
+          </div>
+        </div>
+
+        <div class="advanced-actions">
+          <button class="primary-cta" id="applyAdvanced" type="button">Apply advanced settings</button>
+          <button class="text-button" id="cancelAdvanced" type="button">Cancel</button>
+        </div>
+        <div class="form-error" id="advancedError" role="alert" hidden></div>
+
+        <div class="drivers">
+          <h2>What drives your load</h2>
+          <div class="driver-grid">
+            <div class="driver-chart">
+              <h3>Cooling load</h3>
+              <div class="driver-bar" id="coolDriverBar" aria-hidden="true"></div>
+              <div class="driver-legend" id="coolDriverLegend"></div>
+            </div>
+            <div class="driver-chart">
+              <h3>Heating load</h3>
+              <div class="driver-bar" id="heatDriverBar" aria-hidden="true"></div>
+              <div class="driver-legend" id="heatDriverLegend"></div>
+            </div>
+          </div>
+          <p class="uncertainty-note"><svg class="icon" aria-hidden="true"><use href="#icon-info"/></svg><span>Air leakage is usually the biggest unknown. The calculator runs low, expected, and high cases instead of presenting one false-precision answer.</span></p>
+        </div>
+
+        <details class="technical-details" id="method">
+          <summary>
+            <svg class="icon" aria-hidden="true"><use href="#icon-calc"/></svg>
+            <span><strong>View calculation details</strong><span>Formulas, assumptions and current load breakdown</span></span>
+            <svg class="icon chevron" aria-hidden="true"><use href="#icon-chevron"/></svg>
+          </summary>
+          <div class="technical-content">
+            <div class="method-grid">
+              <div>
+                <h3>Cooling model</h3>
+                <p>The estimate adds heat through the roof, walls, floor, door and windows; solar gain; outside-air leakage; people; appliances; moisture; and duct loss. Hot-soak recovery is kept separate from the continuous load.</p>
+                <div class="formula">Cooling = conduction + solar + outside air + people + appliances + moisture + duct loss</div>
+              </div>
+              <div>
+                <h3>Heating model</h3>
+                <p>The estimate adds steady heat loss through the RV shell and outside-air leakage. It does not credit people, cooking, or sun, so a cold-night recommendation is not dependent on temporary internal heat.</p>
+                <div class="formula">Heating = envelope loss + outside-air loss + duct loss</div>
+              </div>
+            </div>
+            <table class="load-table">
+              <thead><tr><th>Current load component</th><th>BTU/hr</th></tr></thead>
+              <tbody id="loadBreakdownBody"></tbody>
+            </table>
+            <ul class="source-links">
+              <li><a href="https://www.dometic.com/en-us/category/rv-and-van/rv-air-conditioners/rooftop-rv-air-conditioners" target="_blank" rel="noreferrer">Official Dometic US rooftop A/C lineup</a></li>
+              <li><a href="https://media.dometic.com/externalassets/dometic-medium-furnace_9600000823_81453.pdf" target="_blank" rel="noreferrer">Official Dometic DF-series furnace input/output table</a></li>
+            </ul>
+          </div>
+        </details>
+      </div>
+      </div>
+    </dialog>
+
+    <p class="footer-note">This is an RV planning estimate based on simplified geometry, weather, and construction assumptions. It is not an ACCA Manual J calculation, OEM approval, product quote, or installation/safety determination. A qualified RV HVAC installer should verify actual construction, leakage, local design weather, equipment performance, ducting, electrical or gas service, roof structure, venting, altitude requirements, and combustion safety.</p>
+  </main>
+
+  <dialog class="info-modal detail-modal" id="howModal" aria-labelledby="howModalTitle">
+    <div class="info-modal-card">
+      <div class="info-modal-head">
+        <div><span class="info-modal-kicker">Method, assumptions &amp; sources</span><h2 id="howModalTitle">How it works</h2></div>
+        <button class="modal-close" type="button" data-close-modal aria-label="Close how it works"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 14 14M19 5 5 19"/></svg></button>
+      </div>
+      <p>This is a steady-state RV heat-load model, not a square-footage multiplier. It estimates the heat entering during hot weather and leaving during cold weather, then compares the expected load with common equipment capacities.</p>
+
+      <div class="how-flow">
+        <div class="how-step"><span class="how-step-number">Step 1</span><h3>Build the RV geometry</h3><p>RV type supplies starting dimensions, slide-out count and average window size. Your length, width, height and window count turn those defaults into roof, floor, wall, glass and interior-volume estimates.</p></div>
+        <div class="how-step"><span class="how-step-number">Step 2</span><h3>Calculate cooling</h3><p>The model adds shell and window conduction, fixed mixed-sun gain, air leakage, ventilation, people, appliances, humidity and cooling-duct loss.</p></div>
+        <div class="how-step"><span class="how-step-number">Step 3</span><h3>Calculate heating</h3><p>The model adds heat loss through the shell and windows, cold outside air and heating-duct loss. It does not rely on temporary heat from people, cooking or sun.</p></div>
+        <div class="how-step"><span class="how-step-number">Step 4</span><h3>Suggest a capacity</h3><p>The expected cooling load is compared with A/C nameplate BTU/hr. Heating is compared with published furnace output, which can be lower than the input number in a model name.</p></div>
+      </div>
+
+      <div class="how-section">
+        <h3>What the basic answers control</h3>
+        <ul>
+          <li><strong>RV type:</strong> starting dimensions, slide-outs and window area per window.</li>
+          <li><strong>Length, width and height:</strong> conditioned floor area, shell area and air volume.</li>
+          <li><strong>Construction:</strong> wall, roof and floor R-values; window performance; and air changes per hour (ACH).</li>
+          <li><strong>Windows and travelers:</strong> glass conduction/solar area plus sensible and moisture load from people.</li>
+        </ul>
+      </div>
+
+      <div class="how-section">
+        <h3>Defaults used until Advanced replaces them</h3>
+        <div class="assumption-grid">
+          <div class="assumption-item"><strong>Cooling design</strong>95°F outside, 75°F inside; 55% outside and 50% inside relative humidity.</div>
+          <div class="assumption-item"><strong>Heating design</strong>20°F outside and 68°F inside.</div>
+          <div class="assumption-item"><strong>Construction profiles</strong>Well insulated: R-8/R-10/R-7 and 0.45 ACH. Typical: R-6/R-7/R-5 and 0.75 ACH. Older/drafty: R-3.5/R-4/R-3 and 1.25 ACH.</div>
+          <div class="assumption-item"><strong>Other planning defaults</strong>Mixed sun, 0 CFM intentional outside ventilation, 8% duct allowance and 175 W for lights/appliances.</div>
+        </div>
+        <p>Those construction and leakage values are transparent prototype presets, not Dometic-certified RV specifications. Use measured or manufacturer values in Advanced when available.</p>
+      </div>
+
+      <div class="how-section">
+        <h3>Why the result is a range</h3>
+        <p>Low, expected and high are three planning scenarios—not a statistical confidence interval. The scenarios vary insulation effectiveness, leakage, window transfer, solar/internal gains and duct allowance because those values are usually uncertain in an RV. Air leakage often has the largest effect.</p>
+      </div>
+
+      <div class="how-section">
+        <h3>Where the method and equipment data come from</h3>
+        <p>The model uses standard envelope heat-transfer, ventilation/infiltration and psychrometric relationships described in HVAC load-calculation references. The code is intentionally simplified for RV planning and is not ACCA-approved Manual J software.</p>
+        <ul class="source-links">
+          <li><a href="https://www.ashrae.org/technical-resources/ashrae-handbook/description-2025-ashrae-handbook-fundamentals" target="_blank" rel="noopener noreferrer">ASHRAE Handbook—Fundamentals: heat transfer, psychrometrics and load calculations</a></li>
+          <li><a href="https://www.acca.org/standards/technical-manuals/manual-j" target="_blank" rel="noopener noreferrer">ACCA Manual J residential load-calculation standard</a></li>
+          <li><a href="https://nfrc.org/residential/" target="_blank" rel="noopener noreferrer">NFRC window ratings: U-factor, solar heat gain and air leakage</a></li>
+          <li><a href="https://www.dometic.com/en-us/lp/rv-ac" target="_blank" rel="noopener noreferrer">Dometic RV A/C capacities</a></li>
+          <li><a href="https://media.dometic.com/externalassets/dometic-medium-furnace_9600000823_81453.pdf" target="_blank" rel="noopener noreferrer">Dometic DF-series furnace input/output table</a></li>
+        </ul>
+      </div>
+
+      <div class="info-modal-note"><strong>What it does not do:</strong> It does not predict hot-soak pull-down time, model moving-road loads, confirm a specific product’s performance at your exact conditions, or verify roof fit, ducts, power, gas, venting, controls or installation safety. A qualified RV HVAC installer should verify the final choice.</div>
+    </div>
+  </dialog>
+
+  <dialog class="info-modal" id="sizingModal" aria-labelledby="sizingModalTitle">
+    <div class="info-modal-card">
+      <div class="info-modal-head">
+        <div><span class="info-modal-kicker">Reading the result</span><h2 id="sizingModalTitle">Sizing guide</h2></div>
+        <button class="modal-close" type="button" data-close-modal aria-label="Close sizing guide"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 14 14M19 5 5 19"/></svg></button>
+      </div>
+      <ul>
+        <li><strong>A/C:</strong> compares the expected continuous cooling load with 11K, 13.5K and 15K BTU/hr classes, plus common two-unit totals.</li>
+        <li><strong>Furnace:</strong> compares required heat with published delivered output—not only the larger input number printed in the model class.</li>
+        <li><strong>Highlighted size:</strong> is the closest typical-day match. Neighboring choices show likely coverage or oversizing cautions.</li>
+        <li><strong>Advanced:</strong> lets you apply known insulation, window, leakage, weather and duct information. An applied-status label and Clear action remain visible beside the Advanced button.</li>
+      </ul>
+      <div class="info-modal-note">BTU sizing alone does not confirm roof fit, duct compatibility, electrical or gas service, controls, venting or safe installation. Have the final equipment choice verified by a qualified RV HVAC installer.</div>
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const vehicleDefaults = {
+        travel: { label: "travel trailer", length: 28, width: 8, height: 8, windows: 10, windowSqFt: 8, slides: 1 },
+        fifth: { label: "fifth wheel", length: 36, width: 8, height: 8.5, windows: 12, windowSqFt: 8.5, slides: 3 },
+        motorhome: { label: "motorhome", length: 35, width: 8.5, height: 8, windows: 12, windowSqFt: 12, slides: 2 },
+        van: { label: "camper van", length: 21, width: 7, height: 6.5, windows: 6, windowSqFt: 7.5, slides: 0 }
+      };
+
+      const constructionProfiles = {
+        well: { label: "newer / well insulated", wallR: 8, roofR: 10, floorR: 7, ach: 0.45, windowU: 0.65, shgc: 0.55, windowType: "double" },
+        typical: { label: "typical / not sure", wallR: 6, roofR: 7, floorR: 5, ach: 0.75, windowU: 1.1, shgc: 0.70, windowType: "single" },
+        older: { label: "older / drafty", wallR: 3.5, roofR: 4, floorR: 3, ach: 1.25, windowU: 1.1, shgc: 0.70, windowType: "single" }
+      };
+
+      const basicDesign = { cool: 95, rh: 55, heat: 20 };
+      const defaultSunProfile = { roof: 10, wall: 3, window: 60 };
+
+      const windowProfiles = {
+        single: { label: "Single pane", u: 1.1, shgc: 0.70 },
+        double: { label: "Double pane", u: 0.65, shgc: 0.55 },
+        premium: { label: "Low-E / premium", u: 0.42, shgc: 0.38 }
+      };
+
+      const acSystems = [
+        { id: "ac11", capacity: 11000, label: "11K BTU/hr", detail: "1 × high-efficiency class", staged: false },
+        { id: "ac135", capacity: 13500, label: "13.5K BTU/hr", detail: "1 × 13.5K", staged: false },
+        { id: "ac15", capacity: 15000, label: "15K BTU/hr", detail: "1 × 15K", staged: false },
+        { id: "ac27", capacity: 27000, label: "27K BTU/hr", detail: "2 × 13.5K", staged: true },
+        { id: "ac285", capacity: 28500, label: "28.5K BTU/hr", detail: "13.5K + 15K", staged: true },
+        { id: "ac30", capacity: 30000, label: "30K BTU/hr", detail: "2 × 15K", staged: true }
+      ];
+
+      const furnaceSystems = [
+        { id: "f12", input: 12000, output: 9120, label: "12K input", detail: "9.1K published output" },
+        { id: "f18", input: 18000, output: 13680, label: "18K input", detail: "13.7K published output" },
+        { id: "f25", input: 25000, output: 19000, label: "25K input", detail: "19K published output" },
+        { id: "f30", input: 30000, output: 22800, label: "30K input", detail: "22.8K published output" },
+        { id: "f35", input: 35000, output: 25840, label: "35K input", detail: "25.8K published output" },
+        { id: "f40", input: 40000, output: 30400, label: "40K input", detail: "30.4K published output" }
+      ];
+
+      const state = {
+        mode: "both",
+        vehicle: "travel",
+        length: 28,
+        width: 8,
+        height: 8,
+        construction: "typical",
+        windows: 10,
+        people: 2,
+        advancedApplied: false,
+        selectedAc: null,
+        selectedFurnace: null,
+        lastResults: null
+      };
+
+      const $ = (selector, root = document) => root.querySelector(selector);
+      const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+
+      const fmt = (value) => Math.round(value).toLocaleString("en-US");
+      const round100 = (value) => Math.max(0, Math.round(value / 100) * 100);
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+      const els = {
+        lengthRange: $("#lengthRange"),
+        lengthNumber: $("#lengthNumber"),
+        widthRange: $("#widthRange"),
+        widthNumber: $("#widthNumber"),
+        heightRange: $("#heightRange"),
+        heightNumber: $("#heightNumber"),
+        construction: $("#construction"),
+        windowsOutput: $("#windowsOutput"),
+        peopleOutput: $("#peopleOutput"),
+        coolingResult: $("#coolingResult"),
+        heatingResult: $("#heatingResult"),
+        coolingMatch: $("#coolingMatch"),
+        coolingLow: $("#coolingLow"),
+        coolingHigh: $("#coolingHigh"),
+        coolingExpected: $("#coolingExpected"),
+        heatingExpected: $("#heatingExpected"),
+        heatingExpectedRange: $("#heatingExpectedRange"),
+        heatingLow: $("#heatingLow"),
+        heatingHigh: $("#heatingHigh"),
+        furnaceMatch: $("#furnaceMatch"),
+        confidenceLabel: $("#confidenceLabel"),
+        capacityAlert: $("#capacityAlert"),
+        acCompareRow: $("#acCompareRow"),
+        furnaceCompareRow: $("#furnaceCompareRow"),
+        acCompareOptions: $("#acCompareOptions"),
+        furnaceCompareOptions: $("#furnaceCompareOptions"),
+        advancedAppliedStatus: $("#advancedAppliedStatus"),
+        advancedModal: $("#advancedModal"),
+        advancedError: $("#advancedError"),
+        coolDriverBar: $("#coolDriverBar"),
+        coolDriverLegend: $("#coolDriverLegend"),
+        heatDriverBar: $("#heatDriverBar"),
+        heatDriverLegend: $("#heatDriverLegend"),
+        breakdownBody: $("#loadBreakdownBody")
+      };
+
+      const advancedIds = ["advWidth", "advHeight", "advSlides", "advWallR", "advRoofR", "advFloorR", "advWindowArea", "advWindowType", "advAch", "advCoolTemp", "advOutdoorRh", "advHeatTemp", "advVentCfm", "advCoolDuct", "advHeatDuct", "advInternalWatts", "advAltitude"];
+      let advancedOpenSnapshot = null;
+
+      const readAdvancedValues = () => Object.fromEntries(advancedIds.map((id) => [id, document.getElementById(id).value]));
+
+      function writeAdvancedValues(values) {
+        Object.entries(values).forEach(([id, value]) => { document.getElementById(id).value = value; });
+      }
+
+      function setRangeProgress(input) {
+        const value = Number(input.value);
+        const min = Number(input.min);
+        const max = Number(input.max);
+        input.style.setProperty("--progress", `${((value - min) / (max - min)) * 100}%`);
+      }
+
+      function setDimensionProgress() {
+        [els.lengthRange, els.widthRange, els.heightRange].forEach(setRangeProgress);
+      }
+
+      function baseGeometryDefaults() {
+        const vehicle = vehicleDefaults[state.vehicle];
+        return {
+          ...vehicle,
+          width: state.width,
+          height: state.height,
+          windowArea: Math.round(state.windows * vehicle.windowSqFt)
+        };
+      }
+
+      function resetAdvancedFields() {
+        const geometry = baseGeometryDefaults();
+        const construction = constructionProfiles[state.construction];
+        const values = {
+          advWidth: geometry.width,
+          advHeight: geometry.height,
+          advSlides: geometry.slides,
+          advWallR: construction.wallR,
+          advRoofR: construction.roofR,
+          advFloorR: construction.floorR,
+          advWindowArea: geometry.windowArea,
+          advWindowType: construction.windowType,
+          advAch: construction.ach,
+          advCoolTemp: basicDesign.cool,
+          advOutdoorRh: basicDesign.rh,
+          advHeatTemp: basicDesign.heat,
+          advVentCfm: 0,
+          advCoolDuct: 8,
+          advHeatDuct: 8,
+          advInternalWatts: 175,
+          advAltitude: 1000
+        };
+        Object.entries(values).forEach(([id, value]) => { document.getElementById(id).value = value; });
+        $("#advAchHint").textContent = `${construction.label}: ${construction.ach} ACH starting value`;
+        state.advancedApplied = false;
+        els.advancedError.hidden = true;
+      }
+
+      function invalidateAdvanced() {
+        if (state.advancedApplied) {
+          state.advancedApplied = false;
+          resetAdvancedFields();
+        } else {
+          resetAdvancedFields();
+        }
+      }
+
+      function currentInputs() {
+        const vehicle = vehicleDefaults[state.vehicle];
+        const construction = constructionProfiles[state.construction];
+        const simple = {
+          length: state.length,
+          width: state.width,
+          height: state.height,
+          slides: vehicle.slides,
+          wallR: construction.wallR,
+          roofR: construction.roofR,
+          floorR: construction.floorR,
+          doorR: 2.5,
+          windowArea: state.windows * vehicle.windowSqFt,
+          windowU: construction.windowU,
+          shgc: construction.shgc,
+          ach: construction.ach,
+          coolOutdoor: basicDesign.cool,
+          outdoorRh: basicDesign.rh,
+          heatOutdoor: basicDesign.heat,
+          coolIndoor: 75,
+          indoorRh: 50,
+          heatIndoor: 68,
+          ventilationCfm: 0,
+          coolDuctLoss: 0.08,
+          heatDuctLoss: 0.08,
+          internalWatts: 175,
+          internalDuty: 1,
+          altitude: 1000,
+          people: state.people,
+          sun: defaultSunProfile
+        };
+
+        if (!state.advancedApplied) return simple;
+
+        const window = windowProfiles[$("#advWindowType").value];
+        return {
+          ...simple,
+          width: Number($("#advWidth").value),
+          height: Number($("#advHeight").value),
+          slides: Number($("#advSlides").value),
+          wallR: Number($("#advWallR").value),
+          roofR: Number($("#advRoofR").value),
+          floorR: Number($("#advFloorR").value),
+          windowArea: Number($("#advWindowArea").value),
+          windowU: window.u,
+          shgc: window.shgc,
+          ach: Number($("#advAch").value),
+          coolOutdoor: Number($("#advCoolTemp").value),
+          outdoorRh: Number($("#advOutdoorRh").value),
+          heatOutdoor: Number($("#advHeatTemp").value),
+          ventilationCfm: Number($("#advVentCfm").value),
+          coolDuctLoss: Number($("#advCoolDuct").value) / 100,
+          heatDuctLoss: Number($("#advHeatDuct").value) / 100,
+          internalWatts: Number($("#advInternalWatts").value),
+          altitude: Number($("#advAltitude").value)
+        };
+      }
+
+      function humidityGrains(tempF, rhPercent) {
+        const tempC = (tempF - 32) * 5 / 9;
+        const saturationKpa = 0.61078 * Math.exp((17.2694 * tempC) / (tempC + 237.3));
+        const vaporKpa = clamp(rhPercent / 100, 0, 1) * saturationKpa;
+        const humidityRatio = 0.62198 * vaporKpa / Math.max(1, 101.325 - vaporKpa);
+        return humidityRatio * 7000;
+      }
+
+      function calculateScenario(inputs, variant = "expected") {
+        const scenario = {
+          low: { r: 1.20, ach: 0.70, u: 0.90, solar: 0.85, gains: 0.85, duct: -0.03 },
+          expected: { r: 1, ach: 1, u: 1, solar: 1, gains: 1, duct: 0 },
+          high: { r: 0.75, ach: 1.50, u: 1.10, solar: 1.15, gains: 1.15, duct: 0.05 }
+        }[variant];
+
+        const areaFactor = 1 + 0.05 * inputs.slides;
+        const volumeFactor = 1 + 0.06 * inputs.slides;
+        const floorArea = inputs.length * inputs.width * areaFactor;
+        const roofArea = floorArea;
+        const wallGross = 2 * (inputs.length + inputs.width) * inputs.height * areaFactor;
+        const doorArea = Math.min(18 * areaFactor, wallGross * 0.08);
+        const windowArea = clamp(inputs.windowArea, 0, Math.max(0, wallGross - doorArea));
+        const wallArea = Math.max(0, wallGross - windowArea - doorArea);
+        const volume = inputs.length * inputs.width * inputs.height * volumeFactor;
+        const infiltrationCfm = inputs.ach * scenario.ach * volume / 60;
+        const outsideCfm = infiltrationCfm + inputs.ventilationCfm;
+        const coolDelta = Math.max(inputs.coolOutdoor - inputs.coolIndoor, 0);
+        const heatDelta = Math.max(inputs.heatIndoor - inputs.heatOutdoor, 0);
+        const coolDuct = clamp(inputs.coolDuctLoss + scenario.duct, 0, 0.30);
+        const heatDuct = clamp(inputs.heatDuctLoss + scenario.duct, 0, 0.30);
+
+        const cooling = {
+          walls: wallArea / (inputs.wallR * scenario.r) * Math.max(coolDelta + inputs.sun.wall * scenario.solar, 0),
+          roof: roofArea / (inputs.roofR * scenario.r) * Math.max(coolDelta + inputs.sun.roof * scenario.solar, 0),
+          floor: floorArea / (inputs.floorR * scenario.r) * Math.max(coolDelta - 5, 0),
+          door: doorArea / (inputs.doorR * scenario.r) * coolDelta,
+          windowConduction: windowArea * inputs.windowU * scenario.u * coolDelta,
+          windowSolar: windowArea * inputs.shgc * inputs.sun.window * scenario.solar,
+          outsideAirSensible: 1.08 * outsideCfm * coolDelta,
+          peopleSensible: 230 * inputs.people * scenario.gains,
+          internalSensible: inputs.internalWatts * 3.412 * inputs.internalDuty * scenario.gains
+        };
+
+        const grainDifference = Math.max(humidityGrains(inputs.coolOutdoor, inputs.outdoorRh) - humidityGrains(inputs.coolIndoor, inputs.indoorRh), 0);
+        cooling.outsideAirLatent = 0.68 * outsideCfm * grainDifference;
+        cooling.peopleLatent = 200 * inputs.people * scenario.gains;
+        const coolingSubtotal = Object.values(cooling).reduce((sum, value) => sum + value, 0);
+        cooling.duct = coolingSubtotal * coolDuct;
+        const coolingTotal = coolingSubtotal + cooling.duct;
+
+        const heating = {
+          walls: wallArea / (inputs.wallR * scenario.r) * heatDelta,
+          roof: roofArea / (inputs.roofR * scenario.r) * heatDelta,
+          floor: floorArea / (inputs.floorR * scenario.r) * heatDelta,
+          door: doorArea / (inputs.doorR * scenario.r) * heatDelta,
+          windows: windowArea * inputs.windowU * scenario.u * heatDelta,
+          outsideAir: 1.08 * outsideCfm * heatDelta
+        };
+        const heatingSubtotal = Object.values(heating).reduce((sum, value) => sum + value, 0);
+        heating.duct = heatingSubtotal * heatDuct;
+        const heatingTotal = heatingSubtotal + heating.duct;
+
+        return {
+          coolingTotal,
+          heatingTotal,
+          cooling,
+          heating,
+          geometry: { floorArea, roofArea, wallArea, windowArea, doorArea, volume, infiltrationCfm }
+        };
+      }
+
+      function calculateAll() {
+        const inputs = currentInputs();
+        const low = calculateScenario(inputs, "low");
+        const expected = calculateScenario(inputs, "expected");
+        const high = calculateScenario(inputs, "high");
+        return {
+          inputs,
+          low: { cooling: round100(low.coolingTotal), heating: round100(low.heatingTotal) },
+          expected: { cooling: round100(expected.coolingTotal), heating: round100(expected.heatingTotal) },
+          high: { cooling: round100(high.coolingTotal), heating: round100(high.heatingTotal) },
+          breakdown: expected
+        };
+      }
+
+      function recommendAc(load) {
+        return acSystems.find((system) => system.capacity >= load) || null;
+      }
+
+      function recommendFurnace(load) {
+        return furnaceSystems.find((system) => system.output >= load) || null;
+      }
+
+      function comparisonAround(items, recommended) {
+        if (!recommended) {
+          return [
+            { system: items.at(-1), tier: "Highest compared" },
+            { system: null, tier: "Recommended", empty: "Load exceeds compared sizes" },
+            { system: null, tier: "Higher option", empty: "Professional design needed" }
+          ];
+        }
+        const index = items.findIndex((item) => item.id === recommended.id);
+        return [
+          { system: index > 0 ? items[index - 1] : null, tier: "Lower option", empty: "No lower compared size" },
+          { system: recommended, tier: "Recommended" },
+          { system: index < items.length - 1 ? items[index + 1] : null, tier: "Higher option", empty: "No higher compared size" }
+        ];
+      }
+
+      function acFitText(system, results) {
+        if (system.capacity < results.low.cooling) return "Likely undersized";
+        if (system.capacity < results.expected.cooling) return "Fair-weather coverage";
+        if (system.capacity < results.high.cooling) return "Typical-day fit";
+        if (!system.staged && system.capacity > results.expected.cooling * 1.4) return "Oversizing caution";
+        return system.staged ? "Staged peak coverage" : "Conservative coverage";
+      }
+
+      function furnaceFitText(system, results) {
+        if (system.output < results.low.heating) return "Likely undersized";
+        if (system.output < results.expected.heating) return "Mild-weather coverage";
+        if (system.output < results.high.heating) return "Typical-day fit";
+        if (system.output > results.expected.heating * 1.4) return "Oversizing caution";
+        return "Conservative coverage";
+      }
+
+      function renderCapacityCards(container, comparisons, recommended, selectedId, type, results) {
+        container.innerHTML = "";
+        comparisons.forEach(({ system, tier, empty }) => {
+          if (!system) {
+            const placeholder = document.createElement("div");
+            placeholder.className = "capacity-card unavailable";
+            placeholder.setAttribute("role", "note");
+            placeholder.innerHTML = `<span class="capacity-tier">${tier}</span><span class="capacity-detail">${empty}</span>`;
+            container.appendChild(placeholder);
+            return;
+          }
+          const isRecommended = recommended && system.id === recommended.id;
+          const isSelected = system.id === selectedId;
+          const fit = type === "ac" ? acFitText(system, results) : furnaceFitText(system, results);
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = `capacity-card${isRecommended ? " recommended" : ""}`;
+          button.dataset.systemId = system.id;
+          button.dataset.systemType = type;
+          button.setAttribute("aria-pressed", String(isSelected));
+          button.setAttribute("aria-label", `${system.label}, ${system.detail}, ${fit}${isRecommended ? ", recommended" : ""}`);
+          button.innerHTML = `
+            <span class="capacity-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg></span>
+            <span class="capacity-tier">${tier}</span>
+            <span class="capacity-value">${system.label}</span>
+            <span class="capacity-detail">${system.detail}</span>
+            <span class="capacity-status">${isRecommended ? "Recommended · " : ""}${fit}</span>`;
+          container.appendChild(button);
+        });
+      }
+
+      function renderCompare(results, acRec, furnaceRec) {
+        if (!state.selectedAc || !acSystems.some((s) => s.id === state.selectedAc)) state.selectedAc = acRec?.id || acSystems.at(-1).id;
+        if (!state.selectedFurnace || !furnaceSystems.some((s) => s.id === state.selectedFurnace)) state.selectedFurnace = furnaceRec?.id || furnaceSystems.at(-1).id;
+        const acComparison = comparisonAround(acSystems, acRec);
+        const furnaceComparison = comparisonAround(furnaceSystems, furnaceRec);
+        const acDisplayed = acComparison.map(({ system }) => system).filter(Boolean);
+        const furnaceDisplayed = furnaceComparison.map(({ system }) => system).filter(Boolean);
+        if (!acDisplayed.some((system) => system.id === state.selectedAc)) state.selectedAc = acRec?.id || acDisplayed.at(-1)?.id || null;
+        if (!furnaceDisplayed.some((system) => system.id === state.selectedFurnace)) state.selectedFurnace = furnaceRec?.id || furnaceDisplayed.at(-1)?.id || null;
+        renderCapacityCards(els.acCompareOptions, acComparison, acRec, state.selectedAc, "ac", results);
+        renderCapacityCards(els.furnaceCompareOptions, furnaceComparison, furnaceRec, state.selectedFurnace, "furnace", results);
+      }
+
+      function percentageGroups(breakdown) {
+        const cool = {
+          "Roof & walls": breakdown.cooling.walls + breakdown.cooling.roof + breakdown.cooling.floor + breakdown.cooling.door,
+          "Windows & sun": breakdown.cooling.windowConduction + breakdown.cooling.windowSolar,
+          "Outside air": breakdown.cooling.outsideAirSensible + breakdown.cooling.outsideAirLatent,
+          "People & loads": breakdown.cooling.peopleSensible + breakdown.cooling.peopleLatent + breakdown.cooling.internalSensible + breakdown.cooling.duct
+        };
+        const heat = {
+          "Roof & walls": breakdown.heating.walls + breakdown.heating.roof + breakdown.heating.floor + breakdown.heating.door,
+          "Outside air": breakdown.heating.outsideAir,
+          "Windows": breakdown.heating.windows,
+          "Duct loss": breakdown.heating.duct
+        };
+        return { cool, heat };
+      }
+
+      function renderDriverChart(bar, legend, groups) {
+        const entries = Object.entries(groups);
+        const total = entries.reduce((sum, [, value]) => sum + value, 0) || 1;
+        bar.innerHTML = entries.map(([, value]) => `<span style="width:${(value / total) * 100}%"></span>`).join("");
+        legend.innerHTML = entries.map(([label, value]) => `<span>${label}<strong>${Math.round(value / total * 100)}%</strong></span>`).join("");
+      }
+
+      function renderBreakdown(breakdown) {
+        const rows = [
+          ["Cooling · roof, walls, floor & door", breakdown.cooling.walls + breakdown.cooling.roof + breakdown.cooling.floor + breakdown.cooling.door],
+          ["Cooling · windows & solar", breakdown.cooling.windowConduction + breakdown.cooling.windowSolar],
+          ["Cooling · outside air & moisture", breakdown.cooling.outsideAirSensible + breakdown.cooling.outsideAirLatent],
+          ["Cooling · people, appliances & ducts", breakdown.cooling.peopleSensible + breakdown.cooling.peopleLatent + breakdown.cooling.internalSensible + breakdown.cooling.duct],
+          ["Heating · envelope", breakdown.heating.walls + breakdown.heating.roof + breakdown.heating.floor + breakdown.heating.door + breakdown.heating.windows],
+          ["Heating · outside air & ducts", breakdown.heating.outsideAir + breakdown.heating.duct]
+        ];
+        els.breakdownBody.innerHTML = rows.map(([label, value]) => `<tr><td>${label}</td><td>${fmt(round100(value))}</td></tr>`).join("");
+      }
+
+      function updateModeVisibility() {
+        const acVisible = state.mode !== "furnace";
+        const heatVisible = state.mode !== "ac";
+        els.coolingResult.hidden = !acVisible;
+        els.heatingResult.hidden = !heatVisible;
+        els.acCompareRow.hidden = !acVisible;
+        els.furnaceCompareRow.hidden = !heatVisible;
+        $("#acProductCta").hidden = !acVisible;
+        $("#furnaceProductCta").hidden = !heatVisible;
+      }
+
+      function render() {
+        const results = calculateAll();
+        state.lastResults = results;
+        const acRec = recommendAc(results.expected.cooling);
+        const furnaceRec = recommendFurnace(results.expected.heating);
+
+        els.coolingMatch.textContent = acRec ? fmt(acRec.capacity) : ">30,000";
+        els.coolingLow.textContent = fmt(results.low.cooling);
+        els.coolingHigh.textContent = fmt(results.high.cooling);
+        els.coolingExpected.textContent = fmt(results.expected.cooling);
+        els.heatingExpected.textContent = fmt(results.expected.heating);
+        els.heatingExpectedRange.textContent = fmt(results.expected.heating);
+        els.heatingLow.textContent = fmt(results.low.heating);
+        els.heatingHigh.textContent = fmt(results.high.heating);
+        els.furnaceMatch.textContent = furnaceRec ? `${furnaceRec.label} · ${furnaceRec.detail}` : "Beyond compared single-furnace outputs";
+        els.confidenceLabel.textContent = state.advancedApplied ? "Advanced settings applied" : "Good planning estimate";
+        els.advancedAppliedStatus.hidden = !state.advancedApplied;
+        $("#advancedShortcut").setAttribute("aria-label", state.advancedApplied ? "Edit advanced settings; advanced settings are applied" : "Open advanced settings");
+
+        const alerts = [];
+        if (!acRec && state.mode !== "furnace") alerts.push("Cooling exceeds the common two-unit comparison range; get a professional multi-zone assessment.");
+        if (!furnaceRec && state.mode !== "ac") alerts.push("Heating exceeds the compared published furnace outputs; get a professional heating and combustion-safety assessment.");
+        if (results.inputs.altitude >= 5000) alerts.push("High altitude selected: verify manufacturer-specific furnace derating and combustion requirements.");
+        els.capacityAlert.hidden = alerts.length === 0;
+        els.capacityAlert.textContent = alerts.join(" ");
+
+        renderCompare(results, acRec, furnaceRec);
+        const groups = percentageGroups(results.breakdown);
+        renderDriverChart(els.coolDriverBar, els.coolDriverLegend, groups.cool);
+        renderDriverChart(els.heatDriverBar, els.heatDriverLegend, groups.heat);
+        renderBreakdown(results.breakdown);
+        updateModeVisibility();
+      }
+
+      function setPressed(buttons, active) {
+        buttons.forEach((button) => button.setAttribute("aria-pressed", String(button === active)));
+      }
+
+      function validateAdvanced() {
+        const rules = {
+          advWidth: [5.5, 10, "RV width must be between 5.5 and 10 ft."],
+          advHeight: [5, 10, "Interior height must be between 5 and 10 ft."],
+          advSlides: [0, 5, "Slide-outs must be between 0 and 5."],
+          advWallR: [1, 30, "Wall insulation must be between R-1 and R-30."],
+          advRoofR: [1, 30, "Roof insulation must be between R-1 and R-30."],
+          advFloorR: [1, 30, "Floor insulation must be between R-1 and R-30."],
+          advWindowArea: [0, 400, "Window area must be between 0 and 400 sq ft."],
+          advAch: [0.2, 3, "Air leakage must be between 0.2 and 3 ACH."],
+          advCoolTemp: [50, 125, "Cooling design temperature must be between 50°F and 125°F."],
+          advOutdoorRh: [0, 100, "Outdoor humidity must be between 0% and 100%."],
+          advHeatTemp: [-40, 70, "Heating design temperature must be between -40°F and 70°F."],
+          advVentCfm: [0, 150, "Ventilation must be between 0 and 150 CFM."],
+          advCoolDuct: [0, 25, "Cooling duct loss must be between 0% and 25%."],
+          advHeatDuct: [0, 25, "Heating duct loss must be between 0% and 25%."],
+          advInternalWatts: [0, 2500, "Internal load must be between 0 and 2,500 watts."],
+          advAltitude: [0, 14000, "Altitude must be between 0 and 14,000 ft."]
+        };
+        for (const [id, [min, max, message]] of Object.entries(rules)) {
+          const input = document.getElementById(id);
+          const value = Number(input.value);
+          if (!Number.isFinite(value) || value < min || value > max) return { input, message };
+        }
+        const vehicle = vehicleDefaults[state.vehicle];
+        const width = Number($("#advWidth").value);
+        const height = Number($("#advHeight").value);
+        const slides = Number($("#advSlides").value);
+        const wallGross = 2 * (state.length + width) * height * (1 + 0.05 * slides);
+        if (Number($("#advWindowArea").value) >= wallGross - 10) return { input: $("#advWindowArea"), message: "Window area must be smaller than the gross wall area." };
+        return null;
+      }
+
+      $$(".mode-button").forEach((button) => button.addEventListener("click", () => {
+        state.mode = button.dataset.mode;
+        setPressed($$(".mode-button"), button);
+        render();
+      }));
+
+      $$(".choice-button").forEach((button) => button.addEventListener("click", () => {
+        state.vehicle = button.dataset.vehicle;
+        const defaults = vehicleDefaults[state.vehicle];
+        state.length = defaults.length;
+        state.width = defaults.width;
+        state.height = defaults.height;
+        state.windows = defaults.windows;
+        els.lengthRange.value = clamp(state.length, Number(els.lengthRange.min), Number(els.lengthRange.max));
+        els.lengthNumber.value = state.length;
+        els.widthRange.value = state.width;
+        els.widthNumber.value = state.width;
+        els.heightRange.value = state.height;
+        els.heightNumber.value = state.height;
+        els.windowsOutput.value = state.windows;
+        setDimensionProgress();
+        setPressed($$(".choice-button"), button);
+        state.selectedAc = null;
+        state.selectedFurnace = null;
+        invalidateAdvanced();
+        render();
+      }));
+
+      const updateLength = (value) => {
+        const next = clamp(Math.round(Number(value) || 8), 8, 60);
+        state.length = next;
+        els.lengthNumber.value = next;
+        els.lengthRange.value = clamp(next, Number(els.lengthRange.min), Number(els.lengthRange.max));
+        setRangeProgress(els.lengthRange);
+        state.selectedAc = null;
+        state.selectedFurnace = null;
+        invalidateAdvanced();
+        render();
+      };
+
+      els.lengthRange.addEventListener("input", (event) => updateLength(event.target.value));
+      els.lengthNumber.addEventListener("change", (event) => updateLength(event.target.value));
+
+      const updateWidth = (value) => {
+        const next = clamp(Math.round((Number(value) || 5.5) * 10) / 10, 5.5, 10);
+        state.width = next;
+        els.widthNumber.value = next;
+        els.widthRange.value = next;
+        setRangeProgress(els.widthRange);
+        state.selectedAc = null;
+        state.selectedFurnace = null;
+        invalidateAdvanced();
+        render();
+      };
+
+      els.widthRange.addEventListener("input", (event) => updateWidth(event.target.value));
+      els.widthNumber.addEventListener("change", (event) => updateWidth(event.target.value));
+
+      const updateHeight = (value) => {
+        const next = clamp(Math.round((Number(value) || 5) * 10) / 10, 5, 10);
+        state.height = next;
+        els.heightNumber.value = next;
+        els.heightRange.value = next;
+        setRangeProgress(els.heightRange);
+        state.selectedAc = null;
+        state.selectedFurnace = null;
+        invalidateAdvanced();
+        render();
+      };
+
+      els.heightRange.addEventListener("input", (event) => updateHeight(event.target.value));
+      els.heightNumber.addEventListener("change", (event) => updateHeight(event.target.value));
+
+      els.construction.addEventListener("change", () => {
+        state.construction = els.construction.value;
+        state.selectedAc = null;
+        state.selectedFurnace = null;
+        invalidateAdvanced();
+        render();
+      });
+
+      $("#windowsMinus").addEventListener("click", () => {
+        state.windows = clamp(state.windows - 1, 0, 30);
+        els.windowsOutput.value = state.windows;
+        state.selectedAc = null;
+        state.selectedFurnace = null;
+        invalidateAdvanced();
+        render();
+      });
+
+      $("#windowsPlus").addEventListener("click", () => {
+        state.windows = clamp(state.windows + 1, 0, 30);
+        els.windowsOutput.value = state.windows;
+        state.selectedAc = null;
+        state.selectedFurnace = null;
+        invalidateAdvanced();
+        render();
+      });
+
+      $("#peopleMinus").addEventListener("click", () => {
+        state.people = clamp(state.people - 1, 0, 12);
+        els.peopleOutput.value = state.people;
+        state.selectedAc = null;
+        invalidateAdvanced();
+        render();
+      });
+
+      $("#peoplePlus").addEventListener("click", () => {
+        state.people = clamp(state.people + 1, 0, 12);
+        els.peopleOutput.value = state.people;
+        state.selectedAc = null;
+        invalidateAdvanced();
+        render();
+      });
+
+      $("#seeRecommendation").addEventListener("click", () => {
+        $("#results").scrollIntoView({ behavior: "smooth", block: "center" });
+        $("#results").setAttribute("tabindex", "-1");
+        $("#results").focus({ preventScroll: true });
+      });
+
+      $(".compare-shell").addEventListener("click", (event) => {
+        const card = event.target.closest(".capacity-card");
+        if (!card) return;
+        if (card.dataset.systemType === "ac") state.selectedAc = card.dataset.systemId;
+        else state.selectedFurnace = card.dataset.systemId;
+        render();
+      });
+
+      function setAdvancedOpen(open) {
+        $("#advancedShortcut").setAttribute("aria-expanded", String(open));
+        if (open) {
+          if (!els.advancedModal.open) {
+            advancedOpenSnapshot = {
+              advancedApplied: state.advancedApplied,
+              values: readAdvancedValues()
+            };
+            if (typeof els.advancedModal.showModal === "function") els.advancedModal.showModal();
+            else els.advancedModal.setAttribute("open", "");
+          }
+          setTimeout(() => {
+            $("#advWidth").focus({ preventScroll: true });
+          }, 0);
+        } else if (els.advancedModal.open) {
+          if (typeof els.advancedModal.close === "function") els.advancedModal.close();
+          else els.advancedModal.removeAttribute("open");
+        }
+      }
+
+      $("#advancedShortcut").addEventListener("click", () => setAdvancedOpen(true));
+
+      $("#clearAdvanced").addEventListener("click", () => {
+        resetAdvancedFields();
+        state.selectedAc = null;
+        state.selectedFurnace = null;
+        render();
+        $("#advancedShortcut").focus();
+      });
+
+      $("#applyAdvanced").addEventListener("click", () => {
+        const error = validateAdvanced();
+        if (error) {
+          els.advancedError.textContent = error.message;
+          els.advancedError.hidden = false;
+          error.input.focus();
+          return;
+        }
+        els.advancedError.hidden = true;
+        state.advancedApplied = true;
+        state.selectedAc = null;
+        state.selectedFurnace = null;
+        render();
+        advancedOpenSnapshot = null;
+        setAdvancedOpen(false);
+        $("#results").scrollIntoView({ behavior: "smooth", block: "center" });
+        $("#results").setAttribute("tabindex", "-1");
+        $("#results").focus({ preventScroll: true });
+      });
+
+      function cancelAdvancedDialog() {
+        if (advancedOpenSnapshot) {
+          writeAdvancedValues(advancedOpenSnapshot.values);
+          state.advancedApplied = advancedOpenSnapshot.advancedApplied;
+        }
+        els.advancedError.hidden = true;
+        setAdvancedOpen(false);
+        render();
+        advancedOpenSnapshot = null;
+        $("#advancedShortcut").focus();
+      }
+
+      $("#cancelAdvanced").addEventListener("click", cancelAdvancedDialog);
+      $("#closeAdvanced").addEventListener("click", cancelAdvancedDialog);
+      els.advancedModal.addEventListener("cancel", (event) => {
+        event.preventDefault();
+        cancelAdvancedDialog();
+      });
+      els.advancedModal.addEventListener("click", (event) => {
+        if (event.target === els.advancedModal) cancelAdvancedDialog();
+      });
+
+      $$("[data-modal-target]").forEach((button) => button.addEventListener("click", () => {
+        const dialog = document.getElementById(button.dataset.modalTarget);
+        if (dialog && !dialog.open) dialog.showModal();
+      }));
+
+      $$("[data-close-modal]").forEach((button) => button.addEventListener("click", () => {
+        button.closest("dialog")?.close();
+      }));
+
+      $$(".info-modal").forEach((dialog) => dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) dialog.close();
+      }));
+
+      resetAdvancedFields();
+      setDimensionProgress();
+      render();
+
+      window.RVBTUCalculator = {
+        calculate: (overrides = {}) => {
+          const inputs = { ...currentInputs(), ...overrides };
+          return {
+            low: calculateScenario(inputs, "low"),
+            expected: calculateScenario(inputs, "expected"),
+            high: calculateScenario(inputs, "high")
+          };
+        },
+        getState: () => ({ ...state }),
+        getResults: () => state.lastResults
+      };
+    })();
+  </script>
+</body>
+</html>
