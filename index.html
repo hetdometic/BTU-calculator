@@ -1831,6 +1831,7 @@
 
           <div class="advanced-group">
             <h3>Air &amp; design conditions</h3>
+            <div class="advanced-field"><label for="advDestination">Typical destination <small>Fills the weather fields below; altitude stays manual</small></label><div class="select-wrap"><select id="advDestination"><option value="typical">Typical / mixed</option><option value="hotHumid">Hot &amp; humid</option><option value="hotDry">Hot &amp; dry</option><option value="mild">Mild / coastal</option><option value="cold">Cold winter</option><option value="custom">Custom weather</option></select></div></div>
             <div class="advanced-field"><label for="advAch">Air leakage <small id="advAchHint">From basic construction</small></label><label class="unit-input"><input id="advAch" type="number" min="0.2" max="3" step="0.05"><span>ACH</span></label></div>
             <div class="advanced-field"><label for="advCoolTemp">Cooling design temp</label><label class="unit-input"><input id="advCoolTemp" type="number" min="50" max="125" step="1"><span>°F</span></label></div>
             <div class="advanced-field"><label for="advOutdoorRh">Outdoor humidity</label><label class="unit-input"><input id="advOutdoorRh" type="number" min="0" max="100" step="1"><span>% RH</span></label></div>
@@ -1993,6 +1994,13 @@
       };
 
       const basicDesign = { cool: 95, rh: 55, heat: 20 };
+      const destinationProfiles = {
+        typical: { cool: 95, rh: 55, heat: 20 },
+        hotHumid: { cool: 95, rh: 70, heat: 35 },
+        hotDry: { cool: 105, rh: 25, heat: 30 },
+        mild: { cool: 85, rh: 65, heat: 40 },
+        cold: { cool: 85, rh: 50, heat: 0 }
+      };
       const defaultSunProfile = { roof: 10, wall: 3, window: 60 };
 
       const windowProfiles = {
@@ -2078,7 +2086,7 @@
         breakdownBody: $("#loadBreakdownBody")
       };
 
-      const advancedIds = ["advWidth", "advHeight", "advSlides", "advWallR", "advRoofR", "advFloorR", "advWindowArea", "advWindowType", "advAch", "advCoolTemp", "advOutdoorRh", "advHeatTemp", "advVentCfm", "advCoolDuct", "advHeatDuct", "advInternalWatts", "advAltitude"];
+      const advancedIds = ["advWidth", "advHeight", "advSlides", "advWallR", "advRoofR", "advFloorR", "advWindowArea", "advWindowType", "advDestination", "advAch", "advCoolTemp", "advOutdoorRh", "advHeatTemp", "advVentCfm", "advCoolDuct", "advHeatDuct", "advInternalWatts", "advAltitude"];
       let advancedOpenSnapshot = null;
 
       const readAdvancedValues = () => Object.fromEntries(advancedIds.map((id) => [id, document.getElementById(id).value]));
@@ -2120,6 +2128,7 @@
           advFloorR: construction.floorR,
           advWindowArea: geometry.windowArea,
           advWindowType: construction.windowType,
+          advDestination: "typical",
           advAch: construction.ach,
           advCoolTemp: basicDesign.cool,
           advOutdoorRh: basicDesign.rh,
@@ -2488,6 +2497,25 @@
         if (Number($("#advWindowArea").value) >= wallGross - 10) return { input: $("#advWindowArea"), message: "Window area must be smaller than the gross wall area." };
         return null;
       }
+
+      function applyDestinationProfile(destination) {
+        const profile = destinationProfiles[destination];
+        if (!profile) return;
+        $("#advCoolTemp").value = profile.cool;
+        $("#advOutdoorRh").value = profile.rh;
+        $("#advHeatTemp").value = profile.heat;
+        els.advancedError.hidden = true;
+      }
+
+      $("#advDestination").addEventListener("change", (event) => {
+        applyDestinationProfile(event.target.value);
+      });
+
+      ["advCoolTemp", "advOutdoorRh", "advHeatTemp"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", () => {
+          $("#advDestination").value = "custom";
+        });
+      });
 
       $$(".mode-button").forEach((button) => button.addEventListener("click", () => {
         state.mode = button.dataset.mode;
