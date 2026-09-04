@@ -1,0 +1,48 @@
+name: Run guarded calculator logic patch
+
+on:
+  push:
+    branches:
+      - logic-only-2026
+    paths:
+      - .github/workflows/logic-only-patch-v2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout logic branch
+        uses: actions/checkout@v4
+        with:
+          ref: logic-only-2026
+          fetch-depth: 0
+
+      - name: Apply guarded patch
+        run: python .github/logic_patch.py
+
+      - name: Validate standalone HTML and JavaScript
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          text = Path('index.html').read_text(encoding='utf-8')
+          scripts = re.findall(r'<script>(.*?)</script>', text, re.S)
+          assert scripts, 'No inline script found'
+          assert '<script src=' not in text, 'External JavaScript introduced'
+          assert '<link rel="stylesheet"' not in text, 'External stylesheet introduced'
+          assert text.count('<dialog class="advanced-modal" id="advancedModal"') == 1
+          Path('/tmp/app.js').write_text(scripts[-1], encoding='utf-8')
+          PY
+          node --check /tmp/app.js
+
+      - name: Commit audited index
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Audit Dometic sizing logic without changing design"
+          git push origin HEAD:logic-only-2026
