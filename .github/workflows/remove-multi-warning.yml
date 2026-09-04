@@ -47,3 +47,5 @@ jobs:
           git add index.html
           git commit -m "Remove multi-unit recommendation advisory"
           git push origin HEAD:logic-only-2026
+
+# trigger
