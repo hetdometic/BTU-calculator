@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dometic Climate Sizer · 2026 Logic Preview</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:32px;background:#f4f4f1;color:#111}
+    .card{max-width:760px;margin:0 auto;background:#fff;border:1px solid #d7d7d3;padding:28px}
+    h1{margin:0 0 8px;text-transform:uppercase;font-size:28px}p{line-height:1.5}.error{white-space:pre-wrap;color:#8d111a}
+  </style>
+</head>
+<body>
+<div class="card" id="status"><h1>Loading 2026 logic preview…</h1><p>This preview keeps the current UI and applies the audited Dometic lineup/calculation engine at runtime.</p></div>
+<script>
+(async () => {
+  "use strict";
+  const status = document.getElementById("status");
+  try {
+    const response = await fetch("./index.html", { cache: "no-store" });
+    if (!response.ok) throw new Error(`Could not load index.html (${response.status})`);
+    let html = await response.text();
+
+    function replaceOnce(oldText, newText, label) {
+      if (!html.includes(oldText)) throw new Error(`Patch target not found: ${label}`);
+      html = html.replace(oldText, newText);
+    }
+
+    function replaceRange(startText, endText, replacement, label) {
+      const start = html.indexOf(startText);
+      if (start < 0) throw new Error(`Patch start not found: ${label}`);
+      const end = html.indexOf(endText, start);
+      if (end < 0) throw new Error(`Patch end not found: ${label}`);
+      html = html.slice(0, start) + replacement + html.slice(end);
+    }
+
+    replaceOnce(
+      "  <script>\n    (() => {\n      \"use strict\";",
+      "  <script src=\"dometic-core-v2.js\"><\\/script>\n  <script>\n    (() => {\n      \"use strict\";",
+      "core script insertion"
+    );
+
+    replaceRange(
+      "      const acSystems = [",
+      "      const state = {",
+      `      const acSystems = window.DometicSizingV2.acSystems;\n\n      const furnaceSystems = window.DometicSizingV2.furnaceSystems;\n\n`,
+      "equipment arrays"
+    );
+
+    replaceRange(
+      "      function humidityGrains(",
+      "      function calculateAll() {",
+      `      function calculateScenario(inputs, variant = \"expected\") {\n        return window.DometicSizingV2.calculateScenario(inputs, variant);\n      }\n\n`,
+      "load engine"
+    );
+
+    replaceRange(
+      "      function acFitText(",
+      "      function renderCapacityCards(",
+      `      function acFitText(system, results) {\n        if (system.capacity < results.low.cooling) return \"Below modeled low load\";\n        if (system.capacity < results.expected.cooling) return \"Below expected load\";\n        if (system.capacity < results.high.cooling) return \"Meets expected · high case may exceed\";\n        return system.unitCount > 1 ? \"Multi-unit · covers modeled high case\" : \"Covers modeled high case\";\n      }\n\n      function furnaceFitText(system, results) {\n        if (system.output < results.low.heating) return \"Below modeled low load\";\n        if (system.output < results.expected.heating) return \"Below expected load\";\n        if (system.output < results.high.heating) return \"Meets expected · high case may exceed\";\n        return \"Covers modeled high case\";\n      }\n\n`,
+      "fit labels"
+    );
+
+    replaceOnce(
+      '        els.coolingMatch.textContent = acRec ? fmt(acRec.capacity) : ">30,000";',
+      '        els.coolingMatch.textContent = acRec ? fmt(acRec.capacity) : `>${fmt(acSystems.at(-1).capacity)}`;',
+      "cooling ceiling display"
+    );
+
+    replaceOnce(
+      '        if (!acRec && state.mode !== "furnace") alerts.push("Cooling exceeds the common two-unit comparison range; get a professional multi-zone assessment.");',
+      '        if (!acRec && state.mode !== "furnace") alerts.push(`Cooling exceeds this preview’s ${fmt(acSystems.at(-1).capacity)} BTU/hr three-unit planning ceiling; get a professional multi-zone assessment.`);\n        if (acRec?.unitCount > 1 && state.mode !== "furnace") alerts.push(`${acRec.unitCount}-unit FreshJet 5 capacity plan: verify roof openings, electrical service, ducts and control zoning before selecting equipment.`);',
+      "A/C alerts"
+    );
+
+    replaceOnce(
+      '        if (results.inputs.altitude >= 5000) alerts.push("High altitude selected: verify manufacturer-specific furnace derating and combustion requirements.");',
+      '        if (results.inputs.altitude >= 5000) alerts.push("Elevation is included in the air-property load math. Separately verify model-specific furnace combustion and installation requirements for the actual elevation.");\n        if (results.inputs.coolOutdoor >= 100 && state.mode !== "furnace") alerts.push("Extreme outdoor temperature selected: the load estimate is adjusted, but FreshJet nameplate capacity is nominal. Verify product performance data at the actual design condition.");',
+      "design-condition alerts"
+    );
+
+    replaceOnce(
+      `      $("#peopleMinus").addEventListener("click", () => {\n        state.people = clamp(state.people - 1, 0, 12);\n        els.peopleOutput.value = state.people;\n        state.selectedAc = null;\n        invalidateAdvanced();\n        render();\n      });`,
+      `      $("#peopleMinus").addEventListener("click", () => {\n        state.people = clamp(state.people - 1, 0, 12);\n        els.peopleOutput.value = state.people;\n        state.selectedAc = null;\n        render();\n      });`,
+      "traveler decrement state"
+    );
+
+    replaceOnce(
+      `      $("#peoplePlus").addEventListener("click", () => {\n        state.people = clamp(state.people + 1, 0, 12);\n        els.peopleOutput.value = state.people;\n        state.selectedAc = null;\n        invalidateAdvanced();\n        render();\n      });`,
+      `      $("#peoplePlus").addEventListener("click", () => {\n        state.people = clamp(state.people + 1, 0, 12);\n        els.peopleOutput.value = state.people;\n        state.selectedAc = null;\n        render();\n      });`,
+      "traveler increment state"
+    );
+
+    const copyPatches = [
+      ["Input label and published output", "Current Essential heating capacity"],
+      ["25K input · 19K published output", "18K BTU/hr · Furnace Essential"],
+      ["compares the expected continuous cooling load with 11K, 13.5K and 15K BTU/hr classes, plus common two-unit totals.", "compares expected continuous cooling load with current FreshJet 5 ~11K HE, 13.5K and 15K classes, plus unique two- and three-unit capacity plans."],
+      ["compares required heat with published delivered output—not only the larger input number printed in the model class.", "compares required heat with the current Furnace Essential heating-capacity classes: 12K, 18K, 25K, 30K, 35K and 40K BTU/hr. Legacy DF input/output tables are not used for Essential recommendations."],
+      ["Heating is compared with published furnace output, which can be lower than the input number in a model name.", "Heating is compared with the current Furnace Essential heating-capacity class. Legacy DF input/output data is kept separate from the new Essential lineup."],
+      ["Official Dometic DF-series furnace input/output table", "Dometic Furnace Essential lineup"],
+      ["https://media.dometic.com/externalassets/dometic-medium-furnace_9600000823_81453.pdf", "https://www.dometic.com/en-us/lp/rv-furnaces"]
+    ];
+    for (const [from, to] of copyPatches) {
+      if (html.includes(from)) html = html.split(from).join(to);
+    }
+
+    replaceOnce(
+      "<span>SIZING SUPPORT</span></div>",
+      "<span>2026 LOGIC PREVIEW · SIZING SUPPORT</span></div>",
+      "preview banner"
+    );
+
+    document.open();
+    document.write(html);
+    document.close();
+  } catch (error) {
+    status.innerHTML = `<h1>Preview patch failed</h1><p class="error"></p><p>The production calculator has not been changed.</p>`;
+    status.querySelector(".error").textContent = error?.stack || String(error);
+  }
+})();
+</script>
+</body>
+</html>
