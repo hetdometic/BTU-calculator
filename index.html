@@ -2264,7 +2264,7 @@
 
       function distributionLossAdder(subtotal, lossFraction) {
         const loss = clamp(lossFraction, 0, 0.30);
-        return loss > 0 ? subtotal * loss / (1 - loss) : 0;
+        return subtotal * loss;
       }
 
       function calculateScenario(inputs, variant = "expected") {
