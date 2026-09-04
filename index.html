@@ -2507,7 +2507,6 @@
 
         const alerts = [];
         if (!acRec && state.mode !== "furnace") alerts.push(`Cooling exceeds the ${fmt(acSystems.at(-1).capacity)} BTU/hr three-unit planning range; get a professional multi-zone assessment.`);
-        if (acRec?.unitCount > 1 && state.mode !== "furnace") alerts.push(`${acRec.unitCount}-unit FreshJet 5 capacity plan: verify roof openings, electrical service or generator capacity, ducts/air distribution, and controls/zoning.`);
         if (results.inputs.coolOutdoor >= 100 && state.mode !== "furnace") alerts.push("Extreme cooling design temperature selected: verify actual FreshJet performance at the design condition; nameplate BTU/hr is nominal.");
         if (!furnaceRec && state.mode !== "ac") alerts.push("Heating exceeds the compared published furnace outputs; get a professional heating and combustion-safety assessment.");
         if (results.inputs.altitude >= 5000) alerts.push("Elevation is included in outside-air load calculations; separately verify model-specific furnace combustion, installation, and altitude requirements.");
