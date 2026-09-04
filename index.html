@@ -1840,7 +1840,7 @@
             <div class="advanced-field"><label for="advCoolDuct">Cooling duct loss</label><label class="unit-input"><input id="advCoolDuct" type="number" min="0" max="25" step="1"><span>%</span></label></div>
             <div class="advanced-field"><label for="advHeatDuct">Heating duct loss</label><label class="unit-input"><input id="advHeatDuct" type="number" min="0" max="25" step="1"><span>%</span></label></div>
             <div class="advanced-field"><label for="advInternalWatts">Appliances &amp; lights</label><label class="unit-input"><input id="advInternalWatts" type="number" min="0" max="2500" step="10"><span>watts</span></label></div>
-            <div class="advanced-field"><label for="advAltitude">Altitude <small>Advisory only; no automatic derate</small></label><label class="unit-input"><input id="advAltitude" type="number" min="0" max="14000" step="100"><span>ft</span></label></div>
+            <div class="advanced-field"><label for="advAltitude">Altitude <small>Adjusts air properties; no automatic furnace derate</small></label><label class="unit-input"><input id="advAltitude" type="number" min="0" max="14000" step="100"><span>ft</span></label></div>
           </div>
         </div>
 
@@ -1892,7 +1892,7 @@
             </table>
             <ul class="source-links">
               <li><a href="https://www.dometic.com/en-us/category/rv-and-van/rv-air-conditioners/rooftop-rv-air-conditioners" target="_blank" rel="noreferrer">Official Dometic US rooftop A/C lineup</a></li>
-              <li><a href="https://media.dometic.com/externalassets/dometic-medium-furnace_9600000823_81453.pdf" target="_blank" rel="noreferrer">Official Dometic DF-series furnace input/output table</a></li>
+              <li><a href="https://media.dometic.com/externalassets/dometic-medium-furnace_9610007793_81453.pdf" target="_blank" rel="noreferrer">Official Dometic DF-series furnace input/output table</a></li>
             </ul>
           </div>
         </details>
@@ -1952,7 +1952,7 @@
           <li><a href="https://www.acca.org/standards/technical-manuals/manual-j" target="_blank" rel="noopener noreferrer">ACCA Manual J residential load-calculation standard</a></li>
           <li><a href="https://nfrc.org/residential/" target="_blank" rel="noopener noreferrer">NFRC window ratings: U-factor, solar heat gain and air leakage</a></li>
           <li><a href="https://www.dometic.com/en-us/lp/rv-ac" target="_blank" rel="noopener noreferrer">Dometic RV A/C capacities</a></li>
-          <li><a href="https://media.dometic.com/externalassets/dometic-medium-furnace_9600000823_81453.pdf" target="_blank" rel="noopener noreferrer">Dometic DF-series furnace input/output table</a></li>
+          <li><a href="https://media.dometic.com/externalassets/dometic-medium-furnace_9610007793_81453.pdf" target="_blank" rel="noopener noreferrer">Dometic DF-series furnace input/output table</a></li>
         </ul>
       </div>
 
@@ -1967,7 +1967,7 @@
         <button class="modal-close" type="button" data-close-modal aria-label="Close sizing guide"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 14 14M19 5 5 19"/></svg></button>
       </div>
       <ul>
-        <li><strong>A/C:</strong> compares the expected continuous cooling load with 11K, 13.5K and 15K BTU/hr classes, plus common two-unit totals.</li>
+        <li><strong>A/C:</strong> compares the expected continuous cooling load with current FreshJet 5 ≈11K, 13.5K and 15K classes, including unique one-, two- and three-unit capacity plans.</li>
         <li><strong>Furnace:</strong> compares required heat with published delivered output—not only the larger input number printed in the model class.</li>
         <li><strong>Highlighted size:</strong> is the closest typical-day match. Neighboring choices show likely coverage or oversizing cautions.</li>
         <li><strong>Advanced:</strong> lets you apply known insulation, window, leakage, weather and duct information. An applied-status label and Clear action remain visible beside the Advanced button.</li>
@@ -2009,14 +2009,45 @@
         premium: { label: "Low-E / premium", u: 0.42, shgc: 0.38 }
       };
 
-      const acSystems = [
-        { id: "ac11", capacity: 11000, label: "11K BTU/hr", detail: "1 × high-efficiency class", staged: false },
-        { id: "ac135", capacity: 13500, label: "13.5K BTU/hr", detail: "1 × 13.5K", staged: false },
-        { id: "ac15", capacity: 15000, label: "15K BTU/hr", detail: "1 × 15K", staged: false },
-        { id: "ac27", capacity: 27000, label: "27K BTU/hr", detail: "2 × 13.5K", staged: true },
-        { id: "ac285", capacity: 28500, label: "28.5K BTU/hr", detail: "13.5K + 15K", staged: true },
-        { id: "ac30", capacity: 30000, label: "30K BTU/hr", detail: "2 × 15K", staged: true }
+      const acBaseUnits = [
+        { id: "fj11", capacity: 11000, name: "FreshJet 5 HE ≈11K", approximate: true },
+        { id: "fj135", capacity: 13500, name: "FreshJet 5 13.5K", approximate: false },
+        { id: "fj15", capacity: 15000, name: "FreshJet 5 15K", approximate: false }
       ];
+
+      function buildAcSystems() {
+        const plans = [];
+        const build = (unitCount, startIndex = 0, selected = []) => {
+          if (selected.length === unitCount) {
+            const capacity = selected.reduce((sum, unit) => sum + unit.capacity, 0);
+            const approximate = selected.some((unit) => unit.approximate);
+            plans.push({
+              id: `ac-${selected.map((unit) => unit.id).join("-")}`,
+              capacity,
+              label: `${Number.isInteger(capacity / 1000) ? capacity / 1000 : (capacity / 1000).toFixed(1)}K BTU/hr`,
+              detail: selected.map((unit) => unit.name).join(" + "),
+              staged: unitCount > 1,
+              unitCount,
+              approximate
+            });
+            return;
+          }
+          for (let index = startIndex; index < acBaseUnits.length; index += 1) {
+            selected.push(acBaseUnits[index]);
+            build(unitCount, index, selected);
+            selected.pop();
+          }
+        };
+        for (let unitCount = 1; unitCount <= 3; unitCount += 1) build(unitCount);
+        plans.sort((a, b) => a.capacity - b.capacity || a.unitCount - b.unitCount);
+        const unique = new Map();
+        plans.forEach((plan) => {
+          if (!unique.has(plan.capacity)) unique.set(plan.capacity, plan);
+        });
+        return [...unique.values()];
+      }
+
+      const acSystems = buildAcSystems();
 
       const furnaceSystems = [
         { id: "f12", input: 12000, output: 9120, label: "12K input", detail: "9.1K published output" },
@@ -2212,12 +2243,28 @@
         };
       }
 
-      function humidityGrains(tempF, rhPercent) {
+      function atmosphericPressureKpa(altitudeFt) {
+        const altitude = clamp(Number(altitudeFt) || 0, 0, 14000);
+        return 101.325 * Math.pow(1 - altitude * 6.8754e-6, 5.2559);
+      }
+
+      function airDensityRatio(tempF, altitudeFt) {
+        const absoluteTempR = Math.max(350, Number(tempF) + 459.67);
+        return (atmosphericPressureKpa(altitudeFt) / 101.325) * (529.67 / absoluteTempR);
+      }
+
+      function humidityGrains(tempF, rhPercent, altitudeFt = 0) {
         const tempC = (tempF - 32) * 5 / 9;
         const saturationKpa = 0.61078 * Math.exp((17.2694 * tempC) / (tempC + 237.3));
         const vaporKpa = clamp(rhPercent / 100, 0, 1) * saturationKpa;
-        const humidityRatio = 0.62198 * vaporKpa / Math.max(1, 101.325 - vaporKpa);
+        const pressureKpa = atmosphericPressureKpa(altitudeFt);
+        const humidityRatio = 0.62198 * vaporKpa / Math.max(0.1, pressureKpa - vaporKpa);
         return humidityRatio * 7000;
+      }
+
+      function distributionLossAdder(subtotal, lossFraction) {
+        const loss = clamp(lossFraction, 0, 0.30);
+        return subtotal * loss;
       }
 
       function calculateScenario(inputs, variant = "expected") {
@@ -2228,38 +2275,42 @@
         }[variant];
 
         const areaFactor = 1 + 0.05 * inputs.slides;
-        const volumeFactor = 1 + 0.06 * inputs.slides;
         const floorArea = inputs.length * inputs.width * areaFactor;
         const roofArea = floorArea;
         const wallGross = 2 * (inputs.length + inputs.width) * inputs.height * areaFactor;
-        const doorArea = Math.min(18 * areaFactor, wallGross * 0.08);
+        const doorArea = Math.min(18, wallGross * 0.08);
         const windowArea = clamp(inputs.windowArea, 0, Math.max(0, wallGross - doorArea));
         const wallArea = Math.max(0, wallGross - windowArea - doorArea);
-        const volume = inputs.length * inputs.width * inputs.height * volumeFactor;
+        const volume = floorArea * inputs.height;
         const infiltrationCfm = inputs.ach * scenario.ach * volume / 60;
         const outsideCfm = infiltrationCfm + inputs.ventilationCfm;
         const coolDelta = Math.max(inputs.coolOutdoor - inputs.coolIndoor, 0);
         const heatDelta = Math.max(inputs.heatIndoor - inputs.heatOutdoor, 0);
         const coolDuct = clamp(inputs.coolDuctLoss + scenario.duct, 0, 0.30);
         const heatDuct = clamp(inputs.heatDuctLoss + scenario.duct, 0, 0.30);
+        const coolDensity = airDensityRatio(inputs.coolOutdoor, inputs.altitude);
+        const heatDensity = airDensityRatio(inputs.heatOutdoor, inputs.altitude);
 
         const cooling = {
           walls: wallArea / (inputs.wallR * scenario.r) * Math.max(coolDelta + inputs.sun.wall * scenario.solar, 0),
           roof: roofArea / (inputs.roofR * scenario.r) * Math.max(coolDelta + inputs.sun.roof * scenario.solar, 0),
-          floor: floorArea / (inputs.floorR * scenario.r) * Math.max(coolDelta - 5, 0),
+          floor: floorArea / (inputs.floorR * scenario.r) * coolDelta,
           door: doorArea / (inputs.doorR * scenario.r) * coolDelta,
           windowConduction: windowArea * inputs.windowU * scenario.u * coolDelta,
           windowSolar: windowArea * inputs.shgc * inputs.sun.window * scenario.solar,
-          outsideAirSensible: 1.08 * outsideCfm * coolDelta,
+          outsideAirSensible: 1.08 * coolDensity * outsideCfm * coolDelta,
           peopleSensible: 230 * inputs.people * scenario.gains,
           internalSensible: inputs.internalWatts * 3.412 * inputs.internalDuty * scenario.gains
         };
 
-        const grainDifference = Math.max(humidityGrains(inputs.coolOutdoor, inputs.outdoorRh) - humidityGrains(inputs.coolIndoor, inputs.indoorRh), 0);
-        cooling.outsideAirLatent = 0.68 * outsideCfm * grainDifference;
+        const grainDifference = Math.max(
+          humidityGrains(inputs.coolOutdoor, inputs.outdoorRh, inputs.altitude) - humidityGrains(inputs.coolIndoor, inputs.indoorRh, inputs.altitude),
+          0
+        );
+        cooling.outsideAirLatent = 0.68 * coolDensity * outsideCfm * grainDifference;
         cooling.peopleLatent = 200 * inputs.people * scenario.gains;
         const coolingSubtotal = Object.values(cooling).reduce((sum, value) => sum + value, 0);
-        cooling.duct = coolingSubtotal * coolDuct;
+        cooling.duct = distributionLossAdder(coolingSubtotal, coolDuct);
         const coolingTotal = coolingSubtotal + cooling.duct;
 
         const heating = {
@@ -2268,10 +2319,10 @@
           floor: floorArea / (inputs.floorR * scenario.r) * heatDelta,
           door: doorArea / (inputs.doorR * scenario.r) * heatDelta,
           windows: windowArea * inputs.windowU * scenario.u * heatDelta,
-          outsideAir: 1.08 * outsideCfm * heatDelta
+          outsideAir: 1.08 * heatDensity * outsideCfm * heatDelta
         };
         const heatingSubtotal = Object.values(heating).reduce((sum, value) => sum + value, 0);
-        heating.duct = heatingSubtotal * heatDuct;
+        heating.duct = distributionLossAdder(heatingSubtotal, heatDuct);
         const heatingTotal = heatingSubtotal + heating.duct;
 
         return {
@@ -2279,21 +2330,23 @@
           heatingTotal,
           cooling,
           heating,
-          geometry: { floorArea, roofArea, wallArea, windowArea, doorArea, volume, infiltrationCfm }
+          geometry: { floorArea, roofArea, wallArea, windowArea, doorArea, volume, infiltrationCfm },
+          air: { coolDensity, heatDensity, pressureKpa: atmosphericPressureKpa(inputs.altitude) }
         };
       }
 
       function calculateAll() {
         const inputs = currentInputs();
-        const low = calculateScenario(inputs, "low");
-        const expected = calculateScenario(inputs, "expected");
-        const high = calculateScenario(inputs, "high");
+        const lowRaw = calculateScenario(inputs, "low");
+        const expectedRaw = calculateScenario(inputs, "expected");
+        const highRaw = calculateScenario(inputs, "high");
         return {
           inputs,
-          low: { cooling: round100(low.coolingTotal), heating: round100(low.heatingTotal) },
-          expected: { cooling: round100(expected.coolingTotal), heating: round100(expected.heatingTotal) },
-          high: { cooling: round100(high.coolingTotal), heating: round100(high.heatingTotal) },
-          breakdown: expected
+          low: { cooling: round100(lowRaw.coolingTotal), heating: round100(lowRaw.heatingTotal) },
+          expected: { cooling: round100(expectedRaw.coolingTotal), heating: round100(expectedRaw.heatingTotal) },
+          high: { cooling: round100(highRaw.coolingTotal), heating: round100(highRaw.heatingTotal) },
+          raw: { low: lowRaw, expected: expectedRaw, high: highRaw },
+          breakdown: expectedRaw
         };
       }
 
@@ -2322,18 +2375,24 @@
       }
 
       function acFitText(system, results) {
-        if (system.capacity < results.low.cooling) return "Likely undersized";
-        if (system.capacity < results.expected.cooling) return "Fair-weather coverage";
-        if (system.capacity < results.high.cooling) return "Typical-day fit";
-        if (!system.staged && system.capacity > results.expected.cooling * 1.4) return "Oversizing caution";
+        const low = results.raw.low.coolingTotal;
+        const expected = results.raw.expected.coolingTotal;
+        const high = results.raw.high.coolingTotal;
+        if (system.capacity < low) return "Likely undersized";
+        if (system.capacity < expected) return "Fair-weather coverage";
+        if (system.capacity < high) return "Typical-day fit";
+        if (!system.staged && system.capacity > expected * 1.4) return "Oversizing caution";
         return system.staged ? "Staged peak coverage" : "Conservative coverage";
       }
 
       function furnaceFitText(system, results) {
-        if (system.output < results.low.heating) return "Likely undersized";
-        if (system.output < results.expected.heating) return "Mild-weather coverage";
-        if (system.output < results.high.heating) return "Typical-day fit";
-        if (system.output > results.expected.heating * 1.4) return "Oversizing caution";
+        const low = results.raw.low.heatingTotal;
+        const expected = results.raw.expected.heatingTotal;
+        const high = results.raw.high.heatingTotal;
+        if (system.output < low) return "Likely undersized";
+        if (system.output < expected) return "Mild-weather coverage";
+        if (system.output < high) return "Typical-day fit";
+        if (system.output > expected * 1.4) return "Oversizing caution";
         return "Conservative coverage";
       }
 
@@ -2430,10 +2489,10 @@
       function render() {
         const results = calculateAll();
         state.lastResults = results;
-        const acRec = recommendAc(results.expected.cooling);
-        const furnaceRec = recommendFurnace(results.expected.heating);
+        const acRec = recommendAc(results.raw.expected.coolingTotal);
+        const furnaceRec = recommendFurnace(results.raw.expected.heatingTotal);
 
-        els.coolingMatch.textContent = acRec ? fmt(acRec.capacity) : ">30,000";
+        els.coolingMatch.textContent = acRec ? fmt(acRec.capacity) : `>${fmt(acSystems.at(-1).capacity)}`;
         els.coolingLow.textContent = fmt(results.low.cooling);
         els.coolingHigh.textContent = fmt(results.high.cooling);
         els.coolingExpected.textContent = fmt(results.expected.cooling);
@@ -2447,9 +2506,10 @@
         $("#advancedShortcut").setAttribute("aria-label", state.advancedApplied ? "Edit advanced settings; advanced settings are applied" : "Open advanced settings");
 
         const alerts = [];
-        if (!acRec && state.mode !== "furnace") alerts.push("Cooling exceeds the common two-unit comparison range; get a professional multi-zone assessment.");
+        if (!acRec && state.mode !== "furnace") alerts.push(`Cooling exceeds the ${fmt(acSystems.at(-1).capacity)} BTU/hr three-unit planning range; get a professional multi-zone assessment.`);
+        if (results.inputs.coolOutdoor >= 100 && state.mode !== "furnace") alerts.push("Extreme cooling design temperature selected: verify actual FreshJet performance at the design condition; nameplate BTU/hr is nominal.");
         if (!furnaceRec && state.mode !== "ac") alerts.push("Heating exceeds the compared published furnace outputs; get a professional heating and combustion-safety assessment.");
-        if (results.inputs.altitude >= 5000) alerts.push("High altitude selected: verify manufacturer-specific furnace derating and combustion requirements.");
+        if (results.inputs.altitude >= 5000) alerts.push("Elevation is included in outside-air load calculations; separately verify model-specific furnace combustion, installation, and altitude requirements.");
         els.capacityAlert.hidden = alerts.length === 0;
         els.capacityAlert.textContent = alerts.join(" ");
 
@@ -2553,7 +2613,6 @@
         setRangeProgress(els.lengthRange);
         state.selectedAc = null;
         state.selectedFurnace = null;
-        invalidateAdvanced();
         render();
       };
 
@@ -2620,7 +2679,6 @@
         state.people = clamp(state.people - 1, 0, 12);
         els.peopleOutput.value = state.people;
         state.selectedAc = null;
-        invalidateAdvanced();
         render();
       });
 
@@ -2628,7 +2686,6 @@
         state.people = clamp(state.people + 1, 0, 12);
         els.peopleOutput.value = state.people;
         state.selectedAc = null;
-        invalidateAdvanced();
         render();
       });
 
@@ -2745,7 +2802,9 @@
           };
         },
         getState: () => ({ ...state }),
-        getResults: () => state.lastResults
+        getResults: () => state.lastResults,
+        getAcSystems: () => acSystems.map((system) => ({ ...system })),
+        getFurnaceSystems: () => furnaceSystems.map((system) => ({ ...system }))
       };
     })();
   </script>
