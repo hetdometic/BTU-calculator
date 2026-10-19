@@ -1581,6 +1581,44 @@
       .technical-details summary { grid-template-columns: 30px minmax(0, 1fr) 20px; padding: 13px; }
     }
 
+
+    .slide-section { margin-top: 18px; border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
+    .slide-heading, .slide-card-head, .slide-buttons, .slide-actions { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .slide-heading { align-items: flex-start; flex-wrap: wrap; }
+    .slide-heading h2 { margin: 0; font-size: 14px; }
+    .slide-heading p, .slide-help { margin: 6px 0 12px; color: var(--muted); font-size: 12px; }
+    .slide-heading p { margin-bottom: 0; }
+    .slide-buttons { flex-shrink: 0; }
+    .slide-add, .slide-apply { padding: 10px 14px; border-radius: var(--radius); background: var(--ink); color: #fff; font-size: 12px; font-weight: 800; cursor: pointer; }
+    .slide-add:disabled { opacity: .45; cursor: default; }
+    .slide-apply { background: var(--red); }
+    #slideEditor { padding-top: 14px; }
+    .slide-card { margin-bottom: 14px; padding: 12px; border: 1px solid var(--line); border-radius: var(--radius); min-width: 0; }
+    .slide-card-head { flex-wrap: wrap; margin-bottom: 10px; font-size: 13px; }
+    .slide-card-head label { display: flex; align-items: center; gap: 6px; }
+    .slide-card-head input { accent-color: var(--red); }
+    .slide-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .slide-field { display: block; min-width: 0; font-size: 12px; }
+    .slide-field > span:first-child { display: block; margin-bottom: 4px; }
+    .slide-field small { display: block; font-size: 10px; color: var(--muted); }
+    .slide-field input { min-width: 0; font-size: 13px; }
+    .slide-field select { width: 100%; min-width: 0; height: 40px; padding: 6px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; font-size: 12px; }
+    .slide-thermal { margin-top: 12px; font-size: 12px; }
+    .slide-thermal summary, .slide-impact summary { cursor: pointer; font-weight: 700; padding: 8px 0; }
+    .slide-actions { justify-content: flex-start; margin-top: 14px; }
+    .slide-impact { border-top: 1px solid var(--line); padding-top: 16px; margin-top: 16px; font-size: 12px; }
+    .slide-impact h3 { font-size: 14px; margin: 0 0 6px; }
+    .slide-impact p { margin: 6px 0; }
+    .slide-load-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 6px 0; }
+    .slide-load-row strong { white-space: nowrap; }
+    .slide-impact .load-table { width: 100%; margin: 8px 0; font-size: 11px; }
+    .slide-impact .load-table th, .slide-impact .load-table td { padding: 6px 3px; }
+    .slide-impact .load-table th:not(:first-child), .slide-impact .load-table td:not(:first-child) { text-align: right; white-space: nowrap; }
+    .slide-impact ul { padding-left: 18px; color: var(--quiet); }
+    .slide-impact li { margin-top: 6px; }
+    .slide-detail { padding: 12px 0; border-top: 1px solid var(--line); }
+    @media (max-width: 400px) { .slide-fields { grid-template-columns: 1fr; } .slide-heading { flex-direction: column; } }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         scroll-behavior: auto !important;
@@ -1702,7 +1740,7 @@
           </div>
 
           <div class="question-row">
-            <div class="question-label">6. Number of windows</div>
+            <div class="question-label">6. Main-body windows <small>Exclude windows in slide-outs</small></div>
             <div class="question-control">
               <div class="stepper">
                 <button id="windowsMinus" type="button" aria-label="Remove one window">−</button>
@@ -1724,6 +1762,20 @@
           </div>
         </div>
 
+        <section class="slide-section" aria-labelledby="slideTitle">
+          <div class="slide-heading">
+            <div><h2 id="slideTitle">8. Slide-outs</h2><p id="slideAppliedSummary">No slide-outs added. Enter measurements for each slide.</p></div>
+            <div class="slide-buttons"><button class="text-button" id="editSlides" type="button" hidden>Edit</button><button class="slide-add" id="addSlide" type="button">+ Add slide-out</button></div>
+          </div>
+          <div id="slideEditor" hidden>
+            <p class="slide-help">Measure each fully extended, rectangular slide. Length runs along the RV; depth is the extra extension beyond the main body. RV width above excludes extensions. All deployed slides open to the conditioned cabin.</p>
+            <div id="slideCards"></div>
+            <div class="form-error" id="slideError" role="alert" hidden></div>
+            <div class="slide-actions"><button class="slide-apply" id="applySlides" type="button">Apply slide-outs</button><button class="text-button" id="cancelSlides" type="button">Cancel</button></div>
+            <p class="slide-help">Edits affect results after Apply. Insulation, height and glazing fields left blank inherit main-RV assumptions. Check manufacturer data for the slide itself.</p>
+          </div>
+        </section>
+
         <div class="basic-toolbar">
           <div class="advanced-applied-status" id="advancedAppliedStatus" hidden>
             <svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg>
@@ -1737,6 +1789,8 @@
 
       <aside class="result-panel" id="results" aria-labelledby="resultTitle" aria-live="polite" data-testid="results-panel">
         <h2 id="resultTitle">Your comfort match</h2>
+        <div id="geometryError" class="form-error" role="alert" hidden></div>
+        <div id="resultContent">
 
         <div class="result-block" id="coolingResult">
           <div class="result-main">
@@ -1771,12 +1825,19 @@
           <div class="match-line"><strong>Furnace match</strong><span id="furnaceMatch">25K input · 19K published output</span></div>
         </div>
 
+        <section class="slide-impact" id="slideResult" aria-labelledby="slideResultTitle" hidden>
+          <h3 id="slideResultTitle">Slide-out impact</h3>
+          <p id="slideGeometrySummary"></p>
+          <div id="slideLoadSummary"></div>
+          <details><summary>Review each slide &amp; assumptions</summary><div id="slideResultDetails"></div></details>
+        </section>
         <div class="confidence">
           <svg class="icon" aria-hidden="true"><circle cx="12" cy="12" r="9"/><use href="#icon-check"/></svg>
           <div><strong id="confidenceLabel">Good estimate</strong></div>
         </div>
         <div class="alert-box" id="capacityAlert" hidden></div>
         <div class="result-advisory"><svg class="icon" aria-hidden="true"><use href="#icon-info"/></svg><span>Planning estimate—not a substitute for a professional load calculation. Installation compatibility and safety still need expert verification.</span></div>
+        </div>
       </aside>
     </section>
 
@@ -1821,11 +1882,10 @@
             <h3>Dimensions &amp; construction</h3>
             <div class="advanced-field"><label for="advWidth">RV width</label><label class="unit-input"><input id="advWidth" type="number" min="5.5" max="10" step="0.1"><span>ft</span></label></div>
             <div class="advanced-field"><label for="advHeight">Interior height</label><label class="unit-input"><input id="advHeight" type="number" min="5" max="10" step="0.1"><span>ft</span></label></div>
-            <div class="advanced-field"><label for="advSlides">Slide-outs <small>Prototype area factor</small></label><label class="unit-input"><input id="advSlides" type="number" min="0" max="5" step="1"><span>qty</span></label></div>
-            <div class="advanced-field"><label for="advWallR">Wall insulation</label><label class="unit-input"><input id="advWallR" type="number" min="1" max="30" step="0.5"><span>R</span></label></div>
-            <div class="advanced-field"><label for="advRoofR">Roof insulation</label><label class="unit-input"><input id="advRoofR" type="number" min="1" max="30" step="0.5"><span>R</span></label></div>
-            <div class="advanced-field"><label for="advFloorR">Floor insulation</label><label class="unit-input"><input id="advFloorR" type="number" min="1" max="30" step="0.5"><span>R</span></label></div>
-            <div class="advanced-field"><label for="advWindowArea">Window area</label><label class="unit-input"><input id="advWindowArea" type="number" min="0" max="400" step="1"><span>sq ft</span></label></div>
+            <div class="advanced-field"><label for="advWallR">Wall effective insulation</label><label class="unit-input"><input id="advWallR" type="number" min="1" max="30" step="0.5"><span>R</span></label></div>
+            <div class="advanced-field"><label for="advRoofR">Roof effective insulation</label><label class="unit-input"><input id="advRoofR" type="number" min="1" max="30" step="0.5"><span>R</span></label></div>
+            <div class="advanced-field"><label for="advFloorR">Floor effective insulation</label><label class="unit-input"><input id="advFloorR" type="number" min="1" max="30" step="0.5"><span>R</span></label></div>
+            <div class="advanced-field"><label for="advWindowArea">Main-body window area <small>Exclude slide-out glazing</small></label><label class="unit-input"><input id="advWindowArea" type="number" min="0" max="400" step="1"><span>sq ft</span></label></div>
             <div class="advanced-field"><label for="advWindowType">Window type</label><div class="select-wrap"><select id="advWindowType"><option value="single">Single pane</option><option value="double">Double pane</option><option value="premium">Low-E / premium</option></select></div></div>
           </div>
 
@@ -1886,11 +1946,16 @@
                 <div class="formula">Heating = envelope loss + outside-air loss + duct loss</div>
               </div>
             </div>
+            <h3>Slide geometry and load accounting</h3>
+            <p>For each deployed slide: floor = roof = underside = length × depth; added volume = length × depth × slide height; outer wall = length × height; both end walls = 2 × depth × height. Subtract the length × height attachment opening from the main wall once. Slide windows replace opaque slide wall area and are excluded from main-body windows. The result includes incremental conduction, mixed-sun gain, added-volume infiltration, entered extra seal CFM, latent cooling and the existing duct allowance.</p>
+            <p>Effective assembly R-values include framing and surface effects. A bridge multiplier above 1 is only for user-estimated nominal-R correction; the default is 1. No universal slide leakage coefficient or extra distribution penalty is assumed. Mixed-sun cooling, inherited construction, unmeasured seals, nonrectangular/retracted geometry and actual HVAC delivery remain validation gaps. This is a planning model using HVAC principles, not an RV-validated Manual J or full hourly heat-balance calculation.</p>
             <table class="load-table">
               <thead><tr><th>Current load component</th><th>BTU/hr</th></tr></thead>
               <tbody id="loadBreakdownBody"></tbody>
             </table>
             <ul class="source-links">
+              <li><a href="https://handbook.ashrae.org/Handbooks/F25/IP/F25_Ch17/F25_Ch17_ip.aspx" target="_blank" rel="noopener noreferrer">ASHRAE 2025 Fundamentals, Ch. 17: envelope, fenestration and load principles</a></li>
+              <li><a href="https://handbook.ashrae.org/Handbooks/F25/IP/F25_Ch16/F25_Ch16_ip.aspx" target="_blank" rel="noopener noreferrer">ASHRAE 2025 Fundamentals, Ch. 16: infiltration and outdoor air</a></li>
               <li><a href="https://www.dometic.com/en-us/category/rv-and-van/rv-air-conditioners/rooftop-rv-air-conditioners" target="_blank" rel="noreferrer">Official Dometic US rooftop A/C lineup</a></li>
               <li><a href="https://media.dometic.com/externalassets/dometic-medium-furnace_9610007793_81453.pdf" target="_blank" rel="noreferrer">Official Dometic DF-series furnace input/output table</a></li>
             </ul>
@@ -1912,7 +1977,7 @@
       <p>This is a steady-state RV heat-load model, not a square-footage multiplier. It estimates the heat entering during hot weather and leaving during cold weather, then compares the expected load with common equipment capacities.</p>
 
       <div class="how-flow">
-        <div class="how-step"><span class="how-step-number">Step 1</span><h3>Build the RV geometry</h3><p>RV type supplies starting dimensions, slide-out count and average window size. Your length, width, height and window count turn those defaults into roof, floor, wall, glass and interior-volume estimates.</p></div>
+        <div class="how-step"><span class="how-step-number">Step 1</span><h3>Build the RV geometry</h3><p>RV type supplies starting dimensions and average main-body window size. Each measured slide adds floor, volume, three walls, roof and underside. Its attachment opening is removed from the main wall; slide glazing replaces slide wall area.</p></div>
         <div class="how-step"><span class="how-step-number">Step 2</span><h3>Calculate cooling</h3><p>The model adds shell and window conduction, fixed mixed-sun gain, air leakage, ventilation, people, appliances, humidity and cooling-duct loss.</p></div>
         <div class="how-step"><span class="how-step-number">Step 3</span><h3>Calculate heating</h3><p>The model adds heat loss through the shell and windows, cold outside air and heating-duct loss. It does not rely on temporary heat from people, cooking or sun.</p></div>
         <div class="how-step"><span class="how-step-number">Step 4</span><h3>Suggest a capacity</h3><p>The expected cooling load is compared with A/C nameplate BTU/hr. Heating is compared with published furnace output, which can be lower than the input number in a model name.</p></div>
@@ -1921,9 +1986,10 @@
       <div class="how-section">
         <h3>What the basic answers control</h3>
         <ul>
-          <li><strong>RV type:</strong> starting dimensions, slide-outs and window area per window.</li>
+          <li><strong>RV type:</strong> starting dimensions and main-body window area per window. Slides are entered individually; none are assumed from RV type.</li>
           <li><strong>Length, width and height:</strong> conditioned floor area, shell area and air volume.</li>
           <li><strong>Construction:</strong> wall, roof and floor R-values; window performance; and air changes per hour (ACH).</li>
+          <li><strong>Slide-outs:</strong> measured geometry, separate glazing, effective assembly insulation and optional extra seal leakage. Main-RV ACH applies to the expanded volume. Retracted slides are excluded from deployed additions.</li>
           <li><strong>Windows and travelers:</strong> glass conduction/solar area plus sensible and moisture load from people.</li>
         </ul>
       </div>
@@ -1976,15 +2042,17 @@
     </div>
   </dialog>
 
+  <script src="calculator.js"></script>
+  <script src="slide-outs.js"></script>
   <script>
     (() => {
       "use strict";
 
       const vehicleDefaults = {
-        travel: { label: "travel trailer", length: 28, width: 8, height: 8, windows: 10, windowSqFt: 8, slides: 1 },
-        fifth: { label: "fifth wheel", length: 36, width: 8, height: 8.5, windows: 12, windowSqFt: 8.5, slides: 3 },
-        motorhome: { label: "motorhome", length: 35, width: 8.5, height: 8, windows: 12, windowSqFt: 12, slides: 2 },
-        van: { label: "camper van", length: 21, width: 7, height: 6.5, windows: 6, windowSqFt: 7.5, slides: 0 }
+        travel: { label: "travel trailer", length: 28, width: 8, height: 8, windows: 10, windowSqFt: 8 },
+        fifth: { label: "fifth wheel", length: 36, width: 8, height: 8.5, windows: 12, windowSqFt: 8.5 },
+        motorhome: { label: "motorhome", length: 35, width: 8.5, height: 8, windows: 12, windowSqFt: 12 },
+        van: { label: "camper van", length: 21, width: 7, height: 6.5, windows: 6, windowSqFt: 7.5 }
       };
 
       const constructionProfiles = {
@@ -2067,6 +2135,7 @@
         construction: "typical",
         windows: 10,
         people: 2,
+        slideOuts: [],
         advancedApplied: false,
         selectedAc: null,
         selectedFurnace: null,
@@ -2117,7 +2186,7 @@
         breakdownBody: $("#loadBreakdownBody")
       };
 
-      const advancedIds = ["advWidth", "advHeight", "advSlides", "advWallR", "advRoofR", "advFloorR", "advWindowArea", "advWindowType", "advDestination", "advAch", "advCoolTemp", "advOutdoorRh", "advHeatTemp", "advVentCfm", "advCoolDuct", "advHeatDuct", "advInternalWatts", "advAltitude"];
+      const advancedIds = ["advWidth", "advHeight", "advWallR", "advRoofR", "advFloorR", "advWindowArea", "advWindowType", "advDestination", "advAch", "advCoolTemp", "advOutdoorRh", "advHeatTemp", "advVentCfm", "advCoolDuct", "advHeatDuct", "advInternalWatts", "advAltitude"];
       let advancedOpenSnapshot = null;
 
       const readAdvancedValues = () => Object.fromEntries(advancedIds.map((id) => [id, document.getElementById(id).value]));
@@ -2153,7 +2222,6 @@
         const values = {
           advWidth: geometry.width,
           advHeight: geometry.height,
-          advSlides: geometry.slides,
           advWallR: construction.wallR,
           advRoofR: construction.roofR,
           advFloorR: construction.floorR,
@@ -2192,7 +2260,7 @@
           length: state.length,
           width: state.width,
           height: state.height,
-          slides: vehicle.slides,
+          slideOuts: structuredClone(state.slideOuts),
           wallR: construction.wallR,
           roofR: construction.roofR,
           floorR: construction.floorR,
@@ -2224,7 +2292,6 @@
           ...simple,
           width: Number($("#advWidth").value),
           height: Number($("#advHeight").value),
-          slides: Number($("#advSlides").value),
           wallR: Number($("#advWallR").value),
           roofR: Number($("#advRoofR").value),
           floorR: Number($("#advFloorR").value),
@@ -2243,97 +2310,7 @@
         };
       }
 
-      function atmosphericPressureKpa(altitudeFt) {
-        const altitude = clamp(Number(altitudeFt) || 0, 0, 14000);
-        return 101.325 * Math.pow(1 - altitude * 6.8754e-6, 5.2559);
-      }
-
-      function airDensityRatio(tempF, altitudeFt) {
-        const absoluteTempR = Math.max(350, Number(tempF) + 459.67);
-        return (atmosphericPressureKpa(altitudeFt) / 101.325) * (529.67 / absoluteTempR);
-      }
-
-      function humidityGrains(tempF, rhPercent, altitudeFt = 0) {
-        const tempC = (tempF - 32) * 5 / 9;
-        const saturationKpa = 0.61078 * Math.exp((17.2694 * tempC) / (tempC + 237.3));
-        const vaporKpa = clamp(rhPercent / 100, 0, 1) * saturationKpa;
-        const pressureKpa = atmosphericPressureKpa(altitudeFt);
-        const humidityRatio = 0.62198 * vaporKpa / Math.max(0.1, pressureKpa - vaporKpa);
-        return humidityRatio * 7000;
-      }
-
-      function distributionLossAdder(subtotal, lossFraction) {
-        const loss = clamp(lossFraction, 0, 0.30);
-        return subtotal * loss;
-      }
-
-      function calculateScenario(inputs, variant = "expected") {
-        const scenario = {
-          low: { r: 1.20, ach: 0.70, u: 0.90, solar: 0.85, gains: 0.85, duct: -0.03 },
-          expected: { r: 1, ach: 1, u: 1, solar: 1, gains: 1, duct: 0 },
-          high: { r: 0.75, ach: 1.50, u: 1.10, solar: 1.15, gains: 1.15, duct: 0.05 }
-        }[variant];
-
-        const areaFactor = 1 + 0.05 * inputs.slides;
-        const floorArea = inputs.length * inputs.width * areaFactor;
-        const roofArea = floorArea;
-        const wallGross = 2 * (inputs.length + inputs.width) * inputs.height * areaFactor;
-        const doorArea = Math.min(18, wallGross * 0.08);
-        const windowArea = clamp(inputs.windowArea, 0, Math.max(0, wallGross - doorArea));
-        const wallArea = Math.max(0, wallGross - windowArea - doorArea);
-        const volume = floorArea * inputs.height;
-        const infiltrationCfm = inputs.ach * scenario.ach * volume / 60;
-        const outsideCfm = infiltrationCfm + inputs.ventilationCfm;
-        const coolDelta = Math.max(inputs.coolOutdoor - inputs.coolIndoor, 0);
-        const heatDelta = Math.max(inputs.heatIndoor - inputs.heatOutdoor, 0);
-        const coolDuct = clamp(inputs.coolDuctLoss + scenario.duct, 0, 0.30);
-        const heatDuct = clamp(inputs.heatDuctLoss + scenario.duct, 0, 0.30);
-        const coolDensity = airDensityRatio(inputs.coolOutdoor, inputs.altitude);
-        const heatDensity = airDensityRatio(inputs.heatOutdoor, inputs.altitude);
-
-        const cooling = {
-          walls: wallArea / (inputs.wallR * scenario.r) * Math.max(coolDelta + inputs.sun.wall * scenario.solar, 0),
-          roof: roofArea / (inputs.roofR * scenario.r) * Math.max(coolDelta + inputs.sun.roof * scenario.solar, 0),
-          floor: floorArea / (inputs.floorR * scenario.r) * coolDelta,
-          door: doorArea / (inputs.doorR * scenario.r) * coolDelta,
-          windowConduction: windowArea * inputs.windowU * scenario.u * coolDelta,
-          windowSolar: windowArea * inputs.shgc * inputs.sun.window * scenario.solar,
-          outsideAirSensible: 1.08 * coolDensity * outsideCfm * coolDelta,
-          peopleSensible: 230 * inputs.people * scenario.gains,
-          internalSensible: inputs.internalWatts * 3.412 * inputs.internalDuty * scenario.gains
-        };
-
-        const grainDifference = Math.max(
-          humidityGrains(inputs.coolOutdoor, inputs.outdoorRh, inputs.altitude) - humidityGrains(inputs.coolIndoor, inputs.indoorRh, inputs.altitude),
-          0
-        );
-        cooling.outsideAirLatent = 0.68 * coolDensity * outsideCfm * grainDifference;
-        cooling.peopleLatent = 200 * inputs.people * scenario.gains;
-        const coolingSubtotal = Object.values(cooling).reduce((sum, value) => sum + value, 0);
-        cooling.duct = distributionLossAdder(coolingSubtotal, coolDuct);
-        const coolingTotal = coolingSubtotal + cooling.duct;
-
-        const heating = {
-          walls: wallArea / (inputs.wallR * scenario.r) * heatDelta,
-          roof: roofArea / (inputs.roofR * scenario.r) * heatDelta,
-          floor: floorArea / (inputs.floorR * scenario.r) * heatDelta,
-          door: doorArea / (inputs.doorR * scenario.r) * heatDelta,
-          windows: windowArea * inputs.windowU * scenario.u * heatDelta,
-          outsideAir: 1.08 * heatDensity * outsideCfm * heatDelta
-        };
-        const heatingSubtotal = Object.values(heating).reduce((sum, value) => sum + value, 0);
-        heating.duct = distributionLossAdder(heatingSubtotal, heatDuct);
-        const heatingTotal = heatingSubtotal + heating.duct;
-
-        return {
-          coolingTotal,
-          heatingTotal,
-          cooling,
-          heating,
-          geometry: { floorArea, roofArea, wallArea, windowArea, doorArea, volume, infiltrationCfm },
-          air: { coolDensity, heatDensity, pressureKpa: atmosphericPressureKpa(inputs.altitude) }
-        };
-      }
+      const { calculateScenario } = window.RVBTUEngine;
 
       function calculateAll() {
         const inputs = currentInputs();
@@ -2487,7 +2464,25 @@
       }
 
       function render() {
-        const results = calculateAll();
+        let results;
+        try {
+          results = calculateAll();
+        } catch (error) {
+          if (!(error instanceof RangeError)) throw error;
+          state.lastResults = null;
+          $("#geometryError").textContent = error.message;
+          $("#geometryError").hidden = false;
+          $("#resultContent").hidden = true;
+          $("#comparison").hidden = true;
+          $("#advancedPanel .drivers").hidden = true;
+          $("#method").hidden = true;
+          return;
+        }
+        $("#geometryError").hidden = true;
+        $("#resultContent").hidden = false;
+        $("#comparison").hidden = false;
+        $("#advancedPanel .drivers").hidden = false;
+        $("#method").hidden = false;
         state.lastResults = results;
         const acRec = recommendAc(results.raw.expected.coolingTotal);
         const furnaceRec = recommendFurnace(results.raw.expected.heatingTotal);
@@ -2505,6 +2500,7 @@
         els.advancedAppliedStatus.hidden = !state.advancedApplied;
         $("#advancedShortcut").setAttribute("aria-label", state.advancedApplied ? "Edit advanced settings; advanced settings are applied" : "Open advanced settings");
 
+        if (results.breakdown.slideResults.some((slide) => slide.deployed)) els.confidenceLabel.textContent = "Slide geometry / verify thermal assumptions";
         const alerts = [];
         if (!acRec && state.mode !== "furnace") alerts.push(`Cooling exceeds the ${fmt(acSystems.at(-1).capacity)} BTU/hr three-unit planning range; get a professional multi-zone assessment.`);
         if (results.inputs.coolOutdoor >= 100 && state.mode !== "furnace") alerts.push("Extreme cooling design temperature selected: verify actual FreshJet performance at the design condition; nameplate BTU/hr is nominal.");
@@ -2518,6 +2514,7 @@
         renderDriverChart(els.coolDriverBar, els.coolDriverLegend, groups.cool);
         renderDriverChart(els.heatDriverBar, els.heatDriverLegend, groups.heat);
         renderBreakdown(results.breakdown);
+        renderSlideResults(results);
         updateModeVisibility();
       }
 
@@ -2529,7 +2526,6 @@
         const rules = {
           advWidth: [5.5, 10, "RV width must be between 5.5 and 10 ft."],
           advHeight: [5, 10, "Interior height must be between 5 and 10 ft."],
-          advSlides: [0, 5, "Slide-outs must be between 0 and 5."],
           advWallR: [1, 30, "Wall insulation must be between R-1 and R-30."],
           advRoofR: [1, 30, "Roof insulation must be between R-1 and R-30."],
           advFloorR: [1, 30, "Floor insulation must be between R-1 and R-30."],
@@ -2547,14 +2543,20 @@
         for (const [id, [min, max, message]] of Object.entries(rules)) {
           const input = document.getElementById(id);
           const value = Number(input.value);
-          if (!Number.isFinite(value) || value < min || value > max) return { input, message };
+          if (input.value.trim() === "" || !Number.isFinite(value) || value < min || value > max) return { input, message };
         }
-        const vehicle = vehicleDefaults[state.vehicle];
-        const width = Number($("#advWidth").value);
-        const height = Number($("#advHeight").value);
-        const slides = Number($("#advSlides").value);
-        const wallGross = 2 * (state.length + width) * height * (1 + 0.05 * slides);
-        if (Number($("#advWindowArea").value) >= wallGross - 10) return { input: $("#advWindowArea"), message: "Window area must be smaller than the gross wall area." };
+        const values = readAdvancedValues();
+        const wasApplied = state.advancedApplied;
+        try {
+          state.advancedApplied = true;
+          window.RVBTUEngine.validateInputs(currentInputs());
+        } catch (error) {
+          const fieldIds = { width: "advWidth", height: "advHeight", windowArea: "advWindowArea" };
+          return { input: document.getElementById(fieldIds[error.field] || "advHeight"), message: error.message };
+        } finally {
+          state.advancedApplied = wasApplied;
+          writeAdvancedValues(values);
+        }
         return null;
       }
 
@@ -2788,6 +2790,9 @@
         if (event.target === dialog) dialog.close();
       }));
 
+      const slideUI = window.RVBTUSlides.create({ state, currentInputs, render, fmt });
+      function renderSlideResults(results) { slideUI.renderResults(results); }
+
       resetAdvancedFields();
       setDimensionProgress();
       render();
@@ -2801,7 +2806,8 @@
             high: calculateScenario(inputs, "high")
           };
         },
-        getState: () => ({ ...state }),
+        getState: () => structuredClone(state),
+        getInputs: () => structuredClone(currentInputs()),
         getResults: () => state.lastResults,
         getAcSystems: () => acSystems.map((system) => ({ ...system })),
         getFurnaceSystems: () => furnaceSystems.map((system) => ({ ...system }))

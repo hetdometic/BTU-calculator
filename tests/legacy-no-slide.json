@@ -1,0 +1,2708 @@
+{
+  "sourceCommit": "eaab2df70462e02f51f2b5f55bd445aaa034624a",
+  "cases": [
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 95,
+        "outdoorRh": 55,
+        "heatOutdoor": 20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 1000,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 28,
+        "width": 8,
+        "height": 8,
+        "windowArea": 80,
+        "wallR": 8,
+        "roofR": 10,
+        "floorR": 7,
+        "ach": 0.45,
+        "windowU": 0.65,
+        "shgc": 0.55
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 7724.889608582899,
+          "heatingTotal": 8000.758769873477,
+          "cooling": {
+            "walls": 1122.8020833333335,
+            "roof": 532,
+            "floor": 533.3333333333333,
+            "door": 120,
+            "windowConduction": 936.0000000000001,
+            "windowSolar": 2244,
+            "outsideAirSensible": 187.143054418179,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 443.2242513750582,
+            "peopleLatent": 340,
+            "duct": 367.8518861229952
+          },
+          "heating": {
+            "walls": 2390,
+            "roof": 896,
+            "floor": 1280,
+            "door": 288,
+            "windows": 2246.4,
+            "outsideAir": 519.3702570223596,
+            "duct": 380.988512851118
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 9.408
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "expected": {
+          "coolingTotal": 9577.304700366709,
+          "heatingTotal": 9787.778110834497,
+          "cooling": {
+            "walls": 1374.25,
+            "roof": 672,
+            "floor": 640,
+            "door": 144,
+            "windowConduction": 1040,
+            "windowSolar": 2640,
+            "outsideAirSensible": 267.3472205973986,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 633.177501964369,
+            "peopleLatent": 400,
+            "duct": 709.4299778049415
+          },
+          "heating": {
+            "walls": 2868,
+            "roof": 1075.1999999999998,
+            "floor": 1536,
+            "door": 345.6,
+            "windows": 2496,
+            "outsideAir": 741.9575100319423,
+            "duct": 725.0206008025552
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 13.44
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "high": {
+          "coolingTotal": 12498.66868807553,
+          "heatingTotal": 13136.177979504144,
+          "cooling": {
+            "walls": 1868.1833333333334,
+            "roof": 940.8000000000001,
+            "floor": 853.3333333333333,
+            "door": 192,
+            "windowConduction": 1144,
+            "windowSolar": 3035.9999999999995,
+            "outsideAirSensible": 401.0208308960979,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 949.7662529465535,
+            "peopleLatent": 459.99999999999994,
+            "duct": 1437.8999375662113
+          },
+          "heating": {
+            "walls": 3824,
+            "roof": 1433.6,
+            "floor": 2048,
+            "door": 460.79999999999995,
+            "windows": 2745.6000000000004,
+            "outsideAir": 1112.9362650479138,
+            "duct": 1511.241714456229
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 20.160000000000004
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 95,
+        "outdoorRh": 55,
+        "heatOutdoor": 20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 1000,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 28,
+        "width": 8,
+        "height": 8,
+        "windowArea": 80,
+        "wallR": 6,
+        "roofR": 7,
+        "floorR": 5,
+        "ach": 0.75,
+        "windowU": 1.1,
+        "shgc": 0.7
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 10345.527451804834,
+          "heatingTotal": 11774.577949789129,
+          "cooling": {
+            "walls": 1497.0694444444448,
+            "roof": 759.9999999999999,
+            "floor": 746.6666666666667,
+            "door": 120,
+            "windowConduction": 1584,
+            "windowSolar": 2856,
+            "outsideAirSensible": 311.9050906969649,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 738.7070856250971,
+            "peopleLatent": 340,
+            "duct": 492.64416437165875
+          },
+          "heating": {
+            "walls": 3186.666666666667,
+            "roof": 1280,
+            "floor": 1792,
+            "door": 288,
+            "windows": 3801.6000000000004,
+            "outsideAir": 865.617095037266,
+            "duct": 560.6941880851966
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 15.679999999999998
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "expected": {
+          "coolingTotal": 12863.132500611182,
+          "heatingTotal": 14381.923518057498,
+          "cooling": {
+            "walls": 1832.3333333333335,
+            "roof": 960,
+            "floor": 896,
+            "door": 144,
+            "windowConduction": 1760,
+            "windowSolar": 3360,
+            "outsideAirSensible": 445.57870099566424,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 1055.2958366072814,
+            "peopleLatent": 400,
+            "duct": 952.8246296749024
+          },
+          "heating": {
+            "walls": 3824,
+            "roof": 1536,
+            "floor": 2150.3999999999996,
+            "door": 345.6,
+            "windows": 4224,
+            "outsideAir": 1236.5958500532372,
+            "duct": 1065.327668004259
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 22.4
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "high": {
+          "coolingTotal": 16891.86668012588,
+          "heatingTotal": 19182.83529917357,
+          "cooling": {
+            "walls": 2490.911111111111,
+            "roof": 1344,
+            "floor": 1194.6666666666667,
+            "door": 192,
+            "windowConduction": 1936.0000000000002,
+            "windowSolar": 3863.9999999999995,
+            "outsideAirSensible": 668.3680514934964,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 1582.9437549109225,
+            "peopleLatent": 459.99999999999994,
+            "duct": 1943.3120959436856
+          },
+          "heating": {
+            "walls": 5098.666666666667,
+            "roof": 2048,
+            "floor": 2867.2,
+            "door": 460.79999999999995,
+            "windows": 4646.400000000001,
+            "outsideAir": 1854.8937750798561,
+            "duct": 2206.874857427048
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 33.6
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 95,
+        "outdoorRh": 55,
+        "heatOutdoor": 20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 1000,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 28,
+        "width": 8,
+        "height": 8,
+        "windowArea": 80,
+        "wallR": 3.5,
+        "roofR": 4,
+        "floorR": 3,
+        "ach": 1.25,
+        "windowU": 1.1,
+        "shgc": 0.7
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 13324.924725230276,
+          "heatingTotal": 17032.909916315217,
+          "cooling": {
+            "walls": 2566.404761904762,
+            "roof": 1330.0000000000002,
+            "floor": 1244.4444444444446,
+            "door": 120,
+            "windowConduction": 1584,
+            "windowSolar": 2856,
+            "outsideAirSensible": 519.841817828275,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 1231.1784760418284,
+            "peopleLatent": 340,
+            "duct": 634.5202250109655
+          },
+          "heating": {
+            "walls": 5462.857142857143,
+            "roof": 2240,
+            "floor": 2986.666666666667,
+            "door": 288,
+            "windows": 3801.6000000000004,
+            "outsideAir": 1442.6951583954435,
+            "duct": 811.0909483959626
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 26.133333333333333
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "expected": {
+          "coolingTotal": 16779.996453399588,
+          "heatingTotal": 21014.66338723868,
+          "cooling": {
+            "walls": 3141.1428571428573,
+            "roof": 1680,
+            "floor": 1493.3333333333335,
+            "door": 144,
+            "windowConduction": 1760,
+            "windowSolar": 3360,
+            "outsideAirSensible": 742.6311683261072,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 1758.8263943454695,
+            "peopleLatent": 400,
+            "duct": 1242.9627002518214
+          },
+          "heating": {
+            "walls": 6555.4285714285725,
+            "roof": 2688,
+            "floor": 3584,
+            "door": 345.6,
+            "windows": 4224,
+            "outsideAir": 2060.993083422062,
+            "duct": 1556.6417323880505
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 37.333333333333336
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "high": {
+          "coolingTotal": 22637.39824095054,
+          "heatingTotal": 28591.178324019445,
+          "cooling": {
+            "walls": 4270.133333333333,
+            "roof": 2352,
+            "floor": 1991.111111111111,
+            "door": 192,
+            "windowConduction": 1936.0000000000002,
+            "windowSolar": 3863.9999999999995,
+            "outsideAirSensible": 1113.9467524891606,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 2638.239591518204,
+            "peopleLatent": 459.99999999999994,
+            "duct": 2604.302452498735
+          },
+          "heating": {
+            "walls": 8740.57142857143,
+            "roof": 3584,
+            "floor": 4778.666666666667,
+            "door": 460.79999999999995,
+            "windows": 4646.400000000001,
+            "outsideAir": 3091.4896251330933,
+            "duct": 3289.2506036482546
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 56
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 95,
+        "outdoorRh": 55,
+        "heatOutdoor": 20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 1000,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 36,
+        "width": 8,
+        "height": 8.5,
+        "windowArea": 102,
+        "wallR": 8,
+        "roofR": 10,
+        "floorR": 7,
+        "ach": 0.45,
+        "windowU": 0.65,
+        "shgc": 0.55
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 9574.972979247175,
+          "heatingTotal": 10289.339712416448,
+          "cooling": {
+            "walls": 1475.1458333333335,
+            "roof": 684,
+            "floor": 685.7142857142857,
+            "door": 120,
+            "windowConduction": 1193.4,
+            "windowSolar": 2861.1,
+            "outsideAirSensible": 255.65077969626236,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 605.4759862534278,
+            "peopleLatent": 340,
+            "duct": 455.9510942498655
+          },
+          "heating": {
+            "walls": 3140,
+            "roof": 1152,
+            "floor": 1645.7142857142858,
+            "door": 288,
+            "windows": 2864.16,
+            "outsideAir": 709.496868968045,
+            "duct": 489.96855773411653
+          },
+          "geometry": {
+            "floorArea": 288,
+            "roofArea": 288,
+            "wallArea": 628,
+            "windowArea": 102,
+            "doorArea": 18,
+            "volume": 2448,
+            "infiltrationCfm": 12.852
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "expected": {
+          "coolingTotal": 11896.889296036667,
+          "heatingTotal": 12600.17002640784,
+          "cooling": {
+            "walls": 1805.5,
+            "roof": 864,
+            "floor": 822.8571428571429,
+            "door": 144,
+            "windowConduction": 1326,
+            "windowSolar": 3366,
+            "outsideAirSensible": 365.2153995660892,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 864.9656946477542,
+            "peopleLatent": 400,
+            "duct": 881.251058965679
+          },
+          "heating": {
+            "walls": 3768,
+            "roof": 1382.4,
+            "floor": 1974.8571428571431,
+            "door": 345.6,
+            "windows": 3182.3999999999996,
+            "outsideAir": 1013.5669556686357,
+            "duct": 933.3459278820623
+          },
+          "geometry": {
+            "floorArea": 288,
+            "roofArea": 288,
+            "wallArea": 628,
+            "windowArea": 102,
+            "doorArea": 18,
+            "volume": 2448,
+            "infiltrationCfm": 18.360000000000003
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "high": {
+          "coolingTotal": 15598.082499930562,
+          "heatingTotal": 16929.810618429765,
+          "cooling": {
+            "walls": 2454.4333333333334,
+            "roof": 1209.6,
+            "floor": 1097.142857142857,
+            "door": 192,
+            "windowConduction": 1458.6000000000001,
+            "windowSolar": 3870.8999999999996,
+            "outsideAirSensible": 547.8230993491337,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 1297.4485419716311,
+            "peopleLatent": 459.99999999999994,
+            "duct": 1794.4696681336045
+          },
+          "heating": {
+            "walls": 5024,
+            "roof": 1843.1999999999998,
+            "floor": 2633.142857142857,
+            "door": 460.79999999999995,
+            "windows": 3500.6400000000003,
+            "outsideAir": 1520.3504335029534,
+            "duct": 1947.6773277839552
+          },
+          "geometry": {
+            "floorArea": 288,
+            "roofArea": 288,
+            "wallArea": 628,
+            "windowArea": 102,
+            "doorArea": 18,
+            "volume": 2448,
+            "infiltrationCfm": 27.540000000000003
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 95,
+        "outdoorRh": 55,
+        "heatOutdoor": 20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 1000,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 36,
+        "width": 8,
+        "height": 8.5,
+        "windowArea": 102,
+        "wallR": 6,
+        "roofR": 7,
+        "floorR": 5,
+        "ach": 0.75,
+        "windowU": 1.1,
+        "shgc": 0.7
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 12976.687757078624,
+          "heatingTotal": 15176.611520694078,
+          "cooling": {
+            "walls": 1966.8611111111113,
+            "roof": 977.1428571428571,
+            "floor": 960,
+            "door": 120,
+            "windowConduction": 2019.6000000000001,
+            "windowSolar": 3641.399999999999,
+            "outsideAirSensible": 426.08463282710386,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 1009.126643755713,
+            "peopleLatent": 340,
+            "duct": 617.9375122418393
+          },
+          "heating": {
+            "walls": 4186.666666666667,
+            "roof": 1645.7142857142858,
+            "floor": 2304,
+            "door": 288,
+            "windows": 4847.04,
+            "outsideAir": 1182.4947816134081,
+            "duct": 722.695786699718
+          },
+          "geometry": {
+            "floorArea": 288,
+            "roofArea": 288,
+            "wallArea": 628,
+            "windowArea": 102,
+            "doorArea": 18,
+            "volume": 2448,
+            "infiltrationCfm": 21.419999999999998
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "expected": {
+          "coolingTotal": 16170.862541013488,
+          "heatingTotal": 18558.86623448926,
+          "cooling": {
+            "walls": 2407.3333333333335,
+            "roof": 1234.2857142857144,
+            "floor": 1152,
+            "door": 144,
+            "windowConduction": 2244,
+            "windowSolar": 4283.999999999999,
+            "outsideAirSensible": 608.6923326101486,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 1441.60949107959,
+            "peopleLatent": 400,
+            "duct": 1197.8416697047028
+          },
+          "heating": {
+            "walls": 5024,
+            "roof": 1974.8571428571431,
+            "floor": 2764.8,
+            "door": 345.6,
+            "windows": 5385.6,
+            "outsideAir": 1689.2782594477258,
+            "duct": 1374.7308321843896
+          },
+          "geometry": {
+            "floorArea": 288,
+            "roofArea": 288,
+            "wallArea": 628,
+            "windowArea": 102,
+            "doorArea": 18,
+            "volume": 2448,
+            "infiltrationCfm": 30.6
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "high": {
+          "coolingTotal": 21328.405930042994,
+          "heatingTotal": 24788.908211668655,
+          "cooling": {
+            "walls": 3272.5777777777776,
+            "roof": 1728,
+            "floor": 1536,
+            "door": 192,
+            "windowConduction": 2468.4000000000005,
+            "windowSolar": 4926.5999999999985,
+            "outsideAirSensible": 913.0384989152228,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 2162.414236619385,
+            "peopleLatent": 459.99999999999994,
+            "duct": 2453.71041673061
+          },
+          "heating": {
+            "walls": 6698.666666666666,
+            "roof": 2633.142857142857,
+            "floor": 3686.3999999999996,
+            "door": 460.79999999999995,
+            "windows": 5924.160000000001,
+            "outsideAir": 2533.9173891715886,
+            "duct": 2851.8212986875446
+          },
+          "geometry": {
+            "floorArea": 288,
+            "roofArea": 288,
+            "wallArea": 628,
+            "windowArea": 102,
+            "doorArea": 18,
+            "volume": 2448,
+            "infiltrationCfm": 45.9
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 95,
+        "outdoorRh": 55,
+        "heatOutdoor": 20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 1000,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 36,
+        "width": 8,
+        "height": 8.5,
+        "windowArea": 102,
+        "wallR": 3.5,
+        "roofR": 4,
+        "floorR": 3,
+        "ach": 1.25,
+        "windowU": 1.1,
+        "shgc": 0.7
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 16897.98148401993,
+          "heatingTotal": 22053.157867823465,
+          "cooling": {
+            "walls": 3371.7619047619046,
+            "roof": 1710,
+            "floor": 1600.0000000000002,
+            "door": 120,
+            "windowConduction": 2019.6000000000001,
+            "windowSolar": 3641.399999999999,
+            "outsideAirSensible": 710.14105471184,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 1681.8777395928553,
+            "peopleLatent": 340,
+            "duct": 804.66578495333
+          },
+          "heating": {
+            "walls": 7177.142857142857,
+            "roof": 2880,
+            "floor": 3840.000000000001,
+            "door": 288,
+            "windows": 4847.04,
+            "outsideAir": 1970.824636022347,
+            "duct": 1050.1503746582603
+          },
+          "geometry": {
+            "floorArea": 288,
+            "roofArea": 288,
+            "wallArea": 628,
+            "windowArea": 102,
+            "doorArea": 18,
+            "volume": 2448,
+            "infiltrationCfm": 35.7
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "expected": {
+          "coolingTotal": 21333.37699692724,
+          "heatingTotal": 27241.09400986304,
+          "cooling": {
+            "walls": 4126.857142857142,
+            "roof": 2160,
+            "floor": 1920,
+            "door": 144,
+            "windowConduction": 2244,
+            "windowSolar": 4283.999999999999,
+            "outsideAirSensible": 1014.4872210169142,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 2402.68248513265,
+            "peopleLatent": 400,
+            "duct": 1580.2501479205364
+          },
+          "heating": {
+            "walls": 8612.571428571428,
+            "roof": 3456,
+            "floor": 4608,
+            "door": 345.6,
+            "windows": 5385.6,
+            "outsideAir": 2815.46376574621,
+            "duct": 2017.8588155454106
+          },
+          "geometry": {
+            "floorArea": 288,
+            "roofArea": 288,
+            "wallArea": 628,
+            "windowArea": 102,
+            "doorArea": 18,
+            "volume": 2448,
+            "infiltrationCfm": 51
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "high": {
+          "coolingTotal": 28908.28476859018,
+          "heatingTotal": 37113.250168654115,
+          "cooling": {
+            "walls": 5610.133333333333,
+            "roof": 3024,
+            "floor": 2560,
+            "door": 192,
+            "windowConduction": 2468.4000000000005,
+            "windowSolar": 4926.5999999999985,
+            "outsideAirSensible": 1521.7308315253713,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 3604.023727698975,
+            "peopleLatent": 459.99999999999994,
+            "duct": 3325.7318760324983
+          },
+          "heating": {
+            "walls": 11483.428571428572,
+            "roof": 4608,
+            "floor": 6144,
+            "door": 460.79999999999995,
+            "windows": 5924.160000000001,
+            "outsideAir": 4223.195648619315,
+            "duct": 4269.665948606225
+          },
+          "geometry": {
+            "floorArea": 288,
+            "roofArea": 288,
+            "wallArea": 628,
+            "windowArea": 102,
+            "doorArea": 18,
+            "volume": 2448,
+            "infiltrationCfm": 76.5
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 95,
+        "outdoorRh": 55,
+        "heatOutdoor": 20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 1000,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 35,
+        "width": 8.5,
+        "height": 8,
+        "windowArea": 144,
+        "wallR": 8,
+        "roofR": 10,
+        "floorR": 7,
+        "ach": 0.45,
+        "windowU": 0.65,
+        "shgc": 0.55
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 11118.430219406975,
+          "heatingTotal": 11110.374053738213,
+          "cooling": {
+            "walls": 1254.34375,
+            "roof": 706.5625,
+            "floor": 708.3333333333333,
+            "door": 120,
+            "windowConduction": 1684.8000000000002,
+            "windowSolar": 4039.2,
+            "outsideAirSensible": 248.549369149144,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 588.6572088574993,
+            "peopleLatent": 340,
+            "duct": 529.4490580669989
+          },
+          "heating": {
+            "walls": 2670,
+            "roof": 1190,
+            "floor": 1700,
+            "door": 288,
+            "windows": 4043.5200000000004,
+            "outsideAir": 689.7886226078215,
+            "duct": 529.0654311303911
+          },
+          "geometry": {
+            "floorArea": 297.5,
+            "roofArea": 297.5,
+            "wallArea": 534,
+            "windowArea": 144,
+            "doorArea": 18,
+            "volume": 2380,
+            "infiltrationCfm": 12.495000000000001
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "expected": {
+          "coolingTotal": 13714.768148924535,
+          "heatingTotal": 13495.477303452068,
+          "cooling": {
+            "walls": 1535.25,
+            "roof": 892.5,
+            "floor": 850,
+            "door": 144,
+            "windowConduction": 1872.0000000000002,
+            "windowSolar": 4752,
+            "outsideAirSensible": 355.07052735592,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 840.9388697964276,
+            "peopleLatent": 400,
+            "duct": 1015.9087517721879
+          },
+          "heating": {
+            "walls": 3204,
+            "roof": 1428,
+            "floor": 2040,
+            "door": 345.6,
+            "windows": 4492.8,
+            "outsideAir": 985.4123180111735,
+            "duct": 999.6649854408939
+          },
+          "geometry": {
+            "floorArea": 297.5,
+            "roofArea": 297.5,
+            "wallArea": 534,
+            "windowArea": 144,
+            "doorArea": 18,
+            "volume": 2380,
+            "infiltrationCfm": 17.85
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "high": {
+          "coolingTotal": 17690.7855448399,
+          "heatingTotal": 17828.00827902894,
+          "cooling": {
+            "walls": 2087.0499999999997,
+            "roof": 1249.5,
+            "floor": 1133.3333333333333,
+            "door": 192,
+            "windowConduction": 2059.2000000000003,
+            "windowSolar": 5464.799999999999,
+            "outsideAirSensible": 532.6057910338799,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 1261.4083046946412,
+            "peopleLatent": 459.99999999999994,
+            "duct": 2035.2231157780413
+          },
+          "heating": {
+            "walls": 4272,
+            "roof": 1904,
+            "floor": 2720,
+            "door": 460.79999999999995,
+            "windows": 4942.080000000001,
+            "outsideAir": 1478.1184770167602,
+            "duct": 2051.009802012179
+          },
+          "geometry": {
+            "floorArea": 297.5,
+            "roofArea": 297.5,
+            "wallArea": 534,
+            "windowArea": 144,
+            "doorArea": 18,
+            "volume": 2380,
+            "infiltrationCfm": 26.775
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 95,
+        "outdoorRh": 55,
+        "heatOutdoor": 20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 1000,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 35,
+        "width": 8.5,
+        "height": 8,
+        "windowArea": 144,
+        "wallR": 6,
+        "roofR": 7,
+        "floorR": 5,
+        "ach": 0.75,
+        "windowU": 1.1,
+        "shgc": 0.7
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 15140.348261511625,
+          "heatingTotal": 16716.554089563688,
+          "cooling": {
+            "walls": 1672.4583333333335,
+            "roof": 1009.3749999999999,
+            "floor": 991.6666666666667,
+            "door": 120,
+            "windowConduction": 2851.2,
+            "windowSolar": 5140.8,
+            "outsideAirSensible": 414.2489485819066,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 981.0953480958319,
+            "peopleLatent": 340,
+            "duct": 720.968964833887
+          },
+          "heating": {
+            "walls": 3560,
+            "roof": 1700,
+            "floor": 2380,
+            "door": 288,
+            "windows": 6842.88,
+            "outsideAir": 1149.6477043463688,
+            "duct": 796.0263852173185
+          },
+          "geometry": {
+            "floorArea": 297.5,
+            "roofArea": 297.5,
+            "wallArea": 534,
+            "windowArea": 144,
+            "doorArea": 18,
+            "volume": 2380,
+            "infiltrationCfm": 20.824999999999996
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "expected": {
+          "coolingTotal": 18708.244914874223,
+          "heatingTotal": 20259.886172420116,
+          "cooling": {
+            "walls": 2047,
+            "roof": 1275,
+            "floor": 1190,
+            "door": 144,
+            "windowConduction": 3168,
+            "windowSolar": 6048,
+            "outsideAirSensible": 591.7842122598666,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 1401.5647829940458,
+            "peopleLatent": 400,
+            "duct": 1385.795919620313
+          },
+          "heating": {
+            "walls": 4272,
+            "roof": 2040,
+            "floor": 2856,
+            "door": 345.6,
+            "windows": 7603.200000000001,
+            "outsideAir": 1642.3538633519556,
+            "duct": 1500.7323090681568
+          },
+          "geometry": {
+            "floorArea": 297.5,
+            "roofArea": 297.5,
+            "wallArea": 534,
+            "windowArea": 144,
+            "doorArea": 18,
+            "volume": 2380,
+            "infiltrationCfm": 29.75
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "high": {
+          "coolingTotal": 24240.859996955383,
+          "heatingTotal": 26568.391398381566,
+          "cooling": {
+            "walls": 2782.7333333333336,
+            "roof": 1785,
+            "floor": 1586.6666666666665,
+            "door": 192,
+            "windowConduction": 3484.8,
+            "windowSolar": 6955.2,
+            "outsideAirSensible": 887.6763183897999,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 2102.347174491069,
+            "peopleLatent": 459.99999999999994,
+            "duct": 2788.7715040745134
+          },
+          "heating": {
+            "walls": 5696,
+            "roof": 2720,
+            "floor": 3808,
+            "door": 460.79999999999995,
+            "windows": 8363.52,
+            "outsideAir": 2463.530795027934,
+            "duct": 3056.5406033536315
+          },
+          "geometry": {
+            "floorArea": 297.5,
+            "roofArea": 297.5,
+            "wallArea": 534,
+            "windowArea": 144,
+            "doorArea": 18,
+            "volume": 2380,
+            "infiltrationCfm": 44.625
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 95,
+        "outdoorRh": 55,
+        "heatOutdoor": 20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 1000,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 35,
+        "width": 8.5,
+        "height": 8,
+        "windowArea": 144,
+        "wallR": 3.5,
+        "roofR": 4,
+        "floorR": 3,
+        "ach": 1.25,
+        "windowU": 1.1,
+        "shgc": 0.7
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 18860.482498352707,
+          "heatingTotal": 23196.057482606146,
+          "cooling": {
+            "walls": 2867.0714285714284,
+            "roof": 1766.4062500000002,
+            "floor": 1652.777777777778,
+            "door": 120,
+            "windowConduction": 2851.2,
+            "windowSolar": 5140.8,
+            "outsideAirSensible": 690.4149143031777,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 1635.1589134930537,
+            "peopleLatent": 340,
+            "duct": 898.1182142072718
+          },
+          "heating": {
+            "walls": 6102.857142857143,
+            "roof": 2975,
+            "floor": 3966.666666666667,
+            "door": 288,
+            "windows": 6842.88,
+            "outsideAir": 1916.0795072439482,
+            "duct": 1104.574165838388
+          },
+          "geometry": {
+            "floorArea": 297.5,
+            "roofArea": 297.5,
+            "wallArea": 534,
+            "windowArea": 144,
+            "doorArea": 18,
+            "volume": 2380,
+            "infiltrationCfm": 34.708333333333336
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "expected": {
+          "coolingTotal": 23612.120477171327,
+          "heatingTotal": 28446.643811176382,
+          "cooling": {
+            "walls": 3509.1428571428573,
+            "roof": 2231.25,
+            "floor": 1983.3333333333335,
+            "door": 144,
+            "windowConduction": 3168,
+            "windowSolar": 6048,
+            "outsideAirSensible": 986.307020433111,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 2335.9413049900763,
+            "peopleLatent": 400,
+            "duct": 1749.0459612719503
+          },
+          "heating": {
+            "walls": 7323.4285714285725,
+            "roof": 3570,
+            "floor": 4760,
+            "door": 345.6,
+            "windows": 7603.200000000001,
+            "outsideAir": 2737.2564389199265,
+            "duct": 2107.15880082788
+          },
+          "geometry": {
+            "floorArea": 297.5,
+            "roofArea": 297.5,
+            "wallArea": 534,
+            "windowArea": 144,
+            "doorArea": 18,
+            "volume": 2380,
+            "infiltrationCfm": 49.583333333333336
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "high": {
+          "coolingTotal": 31447.484083814525,
+          "heatingTotal": 38195.63031158833,
+          "cooling": {
+            "walls": 4770.4,
+            "roof": 3123.75,
+            "floor": 2644.4444444444443,
+            "door": 192,
+            "windowConduction": 3484.8,
+            "windowSolar": 6955.2,
+            "outsideAirSensible": 1479.4605306496667,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 3503.9119574851143,
+            "peopleLatent": 459.99999999999994,
+            "duct": 3617.8521512352995
+          },
+          "heating": {
+            "walls": 9764.571428571428,
+            "roof": 4760,
+            "floor": 6346.666666666667,
+            "door": 460.79999999999995,
+            "windows": 8363.52,
+            "outsideAir": 4105.8846583798895,
+            "duct": 4394.187557970338
+          },
+          "geometry": {
+            "floorArea": 297.5,
+            "roofArea": 297.5,
+            "wallArea": 534,
+            "windowArea": 144,
+            "doorArea": 18,
+            "volume": 2380,
+            "infiltrationCfm": 74.375
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 95,
+        "outdoorRh": 55,
+        "heatOutdoor": 20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 1000,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 21,
+        "width": 7,
+        "height": 6.5,
+        "windowArea": 45,
+        "wallR": 8,
+        "roofR": 10,
+        "floorR": 7,
+        "ach": 0.45,
+        "windowU": 0.65,
+        "shgc": 0.55
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 5134.038289464124,
+          "heatingTotal": 4999.606336280194,
+          "cooling": {
+            "walls": 707.0364583333334,
+            "roof": 349.125,
+            "floor": 350,
+            "door": 120,
+            "windowConduction": 526.5,
+            "windowSolar": 1262.2500000000002,
+            "outsideAirSensible": 99.7852614378181,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 236.32855590896662,
+            "peopleLatent": 340,
+            "duct": 244.47801378400592
+          },
+          "heating": {
+            "walls": 1505,
+            "roof": 588,
+            "floor": 840,
+            "door": 288,
+            "windows": 1263.6,
+            "outsideAir": 276.9298440763754,
+            "duct": 238.0764922038188
+          },
+          "geometry": {
+            "floorArea": 147,
+            "roofArea": 147,
+            "wallArea": 301,
+            "windowArea": 45,
+            "doorArea": 18,
+            "volume": 955.5,
+            "infiltrationCfm": 5.016375
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "expected": {
+          "coolingTotal": 6347.848603906469,
+          "heatingTotal": 6117.99918800355,
+          "cooling": {
+            "walls": 865.375,
+            "roof": 441,
+            "floor": 420,
+            "door": 144,
+            "windowConduction": 585,
+            "windowSolar": 1485.0000000000002,
+            "outsideAirSensible": 142.55037348259728,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 337.61222272709523,
+            "peopleLatent": 400,
+            "duct": 470.2110076967755
+          },
+          "heating": {
+            "walls": 1806,
+            "roof": 705.5999999999999,
+            "floor": 1008,
+            "door": 345.6,
+            "windows": 1404,
+            "outsideAir": 395.6140629662505,
+            "duct": 453.18512503730005
+          },
+          "geometry": {
+            "floorArea": 147,
+            "roofArea": 147,
+            "wallArea": 301,
+            "windowArea": 45,
+            "doorArea": 18,
+            "volume": 955.5,
+            "infiltrationCfm": 7.166250000000001
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "high": {
+          "coolingTotal": 8241.052967242096,
+          "heatingTotal": 8239.305836727795,
+          "cooling": {
+            "walls": 1176.4083333333333,
+            "roof": 617.4000000000001,
+            "floor": 560,
+            "door": 192,
+            "windowConduction": 643.5000000000001,
+            "windowSolar": 1707.7500000000002,
+            "outsideAirSensible": 213.82556022389596,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 506.4183340906429,
+            "peopleLatent": 459.99999999999994,
+            "duct": 948.0857395942235
+          },
+          "heating": {
+            "walls": 2408,
+            "roof": 940.8000000000001,
+            "floor": 1344,
+            "door": 460.79999999999995,
+            "windows": 1544.4,
+            "outsideAir": 593.4210944493759,
+            "duct": 947.8847422784189
+          },
+          "geometry": {
+            "floorArea": 147,
+            "roofArea": 147,
+            "wallArea": 301,
+            "windowArea": 45,
+            "doorArea": 18,
+            "volume": 955.5,
+            "infiltrationCfm": 10.749375000000002
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 95,
+        "outdoorRh": 55,
+        "heatOutdoor": 20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 1000,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 21,
+        "width": 7,
+        "height": 6.5,
+        "windowArea": 45,
+        "wallR": 6,
+        "roofR": 7,
+        "floorR": 5,
+        "ach": 0.75,
+        "windowU": 1.1,
+        "shgc": 0.7
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 6665.074472023539,
+          "heatingTotal": 7256.147227133658,
+          "cooling": {
+            "walls": 942.7152777777778,
+            "roof": 498.75,
+            "floor": 490,
+            "door": 120,
+            "windowConduction": 891.0000000000001,
+            "windowSolar": 1606.4999999999998,
+            "outsideAirSensible": 166.30876906303013,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 393.8809265149443,
+            "peopleLatent": 340,
+            "duct": 317.38449866778757
+          },
+          "heating": {
+            "walls": 2006.6666666666667,
+            "roof": 840,
+            "floor": 1176,
+            "door": 288,
+            "windows": 2138.4,
+            "outsideAir": 461.5497401272922,
+            "duct": 345.53082033969804
+          },
+          "geometry": {
+            "floorArea": 147,
+            "roofArea": 147,
+            "wallArea": 301,
+            "windowArea": 45,
+            "doorArea": 18,
+            "volume": 955.5,
+            "infiltrationCfm": 8.360624999999999
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "expected": {
+          "coolingTotal": 8265.460673177446,
+          "heatingTotal": 8864.809313339252,
+          "cooling": {
+            "walls": 1153.8333333333333,
+            "roof": 630,
+            "floor": 588,
+            "door": 144,
+            "windowConduction": 990.0000000000001,
+            "windowSolar": 1889.9999999999998,
+            "outsideAirSensible": 237.58395580432878,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 562.6870378784919,
+            "peopleLatent": 400,
+            "duct": 612.2563461612923
+          },
+          "heating": {
+            "walls": 2408,
+            "roof": 1008,
+            "floor": 1411.1999999999998,
+            "door": 345.6,
+            "windows": 2376.0000000000005,
+            "outsideAir": 659.3567716104176,
+            "duct": 656.6525417288335
+          },
+          "geometry": {
+            "floorArea": 147,
+            "roofArea": 147,
+            "wallArea": 301,
+            "windowArea": 45,
+            "doorArea": 18,
+            "volume": 955.5,
+            "infiltrationCfm": 11.94375
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "high": {
+          "coolingTotal": 10808.5810065146,
+          "heatingTotal": 11864.663061212992,
+          "cooling": {
+            "walls": 1568.5444444444443,
+            "roof": 882,
+            "floor": 784,
+            "door": 192,
+            "windowConduction": 1089.0000000000002,
+            "windowSolar": 2173.4999999999995,
+            "outsideAirSensible": 356.3759337064932,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 844.0305568177379,
+            "peopleLatent": 459.99999999999994,
+            "duct": 1243.4650715459275
+          },
+          "heating": {
+            "walls": 3210.6666666666665,
+            "roof": 1344,
+            "floor": 1881.6000000000001,
+            "door": 460.79999999999995,
+            "windows": 2613.6000000000004,
+            "outsideAir": 989.0351574156261,
+            "duct": 1364.9612371306982
+          },
+          "geometry": {
+            "floorArea": 147,
+            "roofArea": 147,
+            "wallArea": 301,
+            "windowArea": 45,
+            "doorArea": 18,
+            "volume": 955.5,
+            "infiltrationCfm": 17.915625
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 95,
+        "outdoorRh": 55,
+        "heatOutdoor": 20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 1000,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 21,
+        "width": 7,
+        "height": 6.5,
+        "windowArea": 45,
+        "wallR": 3.5,
+        "roofR": 4,
+        "floorR": 3,
+        "ach": 1.25,
+        "windowU": 1.1,
+        "shgc": 0.7
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 8500.009342261455,
+          "heatingTotal": 10568.93204522276,
+          "cooling": {
+            "walls": 1616.0833333333333,
+            "roof": 872.8125,
+            "floor": 816.6666666666667,
+            "door": 120,
+            "windowConduction": 891.0000000000001,
+            "windowSolar": 1606.4999999999998,
+            "outsideAirSensible": 277.18128177171695,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 656.4682108582406,
+            "peopleLatent": 340,
+            "duct": 404.76234963149795
+          },
+          "heating": {
+            "walls": 3439.9999999999995,
+            "roof": 1470,
+            "floor": 1960,
+            "door": 288,
+            "windows": 2138.4,
+            "outsideAir": 769.2495668788205,
+            "duct": 503.28247834394097
+          },
+          "geometry": {
+            "floorArea": 147,
+            "roofArea": 147,
+            "wallArea": 301,
+            "windowArea": 45,
+            "doorArea": 18,
+            "volume": 955.5,
+            "infiltrationCfm": 13.934375
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "expected": {
+          "coolingTotal": 10665.415788629078,
+          "heatingTotal": 13029.690188898752,
+          "cooling": {
+            "walls": 1978,
+            "roof": 1102.5,
+            "floor": 980,
+            "door": 144,
+            "windowConduction": 990.0000000000001,
+            "windowSolar": 1889.9999999999998,
+            "outsideAirSensible": 395.97325967388133,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 937.8117297974866,
+            "peopleLatent": 400,
+            "duct": 790.0307991577095
+          },
+          "heating": {
+            "walls": 4128,
+            "roof": 1764,
+            "floor": 2352,
+            "door": 345.6,
+            "windows": 2376.0000000000005,
+            "outsideAir": 1098.9279526840292,
+            "duct": 965.1622362147224
+          },
+          "geometry": {
+            "floorArea": 147,
+            "roofArea": 147,
+            "wallArea": 301,
+            "windowArea": 45,
+            "doorArea": 18,
+            "volume": 955.5,
+            "infiltrationCfm": 19.90625
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "high": {
+          "coolingTotal": 14317.035007153972,
+          "heatingTotal": 17757.71487979943,
+          "cooling": {
+            "walls": 2688.9333333333334,
+            "roof": 1543.5,
+            "floor": 1306.6666666666665,
+            "door": 192,
+            "windowConduction": 1089.0000000000002,
+            "windowSolar": 2173.4999999999995,
+            "outsideAirSensible": 593.959889510822,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 1406.7175946962298,
+            "peopleLatent": 459.99999999999994,
+            "duct": 1647.0925229469171
+          },
+          "heating": {
+            "walls": 5504,
+            "roof": 2352,
+            "floor": 3136,
+            "door": 460.79999999999995,
+            "windows": 2613.6000000000004,
+            "outsideAir": 1648.3919290260437,
+            "duct": 2042.9229507733858
+          },
+          "geometry": {
+            "floorArea": 147,
+            "roofArea": 147,
+            "wallArea": 301,
+            "windowArea": 45,
+            "doorArea": 18,
+            "volume": 955.5,
+            "infiltrationCfm": 29.859375
+          },
+          "air": {
+            "coolDensity": 0.920921587705986,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 95,
+        "outdoorRh": 55,
+        "heatOutdoor": 20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 20,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 0,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 28,
+        "width": 8,
+        "height": 8,
+        "windowArea": 80,
+        "wallR": 6,
+        "roofR": 7,
+        "floorR": 5,
+        "ach": 0.75,
+        "windowU": 1.1,
+        "shgc": 0.7
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 11777.098431502409,
+          "heatingTotal": 13010.258540786792,
+          "cooling": {
+            "walls": 1497.0694444444448,
+            "roof": 759.9999999999999,
+            "floor": 746.6666666666667,
+            "door": 120,
+            "windowConduction": 1584,
+            "windowSolar": 2856,
+            "outsideAirSensible": 735.951670290443,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 1678.0614390769322,
+            "peopleLatent": 340,
+            "duct": 560.8142110239243
+          },
+          "heating": {
+            "walls": 3186.666666666667,
+            "roof": 1280,
+            "floor": 1792,
+            "door": 288,
+            "windows": 3801.6000000000004,
+            "outsideAir": 2042.4557531302771,
+            "duct": 619.5361209898473
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 15.679999999999998
+          },
+          "air": {
+            "coolDensity": 0.9549281554798347,
+            "heatDensity": 1.1042383305188983,
+            "pressureKpa": 101.325
+          }
+        },
+        "expected": {
+          "coolingTotal": 14340.3519098697,
+          "heatingTotal": 15667.704199757334,
+          "cooling": {
+            "walls": 1832.3333333333335,
+            "roof": 960,
+            "floor": 896,
+            "door": 144,
+            "windowConduction": 1760,
+            "windowSolar": 3360,
+            "outsideAirSensible": 874.5614019146518,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 1994.1088850017356,
+            "peopleLatent": 400,
+            "duct": 1062.2482896199776
+          },
+          "heating": {
+            "walls": 3824,
+            "roof": 1536,
+            "floor": 2150.3999999999996,
+            "door": 345.6,
+            "windows": 4224,
+            "outsideAir": 2427.133518293827,
+            "duct": 1160.5706814635062
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 22.4
+          },
+          "air": {
+            "coolDensity": 0.9549281554798347,
+            "heatDensity": 1.1042383305188983,
+            "pressureKpa": 101.325
+          }
+        },
+        "high": {
+          "coolingTotal": 18445.752780821713,
+          "heatingTotal": 20553.942666730043,
+          "cooling": {
+            "walls": 2490.911111111111,
+            "roof": 1344,
+            "floor": 1194.6666666666667,
+            "door": 192,
+            "windowConduction": 1936.0000000000002,
+            "windowSolar": 3863.9999999999995,
+            "outsideAirSensible": 1105.5776212883334,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 2520.854628209741,
+            "peopleLatent": 459.99999999999994,
+            "duct": 2122.0777535458606
+          },
+          "heating": {
+            "walls": 5098.666666666667,
+            "roof": 2048,
+            "floor": 2867.2,
+            "door": 460.79999999999995,
+            "windows": 4646.400000000001,
+            "outsideAir": 3068.263126899744,
+            "duct": 2364.612873163633
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 33.6
+          },
+          "air": {
+            "coolDensity": 0.9549281554798347,
+            "heatDensity": 1.1042383305188983,
+            "pressureKpa": 101.325
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 95,
+        "outdoorRh": 55,
+        "heatOutdoor": -20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 8000,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 28,
+        "width": 8,
+        "height": 8,
+        "windowArea": 80,
+        "wallR": 6,
+        "roofR": 7,
+        "floorR": 5,
+        "ach": 0.75,
+        "windowU": 1.1,
+        "shgc": 0.7
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 10281.52428287732,
+          "heatingTotal": 21320.59581635526,
+          "cooling": {
+            "walls": 1497.0694444444448,
+            "roof": 759.9999999999999,
+            "floor": 746.6666666666667,
+            "door": 120,
+            "windowConduction": 1584,
+            "windowSolar": 2856,
+            "outsideAirSensible": 240.2341926447309,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 749.4225846987491,
+            "peopleLatent": 340,
+            "duct": 489.5963944227296
+          },
+          "heating": {
+            "walls": 5842.2222222222235,
+            "roof": 2346.6666666666665,
+            "floor": 3285.3333333333335,
+            "door": 528,
+            "windows": 6969.6,
+            "outsideAir": 1333.5071266875448,
+            "duct": 1015.2664674454886
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 15.679999999999998
+          },
+          "air": {
+            "coolDensity": 0.7093082502029329,
+            "heatDensity": 0.8948347786750536,
+            "pressureKpa": 75.26289599838894
+          }
+        },
+        "expected": {
+          "coolingTotal": 12769.08702790137,
+          "heatingTotal": 25975.810995460786,
+          "cooling": {
+            "walls": 1832.3333333333335,
+            "roof": 960,
+            "floor": 896,
+            "door": 144,
+            "windowConduction": 1760,
+            "windowSolar": 3360,
+            "outsideAirSensible": 343.191703778187,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 1070.6036924267844,
+            "peopleLatent": 400,
+            "duct": 945.8582983630646
+          },
+          "heating": {
+            "walls": 7010.666666666667,
+            "roof": 2816,
+            "floor": 3942.3999999999996,
+            "door": 633.6,
+            "windows": 7744,
+            "outsideAir": 1905.010180982207,
+            "duct": 1924.1341478119102
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 22.4
+          },
+          "air": {
+            "coolDensity": 0.7093082502029329,
+            "heatDensity": 0.8948347786750536,
+            "pressureKpa": 75.26289599838894
+          }
+        },
+        "high": {
+          "coolingTotal": 16744.267535456318,
+          "heatingTotal": 34554.80203454262,
+          "cooling": {
+            "walls": 2490.911111111111,
+            "roof": 1344,
+            "floor": 1194.6666666666667,
+            "door": 192,
+            "windowConduction": 1936.0000000000002,
+            "windowSolar": 3863.9999999999995,
+            "outsideAirSensible": 514.7875556672806,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 1605.905538640177,
+            "peopleLatent": 459.99999999999994,
+            "duct": 1926.3316633710808
+          },
+          "heating": {
+            "walls": 9347.555555555557,
+            "roof": 3754.6666666666665,
+            "floor": 5256.533333333334,
+            "door": 844.8,
+            "windows": 8518.400000000001,
+            "outsideAir": 2857.515271473311,
+            "duct": 3975.331207513753
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 33.6
+          },
+          "air": {
+            "coolDensity": 0.7093082502029329,
+            "heatDensity": 0.8948347786750536,
+            "pressureKpa": 75.26289599838894
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 105,
+        "outdoorRh": 25,
+        "heatOutdoor": 20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 1000,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 28,
+        "width": 8,
+        "height": 8,
+        "windowArea": 80,
+        "wallR": 6,
+        "roofR": 7,
+        "floorR": 5,
+        "ach": 0.75,
+        "windowU": 1.1,
+        "shgc": 0.7
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 12183.50337688269,
+          "heatingTotal": 11774.577949789129,
+          "cooling": {
+            "walls": 2160.9583333333335,
+            "roof": 1026.6666666666665,
+            "floor": 1120,
+            "door": 180,
+            "windowConduction": 2376,
+            "windowSolar": 2856,
+            "outsideAirSensible": 459.572130598984,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 185.60441881310115,
+            "peopleLatent": 340,
+            "duct": 580.1668274706043
+          },
+          "heating": {
+            "walls": 3186.666666666667,
+            "roof": 1280,
+            "floor": 1792,
+            "door": 288,
+            "windows": 3801.6000000000004,
+            "outsideAir": 865.617095037266,
+            "duct": 560.6941880851966
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 15.679999999999998
+          },
+          "air": {
+            "coolDensity": 0.9046125649545385,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "expected": {
+          "coolingTotal": 14955.603247664361,
+          "heatingTotal": 14381.923518057498,
+          "cooling": {
+            "walls": 2629,
+            "roof": 1280,
+            "floor": 1344,
+            "door": 216,
+            "windowConduction": 2640,
+            "windowSolar": 3360,
+            "outsideAirSensible": 656.5316151414058,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 265.14916973300166,
+            "peopleLatent": 400,
+            "duct": 1107.8224627899526
+          },
+          "heating": {
+            "walls": 3824,
+            "roof": 1536,
+            "floor": 2150.3999999999996,
+            "door": 345.6,
+            "windows": 4224,
+            "outsideAir": 1236.5958500532372,
+            "duct": 1065.327668004259
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 22.4
+          },
+          "air": {
+            "coolDensity": 0.9046125649545385,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "high": {
+          "coolingTotal": 19469.88438036212,
+          "heatingTotal": 19182.83529917357,
+          "cooling": {
+            "walls": 3553.1333333333337,
+            "roof": 1770.6666666666665,
+            "floor": 1792,
+            "door": 288,
+            "windowConduction": 2904.0000000000005,
+            "windowSolar": 3863.9999999999995,
+            "outsideAirSensible": 984.7974227121089,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 397.7237545995025,
+            "peopleLatent": 459.99999999999994,
+            "duct": 2239.8982030505094
+          },
+          "heating": {
+            "walls": 5098.666666666667,
+            "roof": 2048,
+            "floor": 2867.2,
+            "door": 460.79999999999995,
+            "windows": 4646.400000000001,
+            "outsideAir": 1854.8937750798561,
+            "duct": 2206.874857427048
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 33.6
+          },
+          "air": {
+            "coolDensity": 0.9046125649545385,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 85,
+        "outdoorRh": 90,
+        "heatOutdoor": 20,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 175,
+        "internalDuty": 1,
+        "altitude": 1000,
+        "people": 2,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 28,
+        "width": 8,
+        "height": 8,
+        "windowArea": 80,
+        "wallR": 6,
+        "roofR": 7,
+        "floorR": 5,
+        "ach": 0.75,
+        "windowU": 1.1,
+        "shgc": 0.7
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 8239.739626494038,
+          "heatingTotal": 11774.577949789129,
+          "cooling": {
+            "walls": 833.1805555555558,
+            "roof": 493.3333333333333,
+            "floor": 373.33333333333337,
+            "door": 60,
+            "windowConduction": 792,
+            "windowSolar": 2856,
+            "outsideAirSensible": 158.81579365201458,
+            "peopleSensible": 391,
+            "internalSensible": 507.535,
+            "outsideAirLatent": 1042.1730569772276,
+            "peopleLatent": 340,
+            "duct": 392.36855364257326
+          },
+          "heating": {
+            "walls": 3186.666666666667,
+            "roof": 1280,
+            "floor": 1792,
+            "door": 288,
+            "windows": 3801.6000000000004,
+            "outsideAir": 865.617095037266,
+            "duct": 560.6941880851966
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 15.679999999999998
+          },
+          "air": {
+            "coolDensity": 0.9378294693169795,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "expected": {
+          "coolingTotal": 10377.142226685119,
+          "heatingTotal": 14381.923518057498,
+          "cooling": {
+            "walls": 1035.6666666666667,
+            "roof": 640,
+            "floor": 448,
+            "door": 72,
+            "windowConduction": 880,
+            "windowSolar": 3360,
+            "outsideAirSensible": 226.8797052171637,
+            "peopleSensible": 460,
+            "internalSensible": 597.1,
+            "outsideAirLatent": 1488.818652824611,
+            "peopleLatent": 400,
+            "duct": 768.6772019766754
+          },
+          "heating": {
+            "walls": 3824,
+            "roof": 1536,
+            "floor": 2150.3999999999996,
+            "door": 345.6,
+            "windows": 4224,
+            "outsideAir": 1236.5958500532372,
+            "duct": 1065.327668004259
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 22.4
+          },
+          "air": {
+            "coolDensity": 0.9378294693169795,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "high": {
+          "coolingTotal": 13696.241944658588,
+          "heatingTotal": 19182.83529917357,
+          "cooling": {
+            "walls": 1428.6888888888889,
+            "roof": 917.3333333333333,
+            "floor": 597.3333333333334,
+            "door": 96,
+            "windowConduction": 968.0000000000001,
+            "windowSolar": 3863.9999999999995,
+            "outsideAirSensible": 340.31955782574556,
+            "peopleSensible": 529,
+            "internalSensible": 686.665,
+            "outsideAirLatent": 2233.227979236917,
+            "peopleLatent": 459.99999999999994,
+            "duct": 1575.6738520403685
+          },
+          "heating": {
+            "walls": 5098.666666666667,
+            "roof": 2048,
+            "floor": 2867.2,
+            "door": 460.79999999999995,
+            "windows": 4646.400000000001,
+            "outsideAir": 1854.8937750798561,
+            "duct": 2206.874857427048
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 33.6
+          },
+          "air": {
+            "coolDensity": 0.9378294693169795,
+            "heatDensity": 1.064914580967914,
+            "pressureKpa": 97.71664950796345
+          }
+        }
+      }
+    },
+    {
+      "inputs": {
+        "slides": 0,
+        "doorR": 2.5,
+        "coolOutdoor": 65,
+        "outdoorRh": 55,
+        "heatOutdoor": 70,
+        "coolIndoor": 75,
+        "indoorRh": 50,
+        "heatIndoor": 68,
+        "ventilationCfm": 0,
+        "coolDuctLoss": 0.08,
+        "heatDuctLoss": 0.08,
+        "internalWatts": 0,
+        "internalDuty": 1,
+        "altitude": 1000,
+        "people": 0,
+        "sun": {
+          "roof": 10,
+          "wall": 3,
+          "window": 60
+        },
+        "length": 28,
+        "width": 8,
+        "height": 8,
+        "windowArea": 80,
+        "wallR": 6,
+        "roofR": 7,
+        "floorR": 5,
+        "ach": 0.75,
+        "windowU": 1.1,
+        "shgc": 0.7
+      },
+      "expected": {
+        "low": {
+          "coolingTotal": 3414.55625,
+          "heatingTotal": 0,
+          "cooling": {
+            "walls": 169.29166666666669,
+            "roof": 226.66666666666666,
+            "floor": 0,
+            "door": 0,
+            "windowConduction": 0,
+            "windowSolar": 2856,
+            "outsideAirSensible": 0,
+            "peopleSensible": 0,
+            "internalSensible": 0,
+            "outsideAirLatent": 0,
+            "peopleLatent": 0,
+            "duct": 162.5979166666667
+          },
+          "heating": {
+            "walls": 0,
+            "roof": 0,
+            "floor": 0,
+            "door": 0,
+            "windows": 0,
+            "outsideAir": 0,
+            "duct": 0
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 15.679999999999998
+          },
+          "air": {
+            "coolDensity": 0.9735787772368902,
+            "heatDensity": 0.9643883494494293,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "expected": {
+          "coolingTotal": 4232.52,
+          "heatingTotal": 0,
+          "cooling": {
+            "walls": 239,
+            "roof": 320,
+            "floor": 0,
+            "door": 0,
+            "windowConduction": 0,
+            "windowSolar": 3360,
+            "outsideAirSensible": 0,
+            "peopleSensible": 0,
+            "internalSensible": 0,
+            "outsideAirLatent": 0,
+            "peopleLatent": 0,
+            "duct": 313.52
+          },
+          "heating": {
+            "walls": 0,
+            "roof": 0,
+            "floor": 0,
+            "door": 0,
+            "windows": 0,
+            "outsideAir": 0,
+            "duct": 0
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 22.4
+          },
+          "air": {
+            "coolDensity": 0.9735787772368902,
+            "heatDensity": 0.9643883494494293,
+            "pressureKpa": 97.71664950796345
+          }
+        },
+        "high": {
+          "coolingTotal": 5334.880666666667,
+          "heatingTotal": 0,
+          "cooling": {
+            "walls": 366.46666666666664,
+            "roof": 490.66666666666663,
+            "floor": 0,
+            "door": 0,
+            "windowConduction": 0,
+            "windowSolar": 3863.9999999999995,
+            "outsideAirSensible": 0,
+            "peopleSensible": 0,
+            "internalSensible": 0,
+            "outsideAirLatent": 0,
+            "peopleLatent": 0,
+            "duct": 613.7473333333334
+          },
+          "heating": {
+            "walls": 0,
+            "roof": 0,
+            "floor": 0,
+            "door": 0,
+            "windows": 0,
+            "outsideAir": 0,
+            "duct": 0
+          },
+          "geometry": {
+            "floorArea": 224,
+            "roofArea": 224,
+            "wallArea": 478,
+            "windowArea": 80,
+            "doorArea": 18,
+            "volume": 1792,
+            "infiltrationCfm": 33.6
+          },
+          "air": {
+            "coolDensity": 0.9735787772368902,
+            "heatDensity": 0.9643883494494293,
+            "pressureKpa": 97.71664950796345
+          }
+        }
+      }
+    }
+  ]
+}
