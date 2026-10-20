@@ -5,7 +5,7 @@
   "description": "Static RV heating and cooling planning calculator",
   "scripts": {
     "test": "node --test tests/*.test.cjs",
-    "check": "node --check calculator.js && node --check slide-outs.js"
+    "check": "node --check calculator.js && node --check equipment-catalog.js && node --check slide-outs.js"
   },
   "engines": {
     "node": ">=24.15.0"

@@ -168,3 +168,75 @@ test('DOM: five-slide limit disables Add and removing a draft re-enables it', as
   apply(a); assert.equal(a.api.getState().slideOuts.length, 4);
   assert.equal(a.api.getResults().breakdown.geometry.slideFloorArea, 8);
 });
+
+test('DOM: recommendations show model codes and separate calculated load from catalog capacity', async t => {
+  const a = await app(t); const raw = a.api.getResults().raw.expected;
+  const ac = a.api.getAcSystems().find(s => s.capacity >= raw.coolingTotal);
+  const heat = a.api.getFurnaceSystems().find(s => s.output >= raw.heatingTotal);
+  assert.match(a.$('#coolingModelMatch').textContent, new RegExp(ac.detail));
+  assert.match(a.$('#furnaceMatch').textContent, new RegExp(heat.modelNumber));
+  assert.match(a.$('#furnaceMatch').textContent, /delivered/);
+  assert.match(a.$('#catalogStatus').textContent, /2026-10-20/);
+  assert.match(a.$('#catalogStatus').textContent, /not live stock/);
+  assert.equal(a.api.getEquipmentCatalog().models.length, 9);
+  const capacity = Number(a.$('#coolingMatch').textContent.replace(/[^\d]/g, ''));
+  assert.equal(capacity, ac.capacity); assert.ok(capacity >= raw.coolingTotal);
+});
+test('DOM: selecting a different capacity updates linked models and labels an undersized selection', async t => {
+  const a = await app(t);
+  const lower = a.$('#acCompareOptions .capacity-card:not(.recommended):not(.unavailable)');
+  assert.ok(lower); lower.click();
+  const chosen = a.api.getAcSystems().find(s => s.id === lower.dataset.systemId);
+  assert.match(a.$('#acModelReference').textContent, new RegExp(chosen.detail));
+  const code = chosen.components[0].modelId;
+  const model = a.api.getEquipmentCatalog().models.find(m => m.id === code);
+  const product = a.$('#acModelReference a');
+  assert.equal(product.href, model.productUrl);
+  assert.equal(product.target, '_blank'); assert.ok(product.rel.includes('noopener'));
+  assert.equal(a.window.document.querySelectorAll('.capacity-card a').length, 0, 'links are not nested in buttons');
+  if (chosen.capacity < a.api.getResults().raw.expected.coolingTotal) assert.match(a.$('#acModelReference .capacity-deficit').textContent, /does not cover/);
+});
+test('DOM: model details link furnace delivered ratings to the manufacturer manual', async t => {
+  const a = await app(t);
+  assert.match(a.$('#furnaceModelReference').textContent, /fuel input → .*delivered heat/);
+  const links = [...a.window.document.querySelectorAll('#furnaceModelReference a')];
+  assert.ok(links.some(link => link.href.endsWith('81453.pdf#page=7')));
+});
+test('DOM: zero heating load gives no furnace recommendation or false capacity-exceeded alert', async t => {
+  const a = await app(t); a.click('[data-mode="furnace"]');
+  a.click('#advancedShortcut'); a.fill('#advHeatTemp', 68); a.click('#applyAdvanced');
+  assert.equal(a.api.getResults().raw.expected.heatingTotal, 0);
+  assert.match(a.$('#furnaceMatch').textContent, /No heating demand/);
+  assert.equal(a.$('#capacityAlert').hidden, true);
+  assert.equal(a.api.getState().selectedFurnace, null);
+  assert.equal(a.window.document.querySelectorAll('#furnaceCompareOptions .unavailable').length, 3);
+  assert.match(a.$('#furnaceModelReference').textContent, /No equipment capacity/);
+});
+test('DOM: beyond-catalog loads remain explicit and the highest option is labeled insufficient', async t => {
+  const a = await app(t);
+  a.fill('#lengthNumber', 60, 'change'); a.fill('#widthNumber', 10, 'change'); a.fill('#heightNumber', 10, 'change'); a.fill('#construction', 'older', 'change');
+  a.click('#advancedShortcut'); a.fill('#advCoolTemp', 125); a.fill('#advOutdoorRh', 90); a.fill('#advHeatTemp', -40); a.click('#applyAdvanced');
+  const r = a.api.getResults().raw.expected;
+  assert.ok(r.coolingTotal > 45000 && r.heatingTotal > 30400);
+  assert.equal(a.window.document.querySelectorAll('.capacity-card.recommended').length, 0);
+  assert.match(a.$('#coolingModelMatch').textContent, /exceeds/);
+  assert.match(a.$('#furnaceMatch').textContent, /Beyond/);
+  assert.match(a.$('#acModelReference').textContent, /does not cover/);
+  assert.match(a.$('#furnaceModelReference').textContent, /does not cover/);
+});
+test('DOM: a selected multi-unit plan lists component quantity and avoids single-model claims', async t => {
+  const a = await app(t);
+  a.fill('#lengthNumber', 50, 'change');
+  const ac = a.api.getAcSystems().find(s => s.id === a.api.getState().selectedAc);
+  assert.ok(ac.unitCount > 1);
+  assert.match(a.$('#acModelReference h3').textContent, /multi-unit capacity plan/);
+  assert.match(a.$('#acModelReference').textContent, /planning sum/);
+  assert.match(a.$('#coolingModelMatch').textContent, /-unit capacity plan/);
+});
+test('DOM: catalog API snapshots do not allow callers to mutate model ratings', async t => {
+  const a = await app(t);
+  const snapshot = a.api.getEquipmentCatalog(); snapshot.models[0].capacity = -1;
+  const plans = a.api.getAcSystems(); plans[0].components[0].quantity = 99;
+  assert.equal(a.api.getEquipmentCatalog().models[0].capacity, 11000);
+  assert.equal(a.api.getAcSystems()[0].components[0].quantity, 1);
+});

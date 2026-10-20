@@ -213,6 +213,7 @@ test('browser script and CommonJS exports use the identical model', () => {
 test('production HTML loads both modules and inline script parses', () => {
   const html = fs.readFileSync(require.resolve('../index.html'), 'utf8');
   assert.ok(html.includes('<script src="calculator.js"></script>'));
+  assert.ok(html.includes('<script src="equipment-catalog.js"></script>'));
   assert.ok(html.includes('<script src="slide-outs.js"></script>'));
   assert.ok(!html.includes('advSlides') && !html.includes('areaFactor'));
   for (const script of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) assert.doesNotThrow(() => new vm.Script(script[1]));
