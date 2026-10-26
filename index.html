@@ -179,8 +179,8 @@
 
     .calculator-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.22fr) minmax(380px, 0.92fr);
-      gap: clamp(28px, 3vw, 44px);
+      grid-template-columns: minmax(0, 1.16fr) minmax(380px, 1fr);
+      gap: clamp(24px, 2.2vw, 34px);
       align-items: start;
     }
 
@@ -743,22 +743,25 @@
       position: static;
       align-self: start;
       min-height: 520px;
-      padding: clamp(24px, 2.5vw, 38px);
-      color: #fff;
-      background: #050505;
+      padding: 22px;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      box-shadow: none;
     }
 
     .result-panel h2 {
-      margin-bottom: 22px;
-      font-size: 21px;
-      line-height: 1;
+      margin-bottom: 16px;
+      font-size: 29px;
+      line-height: 1.1;
+      text-transform: none;
+      letter-spacing: -.025em;
     }
 
     .result-block {
       padding: 0 0 22px;
-      border-bottom: 1px solid #656565;
+      border-bottom: 1px solid var(--line);
     }
 
     .result-block + .result-block { padding-top: 22px; }
@@ -805,8 +808,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      border-top: 1px solid #777;
-      color: #c8c8c8;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
       font-size: 10px;
       font-weight: 800;
       letter-spacing: 0.06em;
@@ -818,7 +821,7 @@
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       overflow: hidden;
-      border: 1px solid #626262;
+      border: 1px solid var(--line);
       border-radius: var(--radius);
     }
 
@@ -828,21 +831,21 @@
       text-align: center;
     }
 
-    .scenario-value + .scenario-value { border-left: 1px solid #626262; }
+    .scenario-value + .scenario-value { border-left: 1px solid var(--line); }
 
-    .scenario-value.expected { background: #242424; }
+    .scenario-value.expected { background: #f2f2f2; }
 
     .scenario-value span {
       display: block;
       margin-bottom: 2px;
-      color: #bdbdbd;
+      color: var(--muted);
       font-size: 10px;
       font-weight: 800;
       letter-spacing: 0.06em;
       text-transform: uppercase;
     }
 
-    .scenario-value.expected span { color: #fff; }
+    .scenario-value.expected span { color: var(--ink); }
 
     .scenario-value strong {
       display: block;
@@ -877,12 +880,12 @@
       grid-template-columns: 28px 1fr;
       gap: 12px;
       align-items: start;
-      border-bottom: 1px solid #474747;
+      border-bottom: 0;
     }
 
     .confidence strong {
       display: block;
-      font-size: 17px;
+      font-size: 12px;
     }
 
     .confidence p {
@@ -893,14 +896,14 @@
 
     .result-advisory {
       min-height: 52px;
-      margin: 0 calc(clamp(24px, 2.5vw, 38px) * -1) calc(clamp(24px, 2.5vw, 38px) * -1);
-      padding: 15px clamp(24px, 2.5vw, 38px);
+      margin: 0;
+      padding: 12px 0 0;
       display: grid;
       grid-template-columns: 22px 1fr;
       gap: 10px;
       align-items: start;
-      color: #dedede;
-      border-top: 1px solid #474747;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
       font-size: 12px;
       line-height: 1.4;
     }
@@ -1582,7 +1585,86 @@
     }
 
 
-    .result-model { margin: 12px 0; color: #dedede; font-size: 12px; overflow-wrap: anywhere; }
+    .result-model { margin: 12px 0; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+    .recommended-product { min-width: 0; }
+    .product-visual { display: block; overflow: hidden; border-radius: 4px; background: #f0f1f3; }
+    .product-image-wrap { position: relative; display: grid; place-items: center; width: 100%; height: 100%; overflow: hidden; }
+    .recommended-product-photo { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; }
+    .product-image-fallback { padding: 18px; color: var(--muted); font-size: 12px; text-align: center; }
+    .recommended-product--ac .product-visual { height: 210px; margin-bottom: 12px; }
+    .recommended-product--ac .recommended-product-photo { transform: translateY(-8%) scale(1.7); }
+    .product-category { display: block; margin-bottom: 1px; color: var(--muted); font-size: 12px; }
+    .product-model { margin: 0; font-size: 25px; font-weight: 900; line-height: 1.15; letter-spacing: -.025em; overflow-wrap: anywhere; }
+    .product-family { margin: 3px 0; font-size: 15px; line-height: 1.3; }
+    .product-sku { margin: 3px 0 10px; color: var(--muted); font-size: 12px; }
+    .product-rating { margin: 0 0 5px; font-size: 19px; font-weight: 800; line-height: 1.3; }
+    .product-input { display: block; margin-top: 3px; font-size: 13px; font-weight: 600; }
+    .product-fit { margin: 0 0 12px; font-size: 13px; line-height: 1.45; }
+    .recommended-product-link { min-height: 42px; padding: 10px 14px; display: flex; align-items: center; justify-content: center; gap: 10px; color: #fff; background: var(--red); border-radius: 4px; font-size: 14px; font-weight: 800; line-height: 1.3; text-align: center; text-decoration: none; }
+    .recommended-product-link:hover { background: var(--red-dark); }
+    .recommended-product-link .icon { width: 18px; height: 18px; }
+    .product-image-credit { margin: 7px 0 0; color: var(--muted); font-size: 10px; }
+    .recommended-product--furnace { display: grid; grid-template-columns: minmax(115px, .85fr) minmax(0, 1.15fr); align-items: center; gap: 18px; }
+    .recommended-product--furnace .product-visual { height: 158px; }
+    .recommended-product--furnace .recommended-product-photo { transform: scale(1.4); }
+    .recommended-product--furnace .product-model { font-size: 23px; }
+    .recommended-product--furnace .product-family { display: none; }
+    .recommended-product--furnace .product-rating { font-size: 15px; }
+    .recommended-product--furnace .product-fit { margin: 7px 0; font-size: 12px; }
+    .recommended-product--furnace .recommended-product-link { min-height: 28px; padding: 3px 0; justify-content: flex-start; color: var(--ink); background: none; text-align: left; text-decoration: underline; text-underline-offset: 3px; font-size: 13px; }
+    .recommended-product--furnace .product-image-credit { grid-column: 1 / -1; margin-top: -10px; }
+    .result-calculation { margin-top: 12px; border: 1px solid var(--line); border-radius: 4px; font-size: 12px; }
+    .result-calculation > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; cursor: pointer; list-style: none; }
+    .result-calculation > summary::-webkit-details-marker { display: none; }
+    .result-calculation > summary > span:first-child::before { display: inline-block; width: 7px; height: 7px; margin: 0 9px 2px 1px; border-right: 1.5px solid; border-bottom: 1.5px solid; content: ""; transform: rotate(45deg); }
+    .result-calculation[open] > summary > span:first-child::before { transform: rotate(225deg); margin-bottom: -1px; }
+    .result-calculation > summary > strong { flex-shrink: 0; font-size: 11px; }
+    .result-calculation-body { padding: 0 12px 12px; }
+    .result-calculation .result-main { display: block; margin-top: 8px; }
+    .result-calculation .result-kicker { font-size: 10px; }
+    .result-calculation .result-number { font-size: 20px; letter-spacing: 0; line-height: 1.3; }
+    .result-calculation .result-unit { font-size: 11px; }
+    .result-calculation .scenario-header { margin-top: 10px; }
+    .product-empty { padding: 18px; background: #f5f5f5; border-radius: 4px; }
+    .product-empty .icon { width: 26px; height: 26px; margin-bottom: 12px; }
+    .product-empty h3 { margin: 0 0 7px; font-size: 20px; line-height: 1.2; text-transform: none; }
+    .product-empty p { margin: 0; color: var(--muted); font-size: 13px; }
+    .capacity-card { display: grid; grid-template-columns: 82px minmax(0, 1fr); justify-items: start; align-content: center; gap: 3px 10px; padding: 15px 12px; text-align: left; }
+    .capacity-card > :not(.capacity-image):not(.capacity-check) { grid-column: 2; }
+    .capacity-image { grid-column: 1; grid-row: 1 / 7; width: 82px; height: 82px; background: #f0f1f3; border-radius: 3px; }
+    .capacity-image img { transform: scale(1.15); }
+    .capacity-card .capacity-detail { font-size: 13px; font-weight: 800; }
+    .capacity-card .capacity-value { font-size: 15px; }
+    .capacity-sku { color: var(--muted); font-size: 10px; }
+    .capacity-card .capacity-model-type { display: none; }
+    .selected-product { display: grid; grid-template-columns: 140px minmax(0, 1fr); align-items: start; gap: 20px; }
+    .selected-product-visual { height: 130px; background: #f0f1f3; border-radius: 4px; }
+    .selected-product-visual img { transform: scale(1.15); }
+    .selected-product .product-model { margin: 0 0 5px; font-size: 20px; }
+    .selected-product .product-sku { margin-bottom: 8px; }
+    .selected-product-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 8px; font-size: 12px; }
+    .selected-product-link .icon { width: 15px; height: 15px; }
+    @media (max-width: 1100px) and (min-width: 821px) { .capacity-card { grid-template-columns: 1fr; text-align: center; justify-items: center; } .capacity-card > :not(.capacity-check) { grid-column: 1; } .capacity-image { grid-row: auto; } }
+    @media (max-width: 620px) {
+      .result-panel { padding: 18px; }
+      .result-panel h2 { font-size: 27px; }
+      .result-advisory { margin: 0; padding: 12px 0 0; }
+      .recommended-product--ac .product-visual { height: 180px; }
+      .recommended-product--furnace { grid-template-columns: minmax(100px, .85fr) minmax(0, 1.15fr); gap: 12px; }
+      .recommended-product--furnace .product-visual { height: 135px; }
+      .recommended-product--furnace .recommended-product-photo { transform: scale(1.25); }
+      .recommended-product--furnace .product-model { font-size: 20px; }
+      .recommended-product--furnace .product-rating { font-size: 13px; }
+      .recommended-product--furnace .recommended-product-link { font-size: 12px; }
+      .capacity-card { display: grid; grid-template-columns: 76px minmax(0, 1fr); min-width: 0; padding: 15px 12px; align-items: center; justify-items: start; text-align: left; gap: 4px 12px; }
+      .capacity-image { width: 76px; height: 65px; }
+      .capacity-card .capacity-value { font-size: 14px; }
+      .capacity-card .capacity-detail { font-size: 11px; }
+      .capacity-card .capacity-status { font-size: 10px; }
+      .capacity-card .capacity-check { width: 16px; height: 16px; top: 6px; right: 6px; }
+      .selected-product { grid-template-columns: 92px minmax(0, 1fr); gap: 12px; }
+      .selected-product-visual { height: 100px; }
+    }
     .catalog-note { margin: -4px 0 16px; color: var(--muted); font-size: 12px; }
     .capacity-detail { overflow-wrap: anywhere; }
     .capacity-model-type { color: var(--muted); font-size: 10px; }
@@ -1803,13 +1885,16 @@
       </div>
 
       <aside class="result-panel" id="results" aria-labelledby="resultTitle" aria-live="polite" data-testid="results-panel">
-        <h2 id="resultTitle">Your comfort match</h2>
+        <h2 id="resultTitle">Your Dometic match</h2>
         <div id="geometryError" class="form-error" role="alert" hidden></div>
         <div id="resultContent">
 
         <div class="result-block" id="coolingResult">
+          <div id="coolingProduct"></div>
+          <details class="result-calculation">
+            <summary><span>Calculated cooling load</span><strong id="coolingLoadSummary"></strong></summary>
+            <div class="result-calculation-body">
           <div class="result-main">
-            <svg class="icon icon-xl" aria-hidden="true"><use href="#icon-snow"/></svg>
             <div>
               <span class="result-kicker">Recommended cooling capacity</span>
               <div class="result-number-line"><span class="result-number" id="coolingMatch">15,000</span><span class="result-unit">BTU/hr</span></div>
@@ -1822,11 +1907,16 @@
             <div class="scenario-value expected"><span>Expected</span><strong id="coolingExpected">13,600</strong></div>
             <div class="scenario-value"><span>High</span><strong id="coolingHigh">19,000</strong></div>
           </div>
+            </div>
+          </details>
         </div>
 
         <div class="result-block" id="heatingResult">
+          <div id="heatingProduct"></div>
+          <details class="result-calculation">
+            <summary><span>Calculated heating load</span><strong id="heatingLoadSummary"></strong></summary>
+            <div class="result-calculation-body">
           <div class="result-main">
-            <svg class="icon icon-xl" aria-hidden="true"><use href="#icon-flame"/></svg>
             <div>
               <span class="result-kicker">Required heat</span>
               <div class="result-number-line"><span class="result-number" id="heatingExpected">15,400</span><span class="result-unit">BTU/hr</span></div>
@@ -1839,6 +1929,8 @@
             <div class="scenario-value"><span>High</span><strong id="heatingHigh">21,900</strong></div>
           </div>
           <div class="match-line"><strong>Furnace match</strong><span id="furnaceMatch">25K input · 19K published output</span></div>
+            </div>
+          </details>
         </div>
 
         <section class="slide-impact" id="slideResult" aria-labelledby="slideResultTitle" hidden>
@@ -1858,8 +1950,8 @@
     </section>
 
     <section class="comparison-section" id="comparison" aria-labelledby="compareTitle">
-      <h2 class="section-heading" id="compareTitle">Match your load to Dometic models</h2>
-      <p class="section-intro">The recommendation is the smallest compared catalog capacity that covers the expected load. Compare the model below it and the next larger option. Furnace sizing uses delivered heat, while A/C uses nominal cooling capacity.</p>
+      <h2 class="section-heading" id="compareTitle">Explore the listed models</h2>
+      <p class="section-intro">Your recommendation is the smallest listed model that covers the expected load. Select another model to see its photo, specs and product page. Furnace sizing uses delivered heat output.</p>
       <p class="catalog-note" id="catalogStatus"></p>
       <div class="compare-shell">
         <div class="compare-row" id="acCompareRow">
@@ -2108,7 +2200,10 @@
       ratingBasis: "Manufacturer product description: 15,000 BTU",
       listingSourceUrl: acListing
     }
-  ].map((model) => ({ ...model, kind: "ac", market: "US", listingStatus: "listed", checkedAt, ratingSourceUrl: model.productUrl }));
+  ].map((model) => ({ ...model, kind: "ac", market: "US", listingStatus: "listed", checkedAt, ratingSourceUrl: model.productUrl,
+    imageSrc: `assets/products/${model.modelNumber.toLowerCase()}.png`,
+    imageAlt: `${model.modelNumber}: Dometic FreshJet 5 ${model.id === "fj15" ? "black rooftop A/C" : "white rooftop A/C family image"}`,
+    imageNote: model.id === "fj15" ? "Product photo: Dometic" : "Dometic FreshJet 5 family image; see model and SKU for exact variant." }));
 
   const furnaceModels = [
     {
@@ -2155,7 +2250,10 @@
     }
   ].map((model) => ({ ...model, kind: "furnace", market: "US", listingStatus: "listed", checkedAt,
     listingSourceUrl: furnaceListing, ratingSourceUrl: furnaceManual,
-    ratingNote: "Match required heat against delivered output. Input BTU/hr describes fuel consumption, not heat delivered to the RV." }));
+    ratingNote: "Match required heat against delivered output. Input BTU/hr describes fuel consumption, not heat delivered to the RV.",
+    imageSrc: `assets/products/${model.modelNumber.toLowerCase()}.webp`,
+    imageAlt: `${model.modelNumber}: ${["f25", "f30"].includes(model.id) ? "Dometic medium-furnace family image" : "Dometic RV furnace product photo"}`,
+    imageNote: ["f25", "f30"].includes(model.id) ? "Dometic medium-furnace family image; see model and SKU for exact variant." : "Product photo: Dometic" }));
 
   const models = freeze([...acModels, ...furnaceModels]);
   const byId = new Map(models.map((model) => [model.id, model]));
@@ -2460,6 +2558,76 @@
         return "Conservative coverage";
       }
 
+      function productImage(model, className = "", eager = false) {
+        const wrapper = document.createElement("div");
+        wrapper.className = `product-image-wrap ${className}`;
+        const img = document.createElement("img");
+        img.className = "recommended-product-photo";
+        img.src = model.imageSrc; img.alt = model.imageAlt;
+        img.width = 900; img.height = 900; img.decoding = "async";
+        img.loading = eager ? "eager" : "lazy";
+        const fallback = document.createElement("span");
+        fallback.className = "product-image-fallback";
+        fallback.textContent = "Product image unavailable";
+        fallback.hidden = true;
+        fallback.setAttribute("role", "img");
+        fallback.setAttribute("aria-label", `${model.modelNumber}: product image unavailable`);
+        img.addEventListener("error", () => { img.hidden = true; fallback.hidden = false; }, { once: true });
+        wrapper.append(img, fallback);
+        return wrapper;
+      }
+
+      function productLink(model, className, text) {
+        const link = document.createElement("a");
+        link.className = className; link.href = model.productUrl;
+        link.target = "_blank"; link.rel = "noopener noreferrer";
+        link.textContent = text;
+        link.setAttribute("aria-label", `${text}: ${model.modelNumber} (opens in a new tab)`);
+        const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        icon.setAttribute("class", "icon"); icon.setAttribute("aria-hidden", "true"); icon.setAttribute("viewBox", "0 0 24 24");
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", "M6 18 18 6M6 6h12v12");
+        path.setAttribute("fill", "none"); path.setAttribute("stroke", "currentColor"); path.setAttribute("stroke-width", "1.7");
+        icon.append(path); link.append(icon);
+        return link;
+      }
+
+      function renderRecommendedProduct(container, system, type, load) {
+        container.replaceChildren();
+        const isAc = type === "ac";
+        if (!system) {
+          const empty = document.createElement("div"); empty.className = "product-empty";
+          const heading = document.createElement("h3");
+          heading.textContent = load === 0 ? `No ${isAc ? "cooling" : "heating"} needed at these conditions` : `No listed ${isAc ? "A/C" : "furnace"} meets this load`;
+          const text = document.createElement("p");
+          const maximum = isAc ? acSystems.at(-1).capacity : furnaceSystems.at(-1).output;
+          text.textContent = load === 0 ? "The calculated load is zero, so no product is recommended." : `Your expected ${isAc ? "cooling" : "heating"} load is ${fmt(round100(load))} BTU/hr. The largest listed ${isAc ? "A/C provides" : "furnace delivers"} ${fmt(maximum)} BTU/hr. Review the conditions or ask an RV HVAC installer about your options.`;
+          empty.append(heading, text); container.append(empty); return;
+        }
+        const model = Equipment.modelsFor(system)[0].model;
+        const card = document.createElement("article");
+        card.className = `recommended-product recommended-product--${type}`;
+        const visual = productLink(model, "product-visual", "");
+        visual.setAttribute("aria-label", `View ${model.modelNumber} on Dometic (opens in a new tab)`);
+        visual.replaceChildren(productImage(model, "", true));
+        const info = document.createElement("div"); info.className = "product-info";
+        const category = document.createElement("span"); category.className = "product-category";
+        category.textContent = isAc ? "Air conditioning" : "Furnace";
+        const title = document.createElement("h3"); title.className = "product-model"; title.textContent = model.modelNumber;
+        const family = document.createElement("p"); family.className = "product-family"; family.textContent = model.name.replace(/^Dometic /, "");
+        const sku = document.createElement("p"); sku.className = "product-sku"; sku.textContent = `SKU ${model.sku}`;
+        const rating = document.createElement("p"); rating.className = "product-rating";
+        rating.textContent = isAc ? `${model.approximate ? "≈" : ""}${fmt(model.capacity)} BTU/hr cooling` : `${fmt(model.output)} BTU/hr delivered`;
+        if (!isAc) {
+          const input = document.createElement("span"); input.className = "product-input"; input.textContent = `${fmt(model.input)} BTU/hr input`; rating.append(input);
+        }
+        const fit = document.createElement("p"); fit.className = "product-fit";
+        fit.textContent = `Covers your ${fmt(round100(load))} BTU/hr ${isAc ? "cooling" : "heating"} load.`;
+        info.append(category, title, family, sku, rating, fit, productLink(model, "recommended-product-link", "View product on Dometic"));
+        const credit = document.createElement("p"); credit.className = "product-image-credit"; credit.textContent = model.imageNote;
+        card.append(visual, info, credit); container.append(card);
+      }
+
       function renderCapacityCards(container, comparisons, recommended, selectedId, type, results) {
         container.innerHTML = "";
         comparisons.forEach(({ system, tier, empty }) => {
@@ -2484,10 +2652,12 @@
           button.innerHTML = `
             <span class="capacity-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg></span>
             <span class="capacity-tier">${tier}</span>
-            <span class="capacity-value">${system.label}</span>
-            <span class="capacity-detail">${system.detail}</span>
+            <span class="capacity-detail">${system.modelNumber}</span>
+            <span class="capacity-value">${type === "ac" ? system.label : `${fmt(system.output)} BTU/hr delivered`}</span>
+            <span class="capacity-sku">SKU ${system.sku}</span>
             <span class="capacity-model-type">${type === "ac" ? system.planType : `${fmt(system.output)} BTU/hr delivered`}</span>
             <span class="capacity-status">${isRecommended ? "Recommended · " : ""}${fit}</span>`;
+          button.prepend(productImage(Equipment.modelsFor(system)[0].model, "capacity-image"));
           container.appendChild(button);
         });
       }
@@ -2509,21 +2679,24 @@
         const capacity = type === "ac" ? system.capacity : system.output;
         const difference = capacity - load;
         paragraph(difference >= 0 ? `${type === "ac" ? "Nominal cooling capacity" : "Delivered furnace output"} ${system.approximate ? "≈" : ""}${fmt(capacity)} BTU/hr; expected load ${fmt(load)} BTU/hr; ${fmt(difference)} BTU/hr capacity margin.` : `Below the expected calculated load by ${fmt(-difference)} BTU/hr. This selected option does not cover the expected load.`, difference < 0 ? "capacity-deficit" : "capacity-margin");
-        const list = document.createElement("ul");
-        Equipment.modelsFor(system).forEach(({ model, quantity }) => {
-          const item = document.createElement("li");
-          const productLink = document.createElement("a");
-          productLink.href = model.productUrl; productLink.target = "_blank"; productLink.rel = "noopener noreferrer";
-          productLink.textContent = `${quantity > 1 ? `${quantity} × ` : ""}${model.name}`;
+        const detail = document.createElement("div"); detail.className = "selected-product";
+        Equipment.modelsFor(system).forEach(({ model }) => {
+          const visual = productLink(model, "selected-product-visual", "");
+          visual.replaceChildren(productImage(model));
+          const info = document.createElement("div");
+          const name = document.createElement("h4"); name.className = "product-model"; name.textContent = model.modelNumber;
+          const family = document.createElement("p"); family.textContent = model.name;
           const spec = document.createElement("span"); spec.className = "model-code";
           spec.textContent = `${model.modelNumber} · SKU ${model.sku} · ${model.configuration}`;
           const rating = document.createElement("span"); rating.className = "model-code";
           rating.textContent = type === "ac" ? `${model.approximate ? "Approximately " : ""}${fmt(model.capacity)} BTU/hr cooling per unit.` : `${fmt(model.input)} BTU/hr fuel input → ${fmt(model.output)} BTU/hr delivered heat.`;
           const source = document.createElement("a"); source.href = model.ratingSourceUrl; source.target = "_blank"; source.rel = "noopener noreferrer";
           source.textContent = "Manufacturer rating source";
-          item.append(productLink, spec, rating, source); list.append(item);
+          const credit = document.createElement("p"); credit.className = "product-image-credit"; credit.textContent = model.imageNote;
+          info.append(name, family, spec, rating, productLink(model, "selected-product-link", "View product on Dometic"), document.createElement("br"), source, credit);
+          detail.append(visual, info);
         });
-        container.append(list);
+        container.append(detail);
         if (system.approximate) paragraph("This model's cooling capacity and capacity margin are approximate. Verify performance at design weather.");
         paragraph(type === "ac" ? "A/C distribution boxes, grilles and controls may be separate purchases. Confirm the correct configuration with a Dometic dealer." : "Verify door/doorless configuration, ducts, gas supply, venting and installation requirements with a qualified installer.");
       }
@@ -2612,6 +2785,10 @@
         state.lastResults = results;
         const acRec = recommendAc(results.raw.expected.coolingTotal);
         const furnaceRec = recommendFurnace(results.raw.expected.heatingTotal);
+        renderRecommendedProduct($("#coolingProduct"), acRec, "ac", results.raw.expected.coolingTotal);
+        renderRecommendedProduct($("#heatingProduct"), furnaceRec, "furnace", results.raw.expected.heatingTotal);
+        $("#coolingLoadSummary").textContent = `${fmt(results.expected.cooling)} BTU/hr`;
+        $("#heatingLoadSummary").textContent = `${fmt(results.expected.heating)} BTU/hr`;
 
         els.coolingMatch.textContent = acRec ? `${acRec.approximate ? "≈" : ""}${fmt(acRec.capacity)}` : results.raw.expected.coolingTotal === 0 ? "0" : "—";
         $("#coolingModelMatch").textContent = acRec ? `${acRec.modelNumber} · SKU ${acRec.sku}` : results.raw.expected.coolingTotal === 0 ? "No cooling demand at these conditions" : "No listed A/C meets this load";

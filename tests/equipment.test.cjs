@@ -136,6 +136,25 @@ test('the snapshot retains dated official provenance without implying live stock
   }
 });
 
+test('all nine products have local product images with matching alt text and manufacturer attribution', () => {
+  const imageDirectory = path.join(__dirname, '..', 'assets', 'products') + path.sep;
+  for (const model of c.models) {
+    const filename = path.resolve(__dirname, '..', model.imageSrc);
+    assert.ok(filename.startsWith(imageDirectory), model.modelNumber + ' uses a local product asset');
+    const data = fs.readFileSync(filename);
+    if (filename.endsWith('.png')) {
+      assert.deepEqual(data.subarray(0, 8), Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
+      assert.ok(data.readUInt32BE(16) > 0 && data.readUInt32BE(20) > 0);
+    } else {
+      assert.ok(filename.endsWith('.webp'), model.modelNumber + ' has a supported product image');
+      assert.equal(data.toString('ascii', 0, 4), 'RIFF');
+      assert.equal(data.toString('ascii', 8, 12), 'WEBP');
+    }
+    assert.ok(model.imageAlt.includes(model.modelNumber));
+    assert.match(model.imageNote, /Dometic/);
+  }
+});
+
 test('the inline catalog is immutable and works in a browser without CommonJS or network calls', () => {
   assert.throws(() => { c.models[0].capacity = 1; }, TypeError);
   assert.throws(() => { c.acSystems[0].components[0].quantity = 2; }, TypeError);

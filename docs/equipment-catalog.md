@@ -50,9 +50,11 @@ Examples: 13,800 cooling selects the 15,000-rated FJX5557M. A 30,000 cooling loa
 
 A/C and furnace recommendations are independent capacity matches. The app does not certify a compatible thermostat/control pairing, roof opening, electrical service, gas system, duct/static-pressure setup, venting, installation, staging or performance at the chosen weather/altitude. An installer must verify those details. Higher-than-needed capacities retain the existing oversizing cautions.
 
+Product images are sourced from the exact SKU pages; see [image provenance](../assets/products/README.md). Dometic reuses FreshJet 5 and medium-furnace family imagery for some variants, so model numbers and SKUs identify the actual recommendation. The nine allowed products and capacity ratings in the supplied table remain unchanged.
+
 ## Maintenance and validation
 
-The website has no runtime network or catalog service dependency. Publish `index.html`, `calculator.js` and `slide-outs.js` together. Edit the inline catalog in `index.html` to change the allowed products. Reverify the official listing and rating sources before updating records, adding variants or treating the snapshot as current at a later date; update `checkedAt` and the source documentation together. Remove a delisted/unverified record from automatic matching rather than guessing its replacement or delivered output. Keep capacity class, SKU variant, approximate status and source distinct.
+The website has no runtime network or catalog service dependency. Publish `index.html`, `calculator.js`, `slide-outs.js` and the `assets/products` folder together. Edit the inline catalog in `index.html` to change the allowed products. Reverify the official listing and rating sources before updating records, adding variants or treating the snapshot as current at a later date; update `checkedAt` and the source documentation together. Remove a delisted/unverified record from automatic matching rather than guessing its replacement or delivered output. Keep capacity class, SKU variant, approximate status and source distinct.
 
 Run `npm ci`, `npm run check` and `npm test` with Node 24.15+. Catalog and interaction checks cover the supplied product ratings, exact capacity thresholds, invalid/zero/excess loads, model/SKU/source provenance, approximate HE ratings, single-model suggestions, selected-product links, insufficient-selection messaging, equipment modes and immutable API snapshots. Use the current test output for pass counts.
 

@@ -182,15 +182,55 @@ test('DOM: recommendations show model codes and separate calculated load from ca
   assert.equal(a.api.getEquipmentCatalog().models.length, 9);
   const capacity = Number(a.$('#coolingMatch').textContent.replace(/[^\d]/g, ''));
   assert.equal(capacity, ac.capacity); assert.ok(capacity >= raw.coolingTotal);
+  for (const [selector, system] of [['#coolingProduct', ac], ['#heatingProduct', heat]]) {
+    const model = a.api.getEquipmentCatalog().models.find(model => model.id === system.components[0].modelId);
+    const card = a.$(selector);
+    assert.equal(card.querySelector('h3.product-model').textContent, model.modelNumber);
+    assert.ok(card.querySelector('.product-sku').textContent.includes(model.sku));
+    const photo = card.querySelector('.recommended-product-photo');
+    assert.equal(photo.getAttribute('src'), model.imageSrc);
+    assert.equal(photo.alt, model.imageAlt);
+    assert.equal(photo.closest('a').href, model.productUrl);
+    const product = card.querySelector('.recommended-product-link');
+    assert.equal(product.href, model.productUrl);
+    assert.equal(product.target, '_blank');
+    assert.ok(product.rel.includes('noopener'));
+  }
 });
+
+test('DOM: a failed product photo exposes an accessible fallback and keeps the official product link', async t => {
+  const a = await app(t); a.click('[data-vehicle="van"]');
+  const photo = a.$('#coolingProduct .recommended-product-photo');
+  const fallback = a.$('#coolingProduct .product-image-fallback');
+  const modelNumber = a.$('#coolingProduct .product-model').textContent;
+  const productUrl = a.$('#coolingProduct .recommended-product-link').href;
+  assert.equal(photo.hidden, false);
+  assert.equal(fallback.hidden, true);
+  photo.dispatchEvent(new a.window.Event('error'));
+  assert.equal(photo.hidden, true);
+  assert.equal(fallback.hidden, false);
+  assert.equal(fallback.getAttribute('role'), 'img');
+  assert.equal(fallback.getAttribute('aria-label'), modelNumber + ': product image unavailable');
+  assert.match(fallback.textContent, /Product image unavailable/);
+  assert.equal(a.$('#coolingProduct .recommended-product-link').href, productUrl);
+});
+
 test('DOM: selecting a different capacity updates linked models and labels an undersized selection', async t => {
   const a = await app(t);
+  const originalPhoto = a.$('#acModelReference .selected-product-visual img').getAttribute('src');
   const lower = a.$('#acCompareOptions .capacity-card:not(.recommended):not(.unavailable)');
   assert.ok(lower); lower.click();
   const chosen = a.api.getAcSystems().find(s => s.id === lower.dataset.systemId);
   assert.match(a.$('#acModelReference').textContent, new RegExp(chosen.detail));
   const code = chosen.components[0].modelId;
   const model = a.api.getEquipmentCatalog().models.find(m => m.id === code);
+  assert.equal(lower.querySelector('.capacity-image img').getAttribute('src'), model.imageSrc);
+  assert.ok(lower.querySelector('.capacity-sku').textContent.includes(model.sku));
+  const photo = a.$('#acModelReference .selected-product-visual img');
+  assert.equal(photo.getAttribute('src'), model.imageSrc);
+  assert.notEqual(photo.getAttribute('src'), originalPhoto);
+  assert.equal(photo.alt, model.imageAlt);
+  assert.equal(a.$('#acModelReference .selected-product-link').href, model.productUrl);
   const product = a.$('#acModelReference a');
   assert.equal(product.href, model.productUrl);
   assert.equal(product.target, '_blank'); assert.ok(product.rel.includes('noopener'));
@@ -212,9 +252,15 @@ test('DOM: zero heating load gives no furnace recommendation or false capacity-e
   assert.equal(a.api.getState().selectedFurnace, null);
   assert.equal(a.window.document.querySelectorAll('#furnaceCompareOptions .unavailable').length, 3);
   assert.match(a.$('#furnaceModelReference').textContent, /No equipment capacity/);
+  assert.ok(a.$('#heatingProduct .product-empty'));
+  assert.equal(a.$('#heatingProduct .recommended-product-photo'), null);
+  assert.equal(a.$('#heatingProduct .recommended-product-link'), null);
 });
 test('DOM: beyond-catalog loads remain explicit and the highest option is labeled insufficient', async t => {
   const a = await app(t);
+  a.click('[data-vehicle="van"]');
+  assert.ok(a.$('#coolingProduct .recommended-product-photo'));
+  assert.ok(a.$('#heatingProduct .recommended-product-photo'));
   a.fill('#lengthNumber', 60, 'change'); a.fill('#widthNumber', 10, 'change'); a.fill('#heightNumber', 10, 'change'); a.fill('#construction', 'older', 'change');
   a.click('#advancedShortcut'); a.fill('#advCoolTemp', 125); a.fill('#advOutdoorRh', 90); a.fill('#advHeatTemp', -40); a.click('#applyAdvanced');
   const r = a.api.getResults().raw.expected;
@@ -224,6 +270,11 @@ test('DOM: beyond-catalog loads remain explicit and the highest option is labele
   assert.match(a.$('#furnaceMatch').textContent, /No listed furnace meets this load/);
   assert.match(a.$('#acModelReference').textContent, /does not cover/);
   assert.match(a.$('#furnaceModelReference').textContent, /does not cover/);
+  for (const selector of ['#coolingProduct', '#heatingProduct']) {
+    assert.ok(a.$(selector + ' .product-empty'));
+    assert.equal(a.$(selector + ' .recommended-product-photo'), null);
+    assert.equal(a.$(selector + ' .recommended-product-link'), null);
+  }
 });
 test('DOM: cooling above 15,000 BTU/hr never creates a multi-unit recommendation', async t => {
   const a = await app(t);

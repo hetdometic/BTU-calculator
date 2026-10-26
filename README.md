@@ -2,7 +2,7 @@
 
 Static heating and cooling planning calculator with Dometic equipment comparisons and individual, measured RV slide-outs.
 
-Open `index.html` or serve this directory with `python -m http.server 8765 --bind 127.0.0.1`. No build or runtime packages are required. Keep `index.html`, `calculator.js` and `slide-outs.js` together when deploying.
+Open `index.html` or serve this directory with `python -m http.server 8765 --bind 127.0.0.1`. No build or runtime packages are required. Keep `index.html`, `calculator.js`, `slide-outs.js` and the `assets/products` folder together when deploying.
 
 Install test-only dependencies with `npm ci`, then run regression tests with `npm test`; check JavaScript syntax with `npm run check` (Node 24.15+).
 
