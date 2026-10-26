@@ -43,7 +43,7 @@ test('DOM: initial screen has no inferred slides and retains Dometic equipment c
   assert.match(a.$('h1').textContent, /comfort system/);
   assert.equal(a.api.getState().slideOuts.length, 0);
   assert.equal(a.$('#slideResult').hidden, true);
-  assert.equal(a.api.getAcSystems().at(-1).capacity, 45000);
+  assert.equal(a.api.getAcSystems().at(-1).capacity, 15000);
   assert.equal(a.api.getFurnaceSystems().at(-1).output, 30400);
   assert.equal(a.window.document.querySelectorAll('.capacity-card').length, 6);
 });
@@ -170,7 +170,8 @@ test('DOM: five-slide limit disables Add and removing a draft re-enables it', as
 });
 
 test('DOM: recommendations show model codes and separate calculated load from catalog capacity', async t => {
-  const a = await app(t); const raw = a.api.getResults().raw.expected;
+  const a = await app(t); a.click('[data-vehicle="van"]');
+  const raw = a.api.getResults().raw.expected;
   const ac = a.api.getAcSystems().find(s => s.capacity >= raw.coolingTotal);
   const heat = a.api.getFurnaceSystems().find(s => s.output >= raw.heatingTotal);
   assert.match(a.$('#coolingModelMatch').textContent, new RegExp(ac.detail));
@@ -217,21 +218,23 @@ test('DOM: beyond-catalog loads remain explicit and the highest option is labele
   a.fill('#lengthNumber', 60, 'change'); a.fill('#widthNumber', 10, 'change'); a.fill('#heightNumber', 10, 'change'); a.fill('#construction', 'older', 'change');
   a.click('#advancedShortcut'); a.fill('#advCoolTemp', 125); a.fill('#advOutdoorRh', 90); a.fill('#advHeatTemp', -40); a.click('#applyAdvanced');
   const r = a.api.getResults().raw.expected;
-  assert.ok(r.coolingTotal > 45000 && r.heatingTotal > 30400);
+  assert.ok(r.coolingTotal > 15000 && r.heatingTotal > 30400);
   assert.equal(a.window.document.querySelectorAll('.capacity-card.recommended').length, 0);
-  assert.match(a.$('#coolingModelMatch').textContent, /exceeds/);
-  assert.match(a.$('#furnaceMatch').textContent, /Beyond/);
+  assert.match(a.$('#coolingModelMatch').textContent, /No listed A\/C meets this load/);
+  assert.match(a.$('#furnaceMatch').textContent, /No listed furnace meets this load/);
   assert.match(a.$('#acModelReference').textContent, /does not cover/);
   assert.match(a.$('#furnaceModelReference').textContent, /does not cover/);
 });
-test('DOM: a selected multi-unit plan lists component quantity and avoids single-model claims', async t => {
+test('DOM: cooling above 15,000 BTU/hr never creates a multi-unit recommendation', async t => {
   const a = await app(t);
   a.fill('#lengthNumber', 50, 'change');
-  const ac = a.api.getAcSystems().find(s => s.id === a.api.getState().selectedAc);
-  assert.ok(ac.unitCount > 1);
-  assert.match(a.$('#acModelReference h3').textContent, /multi-unit capacity plan/);
-  assert.match(a.$('#acModelReference').textContent, /planning sum/);
-  assert.match(a.$('#coolingModelMatch').textContent, /-unit capacity plan/);
+  assert.ok(a.api.getResults().raw.expected.coolingTotal > 15000);
+  assert.equal(a.api.getAcSystems().length, 3);
+  assert.ok(a.api.getAcSystems().every(system => system.unitCount === 1));
+  assert.equal(a.window.document.querySelectorAll('#acCompareOptions .recommended').length, 0);
+  assert.match(a.$('#coolingModelMatch').textContent, /No listed A\/C meets this load/);
+  assert.match(a.$('#acModelReference').textContent, /FJX5557M/);
+  assert.match(a.$('#acModelReference').textContent, /does not cover/);
 });
 test('DOM: catalog API snapshots do not allow callers to mutate model ratings', async t => {
   const a = await app(t);

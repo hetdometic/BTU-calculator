@@ -63,15 +63,13 @@ Unresolved validation gaps: measured slide assembly U/R and thermal bridges; ope
 
 ## Regression evidence and reproduction
 
-Run `npm ci`, `npm test` and `npm run check` with Node 24.15 or later. The test-only jsdom dependency executes application interaction regressions. No runtime dependencies, package install or build step is required to use the calculator. Serve the repository root with any static server, for example `python -m http.server 8765 --bind 127.0.0.1`, and open the local URL. Deploy `index.html`, `calculator.js`, `equipment-catalog.js` and `slide-outs.js` together.
+Run `npm ci`, `npm test` and `npm run check` with Node 24.15 or later. The test-only jsdom dependency executes application interaction regressions. No runtime dependencies, package install or build step is required to use the calculator. Serve the repository root with any static server, for example `python -m http.server 8765 --bind 127.0.0.1`, and open the local URL. Deploy `index.html`, `calculator.js` and `slide-outs.js` together.
 
 The committed fixtures were captured from original production commit `eaab2df70462e02f51f2b5f55bd445aaa034624a`, explicitly using zero slides. Seventeen input sets × three scenarios check exact unchanged totals, components, air properties and original geometry keys. New default results can differ from original defaults because RV types no longer silently assume one to three unmeasured slides.
 
 Further tests check independent geometry/UA arithmetic, the research's 1,817.14 BTU/hr conductive winter delta, zero-depth cancellation, signed negative deltas, whole-volume ACH, explicit seal CFM, latent cooling, altitude, per-face glazing limits, glass-transfer accounting, different slide heights, multiple slides, invalid/overlapping geometry, inheritance, retraction and conservation of component totals. Air coefficients, density correction and duct allowance explain differences from the research's rounded total including leakage. DOM interaction tests cover add/edit/apply/cancel/remove, input errors and focus, retraction, Advanced inheritance/clear/cancel, stale-result suppression, equipment modes and original basic/help controls. These use jsdom and do not assert rendered layout. Passing these tests is not empirical validation of a real RV.
 
-Local validation on 2026-10-19 used Node 24.19.0: a clean `npm ci`, syntax checks and all **126 tests passed** (51 original numerical scenarios, 61 other engine/integration checks and 14 DOM interaction tests). GitHub CI status is reported separately after commit.
-
-Rendered browser QA was attempted in the development environment: Playwright had no browser binary, its download returned invalid archive content, an official Chrome binary could not start because Unix socket creation was prohibited, and the cloud browser could not access the local page (then blocked observation of its error page). Desktop/mobile screenshots and real-browser interaction/console checks therefore remain incomplete. No browser-passed claim is made.
+Earlier local validation on 2026-10-19 used Node 24.19.0 with a clean `npm ci`, syntax checks and passing regressions. Use the current test output for the present suite and pass counts. GitHub CI status is reported separately after commit.
 
 ## Engineering references
 

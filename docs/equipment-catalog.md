@@ -1,8 +1,8 @@
 # Match calculated loads to Dometic equipment
 
-The calculator keeps the continuous RV load and the discrete equipment recommendation separate. A calculated load such as 13,800 BTU/hr is a result of the heat-transfer model; the recommended equipment is an actual catalog model or an explicit multi-unit capacity plan.
+The calculator keeps the calculated RV load and equipment recommendation separate. A calculated load such as 13,800 BTU/hr comes from the heat-transfer model. Recommendations select only individual products from the nine-model list hardcoded in `index.html`; no combined-unit capacity plans are generated.
 
-`equipment-catalog.js` contains a curated snapshot checked on **2026-10-20**, using official manufacturer pages and the furnace technical-data tables. The existing slide-out and base-load equations in `calculator.js` are unchanged.
+The inline `<script id="equipmentCatalog">` in `index.html` contains the supplied three A/C models and six furnaces below. Its source snapshot was checked on **2026-10-20**, using official manufacturer pages and furnace technical-data tables. That existing date is retained; this change does not reverify the ratings. The slide-out and base-load equations in `calculator.js` are unchanged.
 
 ## Verified scope
 
@@ -18,13 +18,13 @@ The automatic catalog covers three low-profile FreshJet 5 rooftop model types an
 | FJX5457M | 9620015924 | 13,500 | [FreshJet 5 Mechanical 13.5K](https://www.dometic.com/en-us/product/dometic-freshjet-5-series-mechanical-13-5k-4) |
 | FJX5557M | 9620015927 | 15,000 | [FreshJet 5 Series 15K](https://www.dometic.com/en-us/product/dometic-freshjet-5-series-15k-4) |
 
-The [current US rooftop category](https://www.dometic.com/en-us/category/rv-and-van/rv-air-conditioners/rooftop-rv-air-conditioners) lists these FreshJet 5 capacity classes. The HE product's official global-English detail page supplies its code, SKU and approximate capacity; its 115 V / 60 Hz configuration and US family listing were cross-checked. Dometic's [2026 model/SKU sheet, page 3](https://mediabank.dometic.com/deployedFiles/4510414325f2f5f0efab6bb8cb10162e.pdf?v=20260327204754#page=3) independently pairs these model numbers with their item numbers. That sheet's rebate period has expired; no rebate is represented as current.
+The [US rooftop category at the snapshot date](https://www.dometic.com/en-us/category/rv-and-van/rv-air-conditioners/rooftop-rv-air-conditioners) lists these FreshJet 5 capacity classes. The HE product's official global-English detail page supplies its code, SKU and approximate capacity; its 115 V / 60 Hz configuration and US family listing were cross-checked. Dometic's [2026 model/SKU sheet, page 3](https://mediabank.dometic.com/deployedFiles/4510414325f2f5f0efab6bb8cb10162e.pdf?v=20260327204754#page=3) independently pairs these model numbers with their item numbers. That sheet's rebate period has expired; no rebate is represented as current.
 
-The HE capacity is explicitly approximate in Dometic's description. Its display, any plan containing it, and its capacity margin carry the approximation. The two other listed capacities are nominal ratings; actual design-condition performance still needs verification. Selected configurations need the appropriate distribution box or return grille and control kit; these may be sold separately.
+The HE capacity is explicitly approximate in Dometic's description. Its display and capacity margin carry the approximation. The two other listed capacities are nominal ratings; actual design-condition performance still needs verification. Selected configurations need the appropriate distribution box or return grille and control kit; these may be sold separately.
 
 ## Furnace models and delivered heat
 
-All six are observed in the [current US furnace category](https://www.dometic.com/en-us/category/rv-and-van/heating-solutions/rv-furnaces). Input is fuel consumption; output is the published heat-delivery rating used by the matcher.
+All six were observed in the [US furnace category at the snapshot date](https://www.dometic.com/en-us/category/rv-and-van/heating-solutions/rv-furnaces). Input is fuel consumption; output is the published heat-delivery rating used by the matcher.
 
 | Selected model / product page | SKU | Fuel input BTU/hr | Delivered output BTU/hr | Manual table |
 | --- | --- | ---: | ---: | --- |
@@ -41,19 +41,19 @@ Rating source: [Dometic DF Series Operating Manual, English technical data, page
 
 1. Read the **unrounded expected load** from the existing physics model. Rounded display values do not decide a capacity threshold.
 2. For A/C, select the smallest compared nominal capacity at or above that load. For heating, select the smallest published **delivered output** at or above the required heat.
-3. A/C plans contain one, two or three actual catalog models, with quantities. Total capacity is the sum of the component ratings. Equal totals share one comparison tier. These are planning sums, not single products or approved installation combinations.
-4. Show the neighboring lower and higher capacity choices. If the user selects an insufficient option, say explicitly that it does not cover the expected load. Above the catalog maximum, show no recommended match; a highest-option example remains labeled insufficient.
+3. Each choice is one of the three listed A/C models or six listed furnaces. No additional capacities or multi-unit combinations are generated.
+4. Show the neighboring lower and higher capacity choices. If the user selects an insufficient option, say explicitly that it does not cover the expected load. Above the largest listed product of that type, show no recommended match; a highest-option comparison remains labeled insufficient. The maximum listed capacities are 15,000 cooling and 30,400 delivered heating BTU/hr.
 5. For an exactly zero load, show no equipment recommendation. Reject negative/nonfinite/non-numeric loads.
-6. Link each selected component to its product page and rating source, displaying its model number, SKU and configuration. Keep the snapshot date and scope visible.
+6. Link each selected product to its product page and rating source, displaying its model number, SKU and configuration. Keep the source snapshot date and scope visible.
 
-Examples: 13,800 cooling selects the 15,000-rated FJX5557M. A 30,000 cooling plan is **2 × FJX5557M**, not an invented 30K unit. A 20,000 heating load selects DFMD30121 (22,800 delivered), because DFMD25121 delivers only 19,000 despite its 25K input label.
+Examples: 13,800 cooling selects the 15,000-rated FJX5557M. A 30,000 cooling load has no matching product. A 20,000 heating load selects DFMD30121 (22,800 delivered), because DFMD25121 delivers only 19,000 despite its 25K input label.
 
 A/C and furnace recommendations are independent capacity matches. The app does not certify a compatible thermostat/control pairing, roof opening, electrical service, gas system, duct/static-pressure setup, venting, installation, staging or performance at the chosen weather/altitude. An installer must verify those details. Higher-than-needed capacities retain the existing oversizing cautions.
 
 ## Maintenance and validation
 
-The website has no runtime network or catalog service dependency. Publish `index.html`, `calculator.js`, `equipment-catalog.js` and `slide-outs.js` together. Reverify the official listing and rating sources before updating records, adding variants or treating the snapshot as current at a later date; update `checkedAt` and the source documentation together. Remove a delisted/unverified record from automatic matching rather than guessing its replacement or delivered output. Keep capacity class, SKU variant, approximate status and source distinct.
+The website has no runtime network or catalog service dependency. Publish `index.html`, `calculator.js` and `slide-outs.js` together. Edit the inline catalog in `index.html` to change the allowed products. Reverify the official listing and rating sources before updating records, adding variants or treating the snapshot as current at a later date; update `checkedAt` and the source documentation together. Remove a delisted/unverified record from automatic matching rather than guessing its replacement or delivered output. Keep capacity class, SKU variant, approximate status and source distinct.
 
-Run `npm ci`, `npm run check` and `npm test` with Node 24.15+. Local validation passed **157 tests**: the previous 126 tests plus 24 catalog/selection checks and seven additional DOM workflows. New checks cover the published furnace ratings, exact capacity thresholds, invalid/zero/excess loads, model/SKU/source provenance, approximate HE ratings, multi-unit conservation, selected-model links, undersized-selection messaging, mode behavior and immutable API snapshots. The 51 original zero-slide numerical regressions still pass exactly.
+Run `npm ci`, `npm run check` and `npm test` with Node 24.15+. Catalog and interaction checks cover the supplied product ratings, exact capacity thresholds, invalid/zero/excess loads, model/SKU/source provenance, approximate HE ratings, single-model suggestions, selected-product links, insufficient-selection messaging, equipment modes and immutable API snapshots. Use the current test output for pass counts.
 
-Rendered desktop/mobile browser QA remains incomplete because the development environment's browser path was previously blocked. The DOM tests validate script loading and interactions, not actual layout, dealer stock or empirical HVAC performance.
+DOM tests validate script loading and interactions. They do not establish dealer stock or empirical HVAC performance.
