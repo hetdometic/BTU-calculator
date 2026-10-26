@@ -1,16 +1,18 @@
 # Match calculated loads to Dometic equipment
 
-The calculator keeps the calculated RV load and equipment suggestion separate. A calculated load such as 13,800 BTU/hr comes from the heat-transfer model. Suggestions use the nine products hardcoded in `index.html`: one A/C where sufficient, a two-A/C planning combination for higher cooling loads, or one furnace matched by delivered heat output.
+The calculator keeps the calculated RV load and equipment suggestion separate. A calculated load such as 13,800 BTU/hr comes from the heat-transfer model. Suggestions use verified products hardcoded in `index.html`: one A/C where sufficient, a two-A/C planning combination for higher cooling loads, or one furnace matched by delivered heat output. Products at the same capacity appear as alternatives; they do not create extra recommendation tiers.
 
-The inline `<script id="equipmentCatalog">` in `index.html` contains the supplied three A/C models and six furnaces below. Its source snapshot was checked on **2026-10-20**, using official manufacturer pages and furnace technical-data tables. That existing date is retained; this change does not reverify the ratings. The slide-out and base-load equations in `calculator.js` are unchanged.
+The inline `<script id="equipmentCatalog">` in `index.html` contains **20 products: eight A/C configurations and 12 furnace models**. The original nine records retain their **2026-10-20** `checkedAt` date. Additional verified records use **2026-10-26**. The catalog's **2026-10-26** `reviewedAt` date identifies this expansion and review; it does not replace each product's source-check date. Official manufacturer pages and furnace technical-data tables support the records. The slide-out and base-load equations in `calculator.js` are unchanged.
 
 ## Verified scope
 
-The automatic catalog covers three low-profile FreshJet 5 rooftop model types and six representative **12 V DC, LP-gas** furnace models listed in Dometic's US catalog. It is a subset of Dometic's offerings, not a complete worldwide catalog. Different colors, control configurations, door variants, heat-pump versions, other families, OEM bulk packs and 120 V AC furnaces are not interchangeable selections in this snapshot.
+Automatic suggestions use three FreshJet 5 cooling capacity tiers and six representative **12 V DC, LP-gas** furnace delivered-output tiers. The original model at each tier remains the preferred recommendation. Additional verified configurations can be browsed at the same capacities. The catalog is a subset of Dometic's US offerings, not a complete worldwide catalog. Colors, controls, doors, heat-pump functions and other families require separate SKU and installation checks; OEM bulk packs and 120 V AC furnaces are excluded.
 
 “Listed” means observed on the official catalog/product pages at the check date. It does not mean live dealer stock, an explicit manufacturer lifecycle guarantee, a complete installation package, or confirmed suitability for a particular RV. Prices and rebate offers are not used.
 
 ## Rooftop cooling models
+
+These original three FreshJet 5 models remain the preferred cooling suggestions.
 
 | Model on manufacturer listing | Representative SKU | Nominal cooling BTU/hr | Manufacturer product / rating page |
 | --- | --- | ---: | --- |
@@ -22,9 +24,27 @@ The [US rooftop category at the snapshot date](https://www.dometic.com/en-us/cat
 
 The HE capacity is explicitly approximate in Dometic's description. Its display, any pair containing it, and its capacity margin carry the approximation. The two other listed capacities are nominal ratings; actual design-condition performance still needs verification. Selected configurations need the appropriate distribution box or return grille and control kit; these may be sold separately.
 
+## Additional rooftop cooling configurations
+
+These five exact US-market configurations were checked on **2026-10-26**. They add FreshJet 3, commercial and heat-pump choices at the existing 13,500 and 15,000 BTU/hr cooling tiers. The original FreshJet 5 model remains preferred at each capacity. All five use the North American 115 V AC, 60 Hz configuration documented in their source records.
+
+| Additional model | SKU | Nominal cooling BTU/hr | Configuration | Official listing | Rating source |
+| --- | --- | ---: | --- | --- | --- |
+| FJX3473M | 9600028598 | 13,500 | White / mechanical controls / 115 V AC, 60 Hz / R410A / cool only | [View lineup](https://www.dometic.com/en-us/lp/rv-ac) | [US lineup](https://www.dometic.com/en-us/lp/rv-ac) |
+| FJX3573M | 9610007807 | 15,000 | White / mechanical controls / 115 V AC, 60 Hz / R32 / cool only | [View lineup](https://www.dometic.com/en-us/lp/rv-ac) | [Manual technical data](https://documents.dometic.com/files/205966-dometic-freshjet-3-4-5-7-air-distribution-box-electronic-display.pdf#page=31) |
+| FJXM3573M | 9610007865 | 15,000 | Black / commercial grade / mechanical controls / 115 V AC, 60 Hz / R32 / cool only | [View product](https://www.dometic.com/en-us/product/dometic-freshjet-3-commercial-series-15k-4?v=9610007865) | [Exact SKU page](https://www.dometic.com/en-us/product/dometic-freshjet-3-commercial-series-15k-4?v=9610007865) |
+| FJX5557MHP | 9620015926 | 15,000 | White / mechanical controls / 115 V AC, 60 Hz / R32 / heat pump | [View lineup](https://www.dometic.com/en-us/lp/rv-ac) | [Manual technical data](https://documents.dometic.com/files/184961-dometic-freshjet-5-fjx5557mhp.pdf#page=13) |
+| FJX5557EHP | 9620017216 | 15,000 | White / electronic controls / 115 V AC, 60 Hz / R32 / heat pump | [View lineup](https://www.dometic.com/en-us/lp/rv-ac) | [Manual technical data](https://documents.dometic.com/files/205966-dometic-freshjet-3-4-5-7-air-distribution-box-electronic-display.pdf#page=32) |
+
+Four added configurations link to the [live official US A/C lineup](https://www.dometic.com/en-us/lp/rv-ac), which displays their exact SKUs. Their individual product-page paths were not reliably available during verification. The commercial model has a live exact-SKU product page. Model/SKU mapping and the full source trail are retained in the [A/C research manifest](ac-research.json). The manufacturer's 2026 model/SKU sheet is used as identity evidence; its expired rebate offer is not presented as current.
+
+FJX5557MHP and FJX5557EHP include heat pumps, but **15,000 BTU/hr is their nominal cooling capacity**. No verified heating output at the chosen outdoor temperature is assigned. The calculator continues to size heating from published furnace output. Adding a heat-pump heating recommendation would require manufacturer heating-performance data, operating limits and output at the design outdoor condition.
+
+The current research does not add FreshJet 4 or FreshJet 7 products: a manual family rating alone does not verify a current US SKU, listing and matching product photo. European/APAC 230 V variants are outside this catalog.
+
 ## Furnace models and delivered heat
 
-All six were observed in the [US furnace category at the snapshot date](https://www.dometic.com/en-us/category/rv-and-van/heating-solutions/rv-furnaces). Input is fuel consumption; output is the published heat-delivery rating used by the matcher.
+The original six preferred models below were observed in the [US furnace category at the original snapshot date](https://www.dometic.com/en-us/category/rv-and-van/heating-solutions/rv-furnaces). Input is fuel consumption; output is the published heat-delivery rating used by the matcher.
 
 | Selected model / product page | SKU | Fuel input BTU/hr | Delivered output BTU/hr | Manual table |
 | --- | --- | ---: | ---: | --- |
@@ -37,14 +57,31 @@ All six were observed in the [US furnace category at the snapshot date](https://
 
 Rating source: [Dometic DF Series Operating Manual, English technical data, page 7 / Tables 2–4](https://media.dometic.com/externalassets/dometic-medium-furnace_9610007793_81453.pdf#page=7). The tables were visually checked to confirm column alignment. Model prefixes connect the full product number to the table's family. DFSD20 has 18,000 input, not an inferred 20,000. Table 3 explicitly includes DFMDH35; its stated output is used directly rather than calculating output from the web page's efficiency percentage. Final variant/data-plate confirmation remains necessary.
 
+## Additional furnace configurations
+
+These six single-unit models were checked against exact official US product pages on **2026-10-26**. Each page confirms 12 V DC and LP gas. Published delivered outputs come from the same manual tables as the original records, so these variants add door and manifold choices without adding capacity tiers. The original six models remain the preferred suggestions.
+
+| Additional model / product page | SKU | Fuel input BTU/hr | Delivered output BTU/hr | Manual family | Configuration |
+| --- | --- | ---: | ---: | --- | --- |
+| [DFSAD12121](https://www.dometic.com/en-us/product/dometic-dfsad12121-small-furnace-9108923340) | 9108923340 | 12,000 | 9,120 | 2: DFSAD12 | Doorless low-amp furnace. |
+| [DFSD20121](https://www.dometic.com/en-us/product/dometic-dfsd20121-small-furnace-9108923341) | 9108923341 | 18,000 | 13,680 | 2: DFSD20 | Doorless furnace. |
+| [DFMD25111](https://www.dometic.com/en-us/product/dometic-dfmd25111-medium-furnace-9600000886) | 9600000886 | 25,000 | 19,000 | 3: DFMD25 | Doored furnace. Outside access door and thermostat sold separately. |
+| [DFMD30111](https://www.dometic.com/en-us/product/dometic-dfmd30111-medium-furnace-9600000923) | 9600000923 | 30,000 | 22,800 | 3: DFMD30 | Doored furnace. Outside access door and thermostat sold separately. |
+| [DFMDH35111](https://www.dometic.com/en-us/product/dometic-dfmdh35111-medium-35k-furnace-essential-9610007792) | 9610007792 | 35,000 | 25,840 | 3: DFMDH35 | Doored Essential furnace with Hall Effect Sensor and built-in soft start. Access door and thermostat sold separately. |
+| [DFLD40121](https://www.dometic.com/en-us/product/dometic-dfld40121-large-furnace-9108923366) | 9108923366 | 40,000 | 30,400 | 4: DFLD40 | Doorless furnace with rear gas manifold. Access door and thermostat sold separately. |
+
+The [furnace research manifest](furnace-research.json) retains per-product sources and image verification. The manual also lists DFSD16, DFMD16, DFMD20 and DFLD35 family ratings, but an exact current US product/SKU was not verified for those families. No model or delivered output was inferred.
+
 ## Selection rules
 
+The product browser includes all 20 models with photos, capacities, model numbers, SKUs and official source links. Search by model, SKU or capacity, or filter by equipment type. It initially loads six cards; Show all loads the remaining models. Same-capacity choices beside a recommendation open the matching alternatives in the browser.
+
 1. Read the **unrounded expected load** from the existing physics model. Rounded display values do not decide a capacity threshold.
-2. For positive cooling loads up to 15,000 BTU/hr, select the smallest listed single A/C capacity at or above the load. Only when no single model covers the load, consider every unordered pair of the three listed models, allowing two of the same model. Select the pair with the smallest summed nominal capacity at or above the load.
+2. For positive cooling loads up to 15,000 BTU/hr, select the smallest listed single A/C capacity at or above the load. Only when no single model covers the load, consider every unordered pair of the three preferred cooling capacity tiers, allowing two of the same model. Same-capacity product alternatives do not add separate pair combinations. Select the pair with the smallest summed nominal capacity at or above the load.
 3. Above 30,000 cooling BTU/hr, no combination in this two-unit planning scope covers the load. Show no recommended cooling match and identify the remaining shortfall.
-4. For heating, select the smallest of the six furnaces whose **delivered output** meets the load. Above 30,400 delivered heating BTU/hr, show no listed furnace match and call for a professional assessment of a larger or zoned heating system. Do not generate furnace combinations.
+4. For heating, select the smallest of the six furnace capacity tiers whose **delivered output** meets the load, using the original preferred model at each tier. Above 30,400 delivered heating BTU/hr, show no listed furnace match and call for a professional assessment of a larger or zoned heating system. Do not generate furnace combinations.
 5. Show neighboring capacity choices and label any selected insufficient choice explicitly. For an exactly zero load, show no equipment recommendation. Reject negative/nonfinite/non-numeric loads.
-6. Display each selected product's quantity, model number and SKU, with its product and rating-source links. A pair is a planning sum of two listed products, not a new model or an installed-zone sizing guarantee. Keep the existing source snapshot date and scope visible.
+6. Display each selected product's quantity, model number and SKU, with its product and rating-source links. A pair is a planning sum of two listed products, not a new model or an installed-zone sizing guarantee. Keep the per-product `checkedAt` dates, catalog `reviewedAt` date and scope visible.
 
 The available pair totals are:
 
@@ -67,11 +104,11 @@ Mixed-capacity designs exist in OEM practice: the [2026 Jayco Precept](https://w
 
 The exact [FJX5357MHE](https://www.dometic.com/en/product/dometic-freshjet-5-series-mechanical-high-efficiency-75), [FJX5457M](https://www.dometic.com/en-us/product/dometic-freshjet-5-series-mechanical-13-5k-4) and [FJX5557M](https://www.dometic.com/en-us/product/dometic-freshjet-5-series-15k-4) product pages specify cooling-only configurations. Their cooling capacities are never counted toward heating. A/C and furnace recommendations are independent capacity matches. The app does not certify a compatible thermostat/control pairing, roof opening, electrical service, gas system, duct/static-pressure setup, venting, installation, staging or performance at the chosen weather/altitude. An installer must verify those details. Higher-than-needed capacities retain the existing oversizing cautions.
 
-Product images are sourced from the exact SKU pages; see [image provenance](../assets/products/README.md). Dometic reuses FreshJet 5 and medium-furnace family imagery for some variants, so model numbers and SKUs identify the actual recommendation. The nine allowed products and capacity ratings in the supplied table remain unchanged.
+Product images are sourced from exact SKU pages or the official US lineup beside the exact SKU; see [image provenance](../assets/products/README.md). Dometic reuses FreshJet 5 and medium-furnace family imagery for some variants, so model numbers and SKUs identify the actual recommendation. The original nine product records and capacity ratings remain unchanged; the additions retain exact model/SKU identity and their own source-check dates.
 
 ## Maintenance and validation
 
-The website has no runtime network or catalog service dependency. Publish `index.html`, `calculator.js`, `slide-outs.js` and the `assets/products` folder together. Edit the inline catalog in `index.html` to change the allowed products. Reverify the official listing and rating sources before updating records, adding variants or treating the snapshot as current at a later date; update `checkedAt` and the source documentation together. Remove a delisted/unverified record from automatic matching rather than guessing its replacement or delivered output. Keep capacity class, SKU variant, approximate status and source distinct.
+The website has no runtime network or catalog service dependency. Publish `index.html`, `calculator.js`, `slide-outs.js` and the `assets/products` folder together. Edit the inline catalog in `index.html` to change the allowed products. Reverify the official listing and rating sources before updating records, adding variants or treating the snapshot as current at a later date; update that record's `checkedAt` and source documentation together. Update `reviewedAt` when reviewing the catalog as a whole, without changing dates on records whose sources were not rechecked. Remove a delisted/unverified record from automatic matching rather than guessing its replacement or delivered output. Keep capacity class, SKU variant, approximate status and source distinct.
 
 Run `npm ci`, `npm run check` and `npm test` with Node 24.15+. Catalog and interaction checks cover the supplied product ratings, exact capacity thresholds, invalid/zero/excess loads, model/SKU/source provenance, approximate HE ratings, single-first and two-unit cooling suggestions, selected-product links, insufficient-selection messaging, equipment modes and immutable API snapshots. Use the current test output for pass counts.
 

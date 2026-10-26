@@ -1600,9 +1600,9 @@
     .product-rating { margin: 0 0 5px; font-size: 19px; font-weight: 800; line-height: 1.3; }
     .product-input { display: block; margin-top: 3px; font-size: 13px; font-weight: 600; }
     .product-fit { margin: 0 0 12px; font-size: 13px; line-height: 1.45; }
-    .recommended-product-link { min-height: 42px; padding: 10px 14px; display: flex; align-items: center; justify-content: center; gap: 10px; color: #fff; background: var(--red); border-radius: 4px; font-size: 14px; font-weight: 800; line-height: 1.3; text-align: center; text-decoration: none; }
-    .recommended-product-link:hover { background: var(--red-dark); }
-    .recommended-product-link .icon { width: 18px; height: 18px; }
+    .product-action { min-height: 44px; padding: 10px 14px; display: flex; align-items: center; justify-content: center; gap: 10px; color: #fff; background: var(--red); border-radius: 4px; font-size: 14px; font-weight: 800; line-height: 1.3; text-align: center; text-decoration: none; }
+    .product-action:hover { color: #fff; background: var(--red-dark); }
+    .product-action .icon { flex: 0 0 18px; width: 18px; height: 18px; }
     .product-image-credit { margin: 7px 0 0; color: var(--muted); font-size: 10px; }
     .recommended-product--furnace { display: grid; grid-template-columns: minmax(115px, .85fr) minmax(0, 1.15fr); align-items: center; gap: 18px; }
     .recommended-product--furnace .product-visual { height: 158px; }
@@ -1611,7 +1611,6 @@
     .recommended-product--furnace .product-family { display: none; }
     .recommended-product--furnace .product-rating { font-size: 15px; }
     .recommended-product--furnace .product-fit { margin: 7px 0; font-size: 12px; }
-    .recommended-product--furnace .recommended-product-link { min-height: 28px; padding: 3px 0; justify-content: flex-start; color: var(--ink); background: none; text-align: left; text-decoration: underline; text-underline-offset: 3px; font-size: 13px; }
     .recommended-product--furnace .product-image-credit { grid-column: 1 / -1; margin-top: -10px; }
     .result-calculation { margin-top: 12px; border: 1px solid var(--line); border-radius: 4px; font-size: 12px; }
     .result-calculation > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; cursor: pointer; list-style: none; }
@@ -1637,13 +1636,14 @@
     .capacity-card .capacity-value { font-size: 15px; }
     .capacity-sku { color: var(--muted); font-size: 10px; }
     .capacity-card .capacity-model-type { display: none; }
-    .selected-product { display: grid; grid-template-columns: 140px minmax(0, 1fr); align-items: start; gap: 20px; }
+    .selected-products { display: grid; gap: 24px; }
+    .selected-product { display: grid; grid-template-columns: 140px minmax(0, 1fr); align-items: start; gap: 16px 20px; }
     .selected-product-visual { height: 130px; background: #f0f1f3; border-radius: 4px; }
     .selected-product-visual img { transform: scale(1.15); }
     .selected-product .product-model { margin: 0 0 5px; font-size: 20px; }
     .selected-product .product-sku { margin-bottom: 8px; }
-    .selected-product-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 8px; font-size: 12px; }
-    .selected-product-link .icon { width: 15px; height: 15px; }
+    .selected-product-link { grid-column: 1 / -1; }
+    .rating-source { display: inline-flex; min-height: 44px; align-items: center; margin-top: 3px; }
     .pair-title { margin: 0 0 6px; font-size: 23px; line-height: 1.2; text-transform: none; }
     .pair-total { margin: 0; font-size: 22px; font-weight: 800; line-height: 1.25; }
     .pair-total-label { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; font-weight: 500; }
@@ -1655,7 +1655,6 @@
     .pair-product .product-model { font-size: 21px; }
     .pair-product .product-sku { margin: 4px 0 7px; }
     .pair-unit-rating { margin: 0 0 8px; font-size: 12px; }
-    .pair-product .recommended-product-link { min-height: 32px; padding: 5px 0; justify-content: flex-start; color: var(--ink); background: none; text-align: left; text-decoration: underline; text-underline-offset: 3px; font-size: 12px; }
     .pair-product .product-image-credit { grid-column: 1 / -1; margin-top: -8px; }
     .pair-notice { margin: 14px 0 0; padding: 11px 12px; border-left: 3px solid var(--red); background: #f5f5f5; font-size: 12px; line-height: 1.5; }
     .pair-method { margin-top: 10px; font-size: 12px; }
@@ -1673,7 +1672,6 @@
       .recommended-product--furnace .recommended-product-photo { transform: scale(1.25); }
       .recommended-product--furnace .product-model { font-size: 20px; }
       .recommended-product--furnace .product-rating { font-size: 13px; }
-      .recommended-product--furnace .recommended-product-link { font-size: 12px; }
       .capacity-card { display: grid; grid-template-columns: 76px minmax(0, 1fr); min-width: 0; padding: 15px 12px; align-items: center; justify-items: start; text-align: left; gap: 4px 12px; }
       .capacity-image { width: 76px; height: 65px; }
       .capacity-card .capacity-value { font-size: 14px; }
@@ -1689,6 +1687,37 @@
       .pair-total { font-size: 20px; }
     }
     .catalog-note { margin: -4px 0 16px; color: var(--muted); font-size: 12px; }
+    .catalog-browser { margin-top: 24px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+    .catalog-browser > summary { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; padding: 16px 44px 16px 20px; cursor: pointer; font-weight: 800; }
+    .catalog-browser > summary::after { position: absolute; top: 24px; right: 20px; width: 8px; height: 8px; border-right: 2px solid; border-bottom: 2px solid; content: ""; transform: rotate(45deg); }
+    .catalog-browser[open] > summary::after { top: 28px; transform: rotate(225deg); }
+    .catalog-browser > summary span { color: var(--muted); font-size: 12px; font-weight: 500; }
+    .catalog-browser-body { padding: 0 20px 20px; }
+    .catalog-browser-body > p { color: var(--muted); font-size: 13px; }
+    .catalog-toolbar { display: grid; grid-template-columns: minmax(150px, .5fr) minmax(0, 1fr); gap: 16px; }
+    .catalog-toolbar label { display: grid; gap: 6px; font-size: 13px; font-weight: 700; }
+    .catalog-toolbar input, .catalog-toolbar select { width: 100%; min-width: 0; min-height: 44px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px; background: #fff; color: var(--ink); font: inherit; font-size: 16px; }
+    .catalog-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .catalog-card { min-width: 0; display: flex; flex-direction: column; padding: 16px; border: 1px solid var(--line); border-radius: 4px; }
+    .catalog-card .catalog-photo { width: 100%; aspect-ratio: 4 / 3; margin-bottom: 16px; background: #f0f1f3; }
+    .catalog-card .catalog-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+    .catalog-card h3 { margin: 0 0 5px; font-size: 21px; overflow-wrap: anywhere; }
+    .catalog-card p { margin: 0 0 10px; font-size: 13px; }
+    .catalog-card .catalog-spec { font-weight: 800; font-size: 16px; }
+    .catalog-card .product-action { margin-top: auto; }
+    .catalog-show-more { display: block; min-height: 44px; margin: 20px auto 0; padding: 10px 18px; border: 1px solid var(--ink); border-radius: 4px; background: #fff; color: var(--ink); font: inherit; font-weight: 700; cursor: pointer; }
+    .model-alternatives { display: block; min-height: 44px; margin-top: 6px; padding: 8px 0; border: 0; background: none; color: var(--ink); font: inherit; font-size: 12px; text-align: left; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+    .help-link, .brand, .slide-add, .slide-apply { min-height: 44px; }
+    .help-link { display: inline-flex; align-items: center; }
+    @media (max-width: 1080px) { .catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 620px) {
+      .catalog-browser > summary { align-items: flex-start; flex-direction: column; gap: 4px; }
+      .catalog-toolbar, .catalog-grid { grid-template-columns: minmax(0, 1fr); }
+      .catalog-browser-body { padding: 0 16px 16px; }
+      .recommended-product--furnace, .pair-product { grid-template-columns: minmax(0, 1fr); }
+      .recommended-product--furnace .product-visual, .pair-product-visual { height: 160px; }
+      .recommended-product--furnace .product-image-credit, .pair-product .product-image-credit { margin-top: 0; }
+    }
     .capacity-detail { overflow-wrap: anywhere; }
     .capacity-model-type { color: var(--muted); font-size: 10px; }
     .model-reference { grid-column: 2; padding: 16px 18px; border-top: 1px solid var(--line); background: var(--soft); font-size: 12px; min-width: 0; }
@@ -1735,6 +1764,10 @@
     .slide-impact .load-table th, .slide-impact .load-table td { padding: 6px 3px; }
     .slide-impact .load-table th:not(:first-child), .slide-impact .load-table td:not(:first-child) { text-align: right; white-space: nowrap; }
     .slide-impact ul { padding-left: 18px; color: var(--quiet); }
+    @media (max-width: 620px) {
+      .slide-field input, .slide-field select, .advanced-field .unit-input input, .advanced-field select { min-height: 44px; font-size: 16px; }
+      .slide-card-head label { min-height: 44px; }
+    }
     .slide-impact li { margin-top: 6px; }
     .slide-detail { padding: 12px 0; border-top: 1px solid var(--line); }
     @media (max-width: 400px) { .slide-fields { grid-template-columns: 1fr; } .slide-heading { flex-direction: column; } }
@@ -1988,6 +2021,19 @@
           <div class="model-reference" id="furnaceModelReference" aria-live="polite"></div>
         </div>
       </div>
+      <details class="catalog-browser" id="catalogBrowser">
+        <summary>Browse all Dometic models <span id="catalogTotal"></span></summary>
+        <div class="catalog-browser-body">
+          <p>Compare configurations at the same capacity. The supplied models remain the default recommendations. Confirm fit, controls and installation requirements before choosing a variant.</p>
+          <div class="catalog-toolbar">
+            <label for="catalogType">Product type<select id="catalogType"><option value="all">All products</option><option value="ac">Air conditioners</option><option value="furnace">Furnaces</option></select></label>
+            <label for="catalogSearch">Find a model<input id="catalogSearch" type="search" placeholder="Model, SKU or BTU/hr" autocomplete="off"></label>
+          </div>
+          <p id="catalogCount" role="status"></p>
+          <div class="catalog-grid" id="catalogGrid"></div>
+          <button class="catalog-show-more" id="catalogShowMore" type="button" hidden>Show all products</button>
+        </div>
+      </details>
       <div class="product-cta">
         <div class="product-cta-copy"><strong>Ready to explore your options?</strong><span>Browse Dometic RV air conditioners and furnaces.</span></div>
         <div class="product-cta-actions">
@@ -2171,7 +2217,7 @@
         <li><strong>Furnace:</strong> compares required heat with published delivered output—not only the larger input number printed in the model class.</li>
         <li><strong>Highlighted option:</strong> is the smallest fitting single A/C, then the smallest fitting pair, or the smallest delivered furnace output at or above the unrounded expected load. Each product keeps its model number, quantity, SKU and product link. A zero load has no equipment recommendation.</li>
         <li><strong>Two-unit options:</strong> add nominal cooling capacities assuming simultaneous operation. They do not establish the load in each zone or confirm roof, controls, airflow and electrical compatibility. An installer must verify the installation. A total containing the ≈11K model remains approximate.</li>
-        <li><strong>Heating:</strong> these three A/C models are cooling-only. Heating uses only the six listed furnace outputs, up to 30,400 BTU/hr delivered. Larger heating loads need an installer-designed system rather than a cooling-capacity substitution.</li>
+        <li><strong>Heating:</strong> sizing uses verified furnace outputs, up to 30,400 BTU/hr delivered. Heat-pump variants can be browsed, but their cooling BTU ratings are not heating ratings. Heating performance at the outdoor design temperature must be verified before using a heat pump to meet a heating load.</li>
         <li><strong>Advanced:</strong> lets you apply known insulation, window, leakage, weather and duct information. An applied-status label and Clear action remain visible beside the Advanced button.</li>
       </ul>
       <div class="info-modal-note">BTU sizing alone does not confirm roof fit, duct compatibility, electrical or gas service, controls, venting or safe installation. Have the final equipment choice verified by a qualified RV HVAC installer.</div>
@@ -2223,11 +2269,126 @@
       ratingNote: "15,000 BTU/hr nominal cooling. Required air distribution box or return grille/control kit is sold separately.",
       ratingBasis: "Manufacturer product description: 15,000 BTU",
       listingSourceUrl: acListing
+    },
+    {
+      "id": "fj3-135",
+      "modelNumber": "FJX3473M",
+      "sku": "9600028598",
+      "name": "Dometic FreshJet 3 Mechanical 13.5K",
+      "capacity": 13500,
+      "approximate": false,
+      "configuration": "White / mechanical controls / 115 V AC, 60 Hz / R410A / cool only",
+      "family": "FreshJet 3",
+      "heatPump": false,
+      "productUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "ratingSourceUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "ratingBasis": "Official US AC lineup explicitly lists SKU 9600028598 as 13.5K BTU; official rebate schedule maps this SKU to FJX3473M.",
+      "ratingNote": "13,500 BTU/hr nominal cooling. Roof unit requires compatible interior air distribution and controls.",
+      "listingSourceUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "imageSrc": "assets/products/fjx3473m.webp",
+      "imageAlt": "Dometic FreshJet 3 white rooftop air conditioner, FJX3473M family photo",
+      "checkedAt": "2026-10-26",
+      "productLinkLabel": "View lineup",
+      "imageNote": "Dometic: Manufacturer exterior family photo displayed beside this exact SKU on the official US AC lineup; markings and accessories are not verified by the image.",
+      "imageWidth": 720,
+      "imageHeight": 900
+    },
+    {
+      "id": "fj3-15",
+      "modelNumber": "FJX3573M",
+      "sku": "9610007807",
+      "name": "Dometic FreshJet 3 Mechanical 15K",
+      "capacity": 15000,
+      "approximate": false,
+      "configuration": "White / mechanical controls / 115 V AC, 60 Hz / R32 / cool only",
+      "family": "FreshJet 3",
+      "heatPump": false,
+      "productUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "ratingSourceUrl": "https://documents.dometic.com/files/205966-dometic-freshjet-3-4-5-7-air-distribution-box-electronic-display.pdf#page=31",
+      "ratingBasis": "Manufacturer electronic-controls installation manual, technical data page 31: FJX3573MWHCS, 15,000 BTU/hr, 115 V AC, 60 Hz, single phase. Exact SKU and R32 variant displayed on official US lineup.",
+      "ratingNote": "15,000 BTU/hr nominal cooling. Required air distribution box or ducted return grille/control equipment is separate.",
+      "listingSourceUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "imageSrc": "assets/products/fjx3573m.webp",
+      "imageAlt": "Dometic FreshJet 3 white rooftop air conditioner, FJX3573M family photo",
+      "checkedAt": "2026-10-26",
+      "productLinkLabel": "View lineup",
+      "imageNote": "Dometic: Manufacturer exterior family photo displayed beside this exact SKU on the official US AC lineup; shared with the 13.5K model.",
+      "imageWidth": 720,
+      "imageHeight": 900
+    },
+    {
+      "id": "fj3-commercial15",
+      "modelNumber": "FJXM3573M",
+      "sku": "9610007865",
+      "name": "Dometic FreshJet 3 Commercial 15K",
+      "capacity": 15000,
+      "approximate": false,
+      "configuration": "Black / commercial grade / mechanical controls / 115 V AC, 60 Hz / R32 / cool only",
+      "family": "FreshJet 3 Commercial",
+      "heatPump": false,
+      "productUrl": "https://www.dometic.com/en-us/product/dometic-freshjet-3-commercial-series-15k-4?v=9610007865",
+      "ratingSourceUrl": "https://www.dometic.com/en-us/product/dometic-freshjet-3-commercial-series-15k-4?v=9610007865",
+      "ratingBasis": "Manufacturer exact-SKU product record: FJXM3573M, SKU 9610007865, Cooling Capacity Display 15000; technical data page 31 confirms 115 V AC, 60 Hz, single phase.",
+      "ratingNote": "15,000 BTU/hr nominal cooling. Commercial grade corrosion protection; no preinstalled controls. Requires compatible air distribution and controls.",
+      "listingSourceUrl": "https://www.dometic.com/en-us/category/rv-and-van/rv-air-conditioners",
+      "imageSrc": "assets/products/fjxm3573m.png",
+      "imageAlt": "Dometic FreshJet 3 Commercial black rooftop air conditioner, FJXM3573M",
+      "checkedAt": "2026-10-26",
+      "productLinkLabel": "View product",
+      "imageNote": "Dometic: Manufacturer product photograph from the exact SKU product gallery.",
+      "imageWidth": 900,
+      "imageHeight": 900
+    },
+    {
+      "id": "fj5-mhp15",
+      "modelNumber": "FJX5557MHP",
+      "sku": "9620015926",
+      "name": "Dometic FreshJet 5 Mechanical 15K Heat Pump",
+      "capacity": 15000,
+      "approximate": false,
+      "configuration": "White / mechanical controls / 115 V AC, 60 Hz / R32 / heat pump",
+      "family": "FreshJet 5",
+      "heatPump": true,
+      "productUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "ratingSourceUrl": "https://documents.dometic.com/files/184961-dometic-freshjet-5-fjx5557mhp.pdf#page=13",
+      "ratingBasis": "Manufacturer FJX5557MHP installation manual, technical data page 13: 15,000 BTU/hr cooling, 115 V AC, 60 Hz, single phase. Exact white SKU displayed on US lineup.",
+      "ratingNote": "15,000 BTU/hr is cooling capacity. Heat pump is included; no verified heating output is assigned, so heating sizing continues to use furnace output.",
+      "listingSourceUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "imageSrc": "assets/products/fjx5557mhp.webp",
+      "imageAlt": "Dometic FreshJet 5 white rooftop air conditioner, FJX5557MHP heat-pump family photo",
+      "checkedAt": "2026-10-26",
+      "productLinkLabel": "View lineup",
+      "imageNote": "Dometic: Manufacturer exterior family photo displayed beside this exact SKU on the official US AC lineup; the exterior image does not verify heat-pump hardware.",
+      "imageWidth": 720,
+      "imageHeight": 900
+    },
+    {
+      "id": "fj5-ehp15",
+      "modelNumber": "FJX5557EHP",
+      "sku": "9620017216",
+      "name": "Dometic FreshJet 5 Electronic 15K Heat Pump",
+      "capacity": 15000,
+      "approximate": false,
+      "configuration": "White / electronic controls / 115 V AC, 60 Hz / R32 / heat pump",
+      "family": "FreshJet 5",
+      "heatPump": true,
+      "productUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "ratingSourceUrl": "https://documents.dometic.com/files/205966-dometic-freshjet-3-4-5-7-air-distribution-box-electronic-display.pdf#page=32",
+      "ratingBasis": "Manufacturer electronic-controls installation manual, technical data pages 31-32: FJX5557EHPWHCS, 15,000 BTU/hr cooling, shared 115 V AC, 60 Hz, single-phase electrical rating; electronic heat-pump manual identifies exact SKU 9620017216.",
+      "ratingNote": "15,000 BTU/hr is cooling capacity. Electronic-control heat-pump variant; no verified heating output is assigned, so heating sizing continues to use furnace output.",
+      "listingSourceUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "imageSrc": "assets/products/fjx5557ehp.webp",
+      "imageAlt": "Dometic FreshJet 5 white rooftop air conditioner, FJX5557EHP electronic heat-pump family photo",
+      "checkedAt": "2026-10-26",
+      "productLinkLabel": "View lineup",
+      "imageNote": "Dometic: Manufacturer exterior family photo displayed beside this exact SKU on the official US AC lineup; appearance is shared with the mechanical variant.",
+      "imageWidth": 720,
+      "imageHeight": 900
     }
-  ].map((model) => ({ ...model, kind: "ac", market: "US", listingStatus: "listed", checkedAt, ratingSourceUrl: model.productUrl,
-    imageSrc: `assets/products/${model.modelNumber.toLowerCase()}.png`,
-    imageAlt: `${model.modelNumber}: Dometic FreshJet 5 ${model.id === "fj15" ? "black rooftop A/C" : "white rooftop A/C family image"}`,
-    imageNote: model.id === "fj15" ? "Product photo: Dometic" : "Dometic FreshJet 5 family image; see model and SKU for exact variant." }));
+  ].map((model) => ({ ...model, kind: "ac", market: "US", listingStatus: "listed", checkedAt: model.checkedAt || checkedAt, ratingSourceUrl: model.ratingSourceUrl || model.productUrl,
+    imageSrc: model.imageSrc || `assets/products/${model.modelNumber.toLowerCase()}.png`,
+    imageAlt: model.imageAlt || `${model.modelNumber}: Dometic FreshJet 5 ${model.id === "fj15" ? "black rooftop A/C" : "white rooftop A/C family image"}`,
+    imageNote: model.imageNote || (model.id === "fj15" ? "Product photo: Dometic" : "Dometic FreshJet 5 family image; see model and SKU for exact variant.") }));
 
   const furnaceModels = [
     {
@@ -2271,18 +2432,124 @@
       configuration: "Doored · LP gas · 12 V DC",
       productUrl: "https://www.dometic.com/en-us/product/dometic-dfld40111-large-furnace-9108923369",
       ratingBasis: "DF series operating manual, Table 4: DFLD40"
+    },
+    {
+      "id": "dfsad12121",
+      "modelNumber": "DFSAD12121",
+      "sku": "9108923340",
+      "name": "Dometic DFSAD12121 Small Furnace",
+      "input": 12000,
+      "output": 9120,
+      "configuration": "Doorless low-amp furnace, 12 V DC, LP gas.",
+      "productUrl": "https://www.dometic.com/en-us/product/dometic-dfsad12121-small-furnace-9108923340",
+      "ratingSourceUrl": "https://media.dometic.com/externalassets/dometic-medium-furnace_9610007793_81453.pdf#page=7",
+      "ratingBasis": "DF series operating manual, Table 2: DFSAD12",
+      "checkedAt": "2026-10-26",
+      "imageSrc": "assets/products/dfsad12121.png",
+      "imageAlt": "DFSAD12121: Dometic RV furnace product photo",
+      "imageNote": "Product photo: Dometic"
+    },
+    {
+      "id": "dfsd20121",
+      "modelNumber": "DFSD20121",
+      "sku": "9108923341",
+      "name": "Dometic DFSD20121 Small Furnace",
+      "input": 18000,
+      "output": 13680,
+      "configuration": "Doorless furnace, 12 V DC, LP gas.",
+      "productUrl": "https://www.dometic.com/en-us/product/dometic-dfsd20121-small-furnace-9108923341",
+      "ratingSourceUrl": "https://media.dometic.com/externalassets/dometic-medium-furnace_9610007793_81453.pdf#page=7",
+      "ratingBasis": "DF series operating manual, Table 2: DFSD20",
+      "checkedAt": "2026-10-26",
+      "imageSrc": "assets/products/dfsd20121.png",
+      "imageAlt": "DFSD20121: Dometic RV furnace product photo",
+      "imageNote": "Product photo: Dometic"
+    },
+    {
+      "id": "dfmd25111",
+      "modelNumber": "DFMD25111",
+      "sku": "9600000886",
+      "name": "Dometic DFMD25111 Medium Furnace",
+      "input": 25000,
+      "output": 19000,
+      "configuration": "Doored furnace, 12 V DC, LP gas. Outside access door and thermostat sold separately.",
+      "productUrl": "https://www.dometic.com/en-us/product/dometic-dfmd25111-medium-furnace-9600000886",
+      "ratingSourceUrl": "https://media.dometic.com/externalassets/dometic-medium-furnace_9610007793_81453.pdf#page=7",
+      "ratingBasis": "DF series operating manual, Table 3: DFMD25",
+      "checkedAt": "2026-10-26",
+      "imageSrc": "assets/products/dfmd25111.png",
+      "imageAlt": "DFMD25111: Dometic RV furnace product photo",
+      "imageNote": "Product photo: Dometic"
+    },
+    {
+      "id": "dfmd30111",
+      "modelNumber": "DFMD30111",
+      "sku": "9600000923",
+      "name": "Dometic DFMD30111 Medium Furnace",
+      "input": 30000,
+      "output": 22800,
+      "configuration": "Doored furnace, 12 V DC, LP gas. Outside access door and thermostat sold separately.",
+      "productUrl": "https://www.dometic.com/en-us/product/dometic-dfmd30111-medium-furnace-9600000923",
+      "ratingSourceUrl": "https://media.dometic.com/externalassets/dometic-medium-furnace_9610007793_81453.pdf#page=7",
+      "ratingBasis": "DF series operating manual, Table 3: DFMD30",
+      "checkedAt": "2026-10-26",
+      "imageSrc": "assets/products/dfmd30111.png",
+      "imageAlt": "DFMD30111: Dometic RV furnace product photo",
+      "imageNote": "Product photo: Dometic"
+    },
+    {
+      "id": "dfmdh35111",
+      "modelNumber": "DFMDH35111",
+      "sku": "9610007792",
+      "name": "Dometic DFMDH35111 Medium 35K Furnace Essential",
+      "input": 35000,
+      "output": 25840,
+      "configuration": "Doored Essential furnace with Hall Effect Sensor and built-in soft start, 12 V DC, LP gas. Access door and thermostat sold separately.",
+      "productUrl": "https://www.dometic.com/en-us/product/dometic-dfmdh35111-medium-35k-furnace-essential-9610007792",
+      "ratingSourceUrl": "https://media.dometic.com/externalassets/dometic-medium-furnace_9610007793_81453.pdf#page=7",
+      "ratingBasis": "DF series operating manual, Table 3: DFMDH35",
+      "checkedAt": "2026-10-26",
+      "imageSrc": "assets/products/dfmdh35111.png",
+      "imageAlt": "DFMDH35111: Dometic RV furnace product photo",
+      "imageNote": "Product photo: Dometic"
+    },
+    {
+      "id": "dfld40121",
+      "modelNumber": "DFLD40121",
+      "sku": "9108923366",
+      "name": "Dometic DFLD40121 Large Furnace",
+      "input": 40000,
+      "output": 30400,
+      "configuration": "Doorless furnace with rear gas manifold, 12 V DC, LP gas. Access door and thermostat sold separately.",
+      "productUrl": "https://www.dometic.com/en-us/product/dometic-dfld40121-large-furnace-9108923366",
+      "ratingSourceUrl": "https://media.dometic.com/externalassets/dometic-medium-furnace_9610007793_81453.pdf#page=7",
+      "ratingBasis": "DF series operating manual, Table 4: DFLD40",
+      "checkedAt": "2026-10-26",
+      "imageSrc": "assets/products/dfld40121.png",
+      "imageAlt": "DFLD40121: Dometic RV furnace product photo",
+      "imageNote": "Product photo: Dometic"
     }
-  ].map((model) => ({ ...model, kind: "furnace", market: "US", listingStatus: "listed", checkedAt,
-    listingSourceUrl: furnaceListing, ratingSourceUrl: furnaceManual,
+  ].map((model) => ({ ...model, kind: "furnace", market: "US", listingStatus: "listed", checkedAt: model.checkedAt || checkedAt,
+    listingSourceUrl: furnaceListing, ratingSourceUrl: model.ratingSourceUrl || furnaceManual,
     ratingNote: "Match required heat against delivered output. Input BTU/hr describes fuel consumption, not heat delivered to the RV.",
-    imageSrc: `assets/products/${model.modelNumber.toLowerCase()}.webp`,
-    imageAlt: `${model.modelNumber}: ${["f25", "f30"].includes(model.id) ? "Dometic medium-furnace family image" : "Dometic RV furnace product photo"}`,
-    imageNote: ["f25", "f30"].includes(model.id) ? "Dometic medium-furnace family image; see model and SKU for exact variant." : "Product photo: Dometic" }));
+    imageSrc: model.imageSrc || `assets/products/${model.modelNumber.toLowerCase()}.webp`,
+    imageAlt: model.imageAlt || `${model.modelNumber}: ${["f25", "f30"].includes(model.id) ? "Dometic medium-furnace family image" : "Dometic RV furnace product photo"}`,
+    imageNote: model.imageNote || (["f25", "f30"].includes(model.id) ? "Dometic medium-furnace family image; see model and SKU for exact variant." : "Product photo: Dometic") }));
 
   const models = freeze([...acModels, ...furnaceModels]);
   const byId = new Map(models.map((model) => [model.id, model]));
 
-  const singleAcSystems = acModels.map((model) => ({
+  // Preserve the supplied models as the preferred capacity representatives.
+  // Same-capacity variants remain available in the product browser below.
+  const preferredIds = new Set(["fj11", "fj135", "fj15", "f12", "f18", "f25", "f30", "f35", "f40"]);
+  function capacityRepresentatives(records, key) {
+    const sorted = [...records].sort((a, b) => a[key] - b[key]
+      || Number(!preferredIds.has(a.id)) - Number(!preferredIds.has(b.id))
+      || a.sku.localeCompare(b.sku));
+    return sorted.filter((model, index) => index === 0 || model[key] !== sorted[index - 1][key]);
+  }
+  const acCapacityModels = capacityRepresentatives(acModels, "capacity");
+  const singleAcSystems = acCapacityModels.map((model) => ({
     ...model, id: `ac-${model.id}`,
     label: `${model.approximate ? "≈" : ""}${model.capacity / 1000}K BTU/hr`,
     detail: model.modelNumber, staged: false, unitCount: 1,
@@ -2291,9 +2558,9 @@
   // Prefer one unit, then the smallest nominal capacity sum of two listed units.
   // This is a capacity-planning policy; zone loads and installation are not modeled.
   const acPairs = [];
-  for (let first = 0; first < acModels.length; first += 1) {
-    for (let second = first; second < acModels.length; second += 1) {
-      const a = acModels[first], b = acModels[second];
+  for (let first = 0; first < acCapacityModels.length; first += 1) {
+    for (let second = first; second < acCapacityModels.length; second += 1) {
+      const a = acCapacityModels[first], b = acCapacityModels[second];
       const capacity = a.capacity + b.capacity;
       const approximate = a.approximate || b.approximate;
       const components = first === second ? [{ modelId: a.id, quantity: 2 }] : [{ modelId: a.id, quantity: 1 }, { modelId: b.id, quantity: 1 }];
@@ -2306,8 +2573,9 @@
       });
     }
   }
-  const acSystems = freeze([...singleAcSystems, ...acPairs].sort((a, b) => a.unitCount - b.unitCount || a.capacity - b.capacity));
-  const furnaceSystems = freeze(furnaceModels.map((model) => ({ ...model, label: `${model.input / 1000}K input`,
+  const allAcSystems = [...singleAcSystems, ...acPairs].sort((a, b) => a.unitCount - b.unitCount || a.capacity - b.capacity || a.id.localeCompare(b.id));
+  const acSystems = freeze(allAcSystems.filter((system, index) => !allAcSystems.slice(0, index).some((previous) => previous.capacity === system.capacity)));
+  const furnaceSystems = freeze(capacityRepresentatives(furnaceModels, "output").map((model) => ({ ...model, label: `${model.input / 1000}K input`,
     detail: `${model.modelNumber} · ${model.output.toLocaleString("en-US")} BTU/hr delivered`,
     components: [{ modelId: model.id, quantity: 1 }], unitCount: 1 })));
 
@@ -2319,7 +2587,7 @@
   function modelsFor(system) {
     return system ? system.components.map(({ modelId, quantity }) => ({ model: byId.get(modelId), quantity })) : [];
   }
-  return freeze({ checkedAt, models, acSystems, furnaceSystems, acListing, furnaceListing,
+  return freeze({ checkedAt, reviewedAt: "2026-10-26", models, acSystems, furnaceSystems, acListing, furnaceListing,
     acSizingSource: "https://www.dometic.com/en-us/lp/ac-buying-guide2",
     acInstallationSource: "https://media.dometic.com/externalassets/dometic-freshjet-3-series-13-5k_9600028598_107740.pdf",
     recommendAc: (load) => select(load, acSystems, "capacity"),
@@ -2610,7 +2878,7 @@
         const img = document.createElement("img");
         img.className = "recommended-product-photo";
         img.src = model.imageSrc; img.alt = model.imageAlt;
-        img.width = 900; img.height = 900; img.decoding = "async";
+        img.width = model.imageWidth || 900; img.height = model.imageHeight || 900; img.decoding = "async";
         img.loading = eager ? "eager" : "lazy";
         const fallback = document.createElement("span");
         fallback.className = "product-image-fallback";
@@ -2627,8 +2895,10 @@
         const link = document.createElement("a");
         link.className = className; link.href = model.productUrl;
         link.target = "_blank"; link.rel = "noopener noreferrer";
-        link.textContent = text;
-        link.setAttribute("aria-label", `${text}: ${model.modelNumber} (opens in a new tab)`);
+        const label = text ? (model.productLinkLabel || "View product") : "View product";
+        if (text) link.classList.add("product-action");
+        link.textContent = text ? label : "";
+        link.setAttribute("aria-label", `${label}: ${model.modelNumber} (opens in a new tab)`);
         const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         icon.setAttribute("class", "icon"); icon.setAttribute("aria-hidden", "true"); icon.setAttribute("viewBox", "0 0 24 24");
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -2637,6 +2907,60 @@
         icon.append(path); link.append(icon);
         return link;
       }
+
+      let catalogLimit = 6;
+      function renderCatalog() {
+        const kind = $("#catalogType").value;
+        const query = $("#catalogSearch").value.trim().toLowerCase().replace(/,/g, "");
+        const matches = Equipment.models.filter((model) => (kind === "all" || model.kind === kind)
+          && [model.modelNumber, model.sku, model.name, model.configuration, model.capacity, model.input, model.output]
+            .join(" ").toLowerCase().replace(/,/g, "").includes(query));
+        const grid = $("#catalogGrid"); grid.replaceChildren();
+        matches.slice(0, catalogLimit).forEach((model) => {
+          const card = document.createElement("article"); card.className = "catalog-card"; card.dataset.modelId = model.id;
+          const title = document.createElement("h3"); title.textContent = model.modelNumber;
+          const family = document.createElement("p"); family.textContent = model.name;
+          const sku = document.createElement("p"); sku.className = "product-sku"; sku.textContent = `SKU ${model.sku}`;
+          const spec = document.createElement("p"); spec.className = "catalog-spec";
+          spec.textContent = model.kind === "ac" ? `${model.approximate ? "≈" : ""}${fmt(model.capacity)} BTU/hr cooling`
+            : `${fmt(model.output)} BTU/hr delivered · ${fmt(model.input)} BTU/hr input`;
+          const configuration = document.createElement("p"); configuration.textContent = model.configuration;
+          const credit = document.createElement("p"); credit.className = "product-image-credit"; credit.textContent = model.imageNote;
+          card.append(productImage(model, "catalog-photo"), title, family, sku, spec, configuration);
+          if (model.heatPump) {
+            const note = document.createElement("p"); note.textContent = "Heat-pump variant. Heating performance is not sized by this calculator."; card.append(note);
+          }
+          card.append(credit, productLink(model, "catalog-product-link", "View product")); grid.append(card);
+        });
+        $("#catalogCount").textContent = matches.length ? `Showing ${Math.min(catalogLimit, matches.length)} of ${matches.length} products.` : "No products match. Try a model, SKU or capacity.";
+        $("#catalogShowMore").hidden = matches.length <= catalogLimit;
+        $("#catalogShowMore").textContent = `Show all ${matches.length} products`;
+      }
+
+      function appendCapacityAlternatives(container, model) {
+        const rating = model.kind === "ac" ? model.capacity : model.output;
+        const count = Equipment.models.filter((item) => item.kind === model.kind && item.id !== model.id
+          && (item.kind === "ac" ? item.capacity : item.output) === rating).length;
+        if (!count) return;
+        const button = document.createElement("button"); button.type = "button"; button.className = "model-alternatives";
+        button.textContent = `Compare ${count} other ${count === 1 ? "model" : "models"} at this capacity`;
+        button.addEventListener("click", () => {
+          $("#catalogType").value = model.kind; $("#catalogSearch").value = String(rating); catalogLimit = 6;
+          $("#catalogBrowser").open = true; renderCatalog();
+          $("#catalogBrowser").scrollIntoView({ behavior: "smooth", block: "start" });
+          $("#catalogSearch").focus({ preventScroll: true });
+        });
+        container.append(button);
+      }
+
+      $("#catalogBrowser").addEventListener("toggle", () => { if ($("#catalogBrowser").open) renderCatalog(); });
+      for (const id of ["#catalogType", "#catalogSearch"]) $(id).addEventListener(id === "#catalogSearch" ? "input" : "change", () => { catalogLimit = 6; renderCatalog(); });
+      $("#catalogShowMore").addEventListener("click", () => {
+        const previousCount = $("#catalogGrid").children.length;
+        catalogLimit = Equipment.models.length; renderCatalog();
+        const firstNew = $("#catalogGrid").children[previousCount];
+        if (firstNew) { firstNew.tabIndex = -1; firstNew.focus({ preventScroll: true }); }
+      });
 
       function renderAcPair(container, system, load) {
         const card = document.createElement("article"); card.className = "recommended-pair";
@@ -2658,6 +2982,7 @@
           const rating = document.createElement("p"); rating.className = "pair-unit-rating";
           rating.textContent = `${model.approximate ? "≈" : ""}${fmt(model.capacity)} BTU/hr per unit`;
           info.append(name, sku, rating, productLink(model, "recommended-product-link", "View product on Dometic"));
+          appendCapacityAlternatives(info, model);
           const credit = document.createElement("p"); credit.className = "product-image-credit"; credit.textContent = model.imageNote;
           row.append(visual, info, credit); products.append(row);
         });
@@ -2685,7 +3010,7 @@
           const maximum = isAc ? acSystems.at(-1).capacity : furnaceSystems.at(-1).output;
           text.textContent = load === 0 ? "The calculated load is zero, so no product is recommended." : isAc
             ? `Your expected cooling load is ${fmt(round100(load))} BTU/hr. Two of the largest listed A/Cs provide ${fmt(maximum)} BTU/hr nominal cooling. Ask an RV HVAC installer about a larger or zoned system.`
-            : `Your expected heating load is ${fmt(round100(load))} BTU/hr. The largest listed furnace delivers ${fmt(maximum)} BTU/hr. Ask an installer about a larger or zoned heating system. These listed A/Cs are cooling-only; their BTU ratings cannot be used for heating.`;
+            : `Your expected heating load is ${fmt(round100(load))} BTU/hr. The largest listed furnace delivers ${fmt(maximum)} BTU/hr. Ask an installer about a larger or zoned heating system. Cooling BTU ratings cannot be used as heat-pump heating output.`;
           empty.append(heading, text); container.append(empty); return;
         }
         if (isAc && system.unitCount > 1) { renderAcPair(container, system, load); return; }
@@ -2709,6 +3034,7 @@
         const fit = document.createElement("p"); fit.className = "product-fit";
         fit.textContent = `Covers your ${fmt(round100(load))} BTU/hr ${isAc ? "cooling" : "heating"} load.`;
         info.append(category, title, family, sku, rating, fit, productLink(model, "recommended-product-link", "View product on Dometic"));
+        appendCapacityAlternatives(info, model);
         const credit = document.createElement("p"); credit.className = "product-image-credit"; credit.textContent = model.imageNote;
         card.append(visual, info, credit); container.append(card);
       }
@@ -2764,8 +3090,9 @@
         const capacity = type === "ac" ? system.capacity : system.output;
         const difference = capacity - load;
         paragraph(difference >= 0 ? `${type === "ac" ? system.unitCount > 1 ? "Combined nominal cooling capacity" : "Nominal cooling capacity" : "Delivered furnace output"} ${system.approximate ? "≈" : ""}${fmt(capacity)} BTU/hr; expected load ${fmt(load)} BTU/hr; ${fmt(difference)} BTU/hr capacity margin.` : `Below the expected calculated load by ${fmt(-difference)} BTU/hr. This selected option does not cover the expected load.`, difference < 0 ? "capacity-deficit" : "capacity-margin");
-        const detail = document.createElement("div"); detail.className = "selected-product";
+        const detail = document.createElement("div"); detail.className = "selected-products";
         Equipment.modelsFor(system).forEach(({ model, quantity }) => {
+          const row = document.createElement("article"); row.className = "selected-product";
           const visual = productLink(model, "selected-product-visual", "");
           visual.replaceChildren(productImage(model));
           const info = document.createElement("div");
@@ -2776,10 +3103,11 @@
           const rating = document.createElement("span"); rating.className = "model-code";
           rating.textContent = type === "ac" ? `${model.approximate ? "Approximately " : ""}${fmt(model.capacity)} BTU/hr cooling per unit.` : `${fmt(model.input)} BTU/hr fuel input → ${fmt(model.output)} BTU/hr delivered heat.`;
           const source = document.createElement("a"); source.href = model.ratingSourceUrl; source.target = "_blank"; source.rel = "noopener noreferrer";
-          source.textContent = "Manufacturer rating source";
+          source.textContent = "Manufacturer rating source"; source.className = "rating-source";
           const credit = document.createElement("p"); credit.className = "product-image-credit"; credit.textContent = model.imageNote;
-          info.append(name, family, spec, rating, productLink(model, "selected-product-link", "View product on Dometic"), document.createElement("br"), source, credit);
-          detail.append(visual, info);
+          info.append(name, family, spec, rating, source, credit);
+          row.append(visual, info, productLink(model, "selected-product-link", "View product on Dometic"));
+          detail.append(row);
         });
         container.append(detail);
         if (system.unitCount > 1) paragraph("Both units must be able to operate together. An installer must check each zone's load, roof positions, air distribution, controls and electrical supply; the combined total alone does not confirm the installation.");
@@ -3089,10 +3417,13 @@
 
       $(".compare-shell").addEventListener("click", (event) => {
         const card = event.target.closest(".capacity-card");
-        if (!card) return;
+        if (!card || !card.dataset.systemId) return;
+        const restoreFocus = document.activeElement === card;
+        const { systemId, systemType } = card.dataset;
         if (card.dataset.systemType === "ac") state.selectedAc = card.dataset.systemId;
         else state.selectedFurnace = card.dataset.systemId;
         render();
+        if (restoreFocus) document.querySelector(`[data-system-type="${systemType}"][data-system-id="${systemId}"]`)?.focus({ preventScroll: true });
       });
 
       function setAdvancedOpen(open) {
@@ -3180,7 +3511,8 @@
         if (event.target === dialog) dialog.close();
       }));
 
-      $("#catalogStatus").textContent = `US catalog snapshot checked ${Equipment.checkedAt} · Three FreshJet 5 models, six two-unit cooling combinations and six 12 V LP furnaces · Official listings, not live stock. Cooling and furnace choices are independent capacity matches; zoning and installation compatibility need verification.`;
+      $("#catalogTotal").textContent = `${Equipment.models.length} products · photos, specifications and links`;
+      $("#catalogStatus").textContent = `US catalog reviewed ${Equipment.reviewedAt} · ${Equipment.models.filter(model => model.kind === "ac").length} A/C models and ${Equipment.models.filter(model => model.kind === "furnace").length} 12 V LP furnaces · Official listings, not live stock. Same-capacity variants are available below; the supplied models remain the default capacity matches.`;
       const slideUI = window.RVBTUSlides.create({ state, currentInputs, render, fmt });
       function renderSlideResults(results) { slideUI.renderResults(results); }
 
@@ -3202,7 +3534,7 @@
         getResults: () => state.lastResults,
         getAcSystems: () => structuredClone(acSystems),
         getFurnaceSystems: () => structuredClone(furnaceSystems),
-        getEquipmentCatalog: () => ({ checkedAt: Equipment.checkedAt, models: structuredClone(Equipment.models) })
+        getEquipmentCatalog: () => ({ checkedAt: Equipment.checkedAt, reviewedAt: Equipment.reviewedAt, models: structuredClone(Equipment.models) })
       };
     })();
   </script>

@@ -12,8 +12,9 @@ const catalogModule = { exports: {} };
 vm.runInThisContext('(function(module, exports) {\n' + source + '\n})', { filename: 'index.html#equipmentCatalog' })(catalogModule, catalogModule.exports);
 const c = catalogModule.exports;
 
-test('the supplied nine products and their exact ratings are the complete catalog', () => {
-  assert.deepEqual(c.models.map(({ kind, modelNumber, sku, capacity, input, output }) =>
+test('the supplied nine products retain their exact ratings within the expanded catalog', () => {
+  const originalIds = ['fj11', 'fj135', 'fj15', 'f12', 'f18', 'f25', 'f30', 'f35', 'f40'];
+  assert.deepEqual(c.models.filter(model => originalIds.includes(model.id)).map(({ kind, modelNumber, sku, capacity, input, output }) =>
     [kind, modelNumber, sku, capacity ?? null, input ?? null, output ?? null]), [
     ['ac', 'FJX5357MHE', '9620015929', 11000, null, null],
     ['ac', 'FJX5457M', '9620015924', 13500, null, null],
@@ -27,6 +28,36 @@ test('the supplied nine products and their exact ratings are the complete catalo
   ]);
   assert.equal(c.acSystems.length, 9);
   assert.equal(c.furnaceSystems.length, 6);
+  assert.equal(c.models.length, 20);
+});
+
+test('verified additions retain exact model, SKU and rated capacities', () => {
+  const originals = new Set(['fj11', 'fj135', 'fj15', 'f12', 'f18', 'f25', 'f30', 'f35', 'f40']);
+  assert.deepEqual(c.models.filter(model => !originals.has(model.id)).map(model =>
+    [model.modelNumber, model.sku, model.capacity ?? null, model.input ?? null, model.output ?? null]), [
+    ['FJX3473M', '9600028598', 13500, null, null],
+    ['FJX3573M', '9610007807', 15000, null, null],
+    ['FJXM3573M', '9610007865', 15000, null, null],
+    ['FJX5557MHP', '9620015926', 15000, null, null],
+    ['FJX5557EHP', '9620017216', 15000, null, null],
+    ['DFSAD12121', '9108923340', null, 12000, 9120],
+    ['DFSD20121', '9108923341', null, 18000, 13680],
+    ['DFMD25111', '9600000886', null, 25000, 19000],
+    ['DFMD30111', '9600000923', null, 30000, 22800],
+    ['DFMDH35111', '9610007792', null, 35000, 25840],
+    ['DFLD40121', '9108923366', null, 40000, 30400]
+  ]);
+});
+
+test('same-capacity variants do not create duplicate lower or higher tiers or change the preferred model', () => {
+  assert.equal(new Set(c.acSystems.map(system => system.capacity)).size, c.acSystems.length);
+  assert.equal(new Set(c.furnaceSystems.map(system => system.output)).size, c.furnaceSystems.length);
+  assert.equal(c.recommendAc(13500).modelNumber, 'FJX5457M');
+  assert.equal(c.recommendAc(15000).modelNumber, 'FJX5557M');
+  assert.equal(c.recommendFurnace(9120).modelNumber, 'DFSAD12111');
+  assert.equal(c.recommendFurnace(30400).modelNumber, 'DFLD40111');
+  assert.equal(c.models.filter(model => model.heatPump).length, 2);
+  assert.ok(c.models.filter(model => model.heatPump).every(model => model.output === undefined));
 });
 
 test('cooling plans use only the three listed A/C models and preserve every component capacity', () => {
@@ -173,11 +204,11 @@ test('the snapshot retains dated official provenance without implying live stock
     assert.match(model.sku, /^\d{10}$/);
     assert.equal(model.market, 'US');
     assert.equal(model.listingStatus, 'listed');
-    assert.equal(model.checkedAt, '2026-10-20');
+    assert.ok(['2026-10-20', '2026-10-26'].includes(model.checkedAt));
     for (const key of ['productUrl', 'ratingSourceUrl', 'listingSourceUrl']) {
       const url = new URL(model[key]);
       assert.equal(url.protocol, 'https:');
-      assert.ok(url.hostname === 'www.dometic.com' || url.hostname === 'media.dometic.com');
+      assert.ok(['www.dometic.com', 'media.dometic.com', 'documents.dometic.com'].includes(url.hostname));
     }
     if (model.kind === 'furnace') assert.match(model.ratingSourceUrl, /81453\.pdf#page=7$/);
     assert.ok(model.ratingBasis.length > 10 && model.configuration.length > 10);
@@ -185,7 +216,7 @@ test('the snapshot retains dated official provenance without implying live stock
   }
 });
 
-test('all nine products have local product images with matching alt text and manufacturer attribution', () => {
+test('every product has a local image with matching alt text and manufacturer attribution', () => {
   const imageDirectory = path.join(__dirname, '..', 'assets', 'products') + path.sep;
   for (const model of c.models) {
     const filename = path.resolve(__dirname, '..', model.imageSrc);

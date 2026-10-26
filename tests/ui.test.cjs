@@ -37,6 +37,38 @@ function addSlide(a, index = 0) {
 }
 function apply(a) { a.click('#applySlides'); assert.equal(a.$('#slideError').hidden, true, a.$('#slideError').textContent); }
 
+async function openCatalog(a) {
+  const browser = a.$('#catalogBrowser');
+  if (browser.open) return;
+  await new Promise(resolve => {
+    browser.addEventListener('toggle', resolve, { once: true });
+    a.click('#catalogBrowser > summary');
+  });
+  assert.equal(browser.open, true);
+}
+
+function modelsFor(a, system) {
+  const catalog = a.api.getEquipmentCatalog().models;
+  return system.components.map(component => catalog.find(model => model.id === component.modelId));
+}
+
+function assertProductActions(a, selector, models) {
+  const actions = [...a.window.document.querySelectorAll(selector + ' .product-action')];
+  assert.equal(actions.length, models.length, selector + ': one product action per distinct model');
+  actions.forEach((action, index) => {
+    const model = models[index];
+    assert.equal(action.tagName, 'A');
+    assert.equal(action.href, model.productUrl);
+    assert.equal(action.textContent, model.productLinkLabel || 'View product');
+    assert.equal(action.target, '_blank');
+    assert.ok(action.rel.includes('noopener'));
+    assert.ok(action.rel.includes('noreferrer'));
+    assert.ok(action.getAttribute('aria-label').includes(model.modelNumber));
+    assert.match(action.getAttribute('aria-label'), /opens in a new tab/);
+    assert.equal(action.closest('[hidden]'), null);
+  });
+}
+
 test('DOM: initial screen has no inferred slides and retains Dometic equipment comparisons', async t => {
   const a = await app(t);
   assert.match(a.window.document.title, /Dometic/);
@@ -177,9 +209,9 @@ test('DOM: recommendations show model codes and separate calculated load from ca
   assert.match(a.$('#coolingModelMatch').textContent, new RegExp(ac.detail));
   assert.match(a.$('#furnaceMatch').textContent, new RegExp(heat.modelNumber));
   assert.match(a.$('#furnaceMatch').textContent, /delivered/);
-  assert.match(a.$('#catalogStatus').textContent, /2026-10-20/);
+  assert.match(a.$('#catalogStatus').textContent, /2026-10-26/);
   assert.match(a.$('#catalogStatus').textContent, /not live stock/);
-  assert.equal(a.api.getEquipmentCatalog().models.length, 9);
+  assert.equal(a.api.getEquipmentCatalog().models.length, 20);
   const capacity = Number(a.$('#coolingMatch').textContent.replace(/[^\d]/g, ''));
   assert.equal(capacity, ac.capacity); assert.ok(capacity >= raw.coolingTotal);
   for (const [selector, system] of [['#coolingProduct', ac], ['#heatingProduct', heat]]) {
@@ -343,7 +375,7 @@ test('DOM: mixed two-unit options list each exact product and update comparison 
   assert.match(a.$('#coolingProduct .product-empty').textContent, /No listed one- or two-unit option.*30,000/s);
 });
 
-test('DOM: heating overflow never substitutes cooling-only A/C capacity or suppresses a valid cooling pair', async t => {
+test('DOM: heating overflow never substitutes cooling capacity for heating output or suppresses a valid cooling pair', async t => {
   const a = await app(t);
   a.fill('#lengthNumber', 60, 'change');
   a.click('#advancedShortcut'); a.fill('#advCoolTemp', 100); a.fill('#advHeatTemp', -20); a.click('#applyAdvanced');
@@ -351,7 +383,7 @@ test('DOM: heating overflow never substitutes cooling-only A/C capacity or suppr
   assert.ok(a.$('#coolingProduct .recommended-pair'));
   assert.ok(a.$('#heatingProduct .product-empty'));
   assert.equal(a.$('#heatingProduct .recommended-product-link'), null);
-  assert.match(a.$('#heatingProduct').textContent, /cooling-only.*cannot be used for heating/);
+  assert.match(a.$('#heatingProduct').textContent, /Cooling BTU ratings cannot be used as heat-pump heating output/);
   assert.ok(a.api.getFurnaceSystems().every(system => system.unitCount === 1));
   a.click('[data-mode="furnace"]');
   assert.equal(a.$('#coolingResult').hidden, true);
@@ -363,4 +395,136 @@ test('DOM: catalog API snapshots do not allow callers to mutate model ratings', 
   const plans = a.api.getAcSystems(); plans[0].components[0].quantity = 99;
   assert.equal(a.api.getEquipmentCatalog().models[0].capacity, 11000);
   assert.equal(a.api.getAcSystems()[0].components[0].quantity, 1);
+});
+
+test('DOM: the product browser loads six lazy images on demand and Show all preserves keyboard position', async t => {
+  const a = await app(t);
+  const catalog = a.api.getEquipmentCatalog().models;
+  assert.equal(catalog.length, 20);
+  assert.equal(a.$('#catalogBrowser').open, false);
+  assert.equal(a.$('#catalogGrid').children.length, 0, 'closed browser does not create product images');
+  await openCatalog(a);
+  assert.equal(a.$('#catalogGrid').children.length, 6);
+  assert.match(a.$('#catalogCount').textContent, /Showing 6 of 20 products/);
+  assert.equal(a.$('#catalogShowMore').hidden, false);
+  [...a.$('#catalogGrid').children].forEach(card => {
+    const model = catalog.find(item => item.id === card.dataset.modelId);
+    assert.ok(model);
+    const image = card.querySelector('img');
+    assert.equal(image.loading, 'lazy');
+    assert.equal(image.getAttribute('src'), model.imageSrc);
+    assert.equal(image.alt, model.imageAlt);
+    assertProductActions(a, '#catalogGrid [data-model-id="' + model.id + '"]', [model]);
+  });
+  a.$('#catalogShowMore').focus();
+  a.click('#catalogShowMore');
+  assert.equal(a.$('#catalogGrid').children.length, 20);
+  assert.equal(a.$('#catalogShowMore').hidden, true);
+  assert.equal(a.window.document.activeElement, a.$('#catalogGrid').children[6]);
+  assert.match(a.$('#catalogCount').textContent, /Showing 20 of 20 products/);
+});
+
+test('DOM: catalog type, exact SKU and empty-result filters update products and reset the page limit', async t => {
+  const a = await app(t);
+  const catalog = a.api.getEquipmentCatalog().models;
+  await openCatalog(a);
+  a.click('#catalogShowMore');
+  a.fill('#catalogType', 'furnace', 'change');
+  const furnaces = catalog.filter(model => model.kind === 'furnace');
+  assert.equal(a.$('#catalogGrid').children.length, Math.min(6, furnaces.length));
+  assert.ok([...a.$('#catalogGrid').children].every(card => furnaces.some(model => model.id === card.dataset.modelId)));
+  assert.match(a.$('#catalogCount').textContent, new RegExp('Showing 6 of ' + furnaces.length + ' products'));
+  const furnace = furnaces.at(-1);
+  a.fill('#catalogSearch', furnace.sku);
+  assert.equal(a.$('#catalogGrid').children.length, 1);
+  assert.equal(a.$('#catalogGrid').firstElementChild.dataset.modelId, furnace.id);
+  assertProductActions(a, '#catalogGrid', [furnace]);
+  assert.equal(a.$('#catalogShowMore').hidden, true);
+  a.fill('#catalogType', 'ac', 'change');
+  assert.equal(a.$('#catalogGrid').children.length, 0, 'the type filter still applies to an exact SKU');
+  assert.match(a.$('#catalogCount').textContent, /No products match/);
+  assert.equal(a.$('#catalogShowMore').hidden, true);
+  a.fill('#catalogSearch', 'not-a-dometic-model-xyz');
+  assert.equal(a.$('#catalogGrid').children.length, 0);
+  a.fill('#catalogSearch', '');
+  assert.equal(a.$('#catalogGrid').children.length, 6);
+  assert.ok([...a.$('#catalogGrid').children].every(card => catalog.find(model => model.id === card.dataset.modelId).kind === 'ac'));
+});
+
+test('DOM: heat-pump browsing explains the heating limit and leaves furnace sizing unchanged', async t => {
+  const a = await app(t);
+  const model = a.api.getEquipmentCatalog().models.find(item => item.heatPump);
+  assert.ok(model, 'the expanded catalog includes a verified heat-pump model');
+  const originalHeating = a.api.getResults().raw.expected.heatingTotal;
+  const originalFurnace = a.$('#heatingProduct .product-model').textContent;
+  await openCatalog(a);
+  a.fill('#catalogSearch', model.sku);
+  assert.equal(a.$('#catalogGrid').children.length, 1);
+  assert.match(a.$('#catalogGrid').textContent, /Heat-pump variant\. Heating performance is not sized by this calculator/);
+  assertProductActions(a, '#catalogGrid', [model]);
+  assert.equal(a.api.getResults().raw.expected.heatingTotal, originalHeating);
+  assert.equal(a.$('#heatingProduct .product-model').textContent, originalFurnace);
+});
+
+test('DOM: same-capacity alternatives open the product browser with the correct type, rating and focus', async t => {
+  const a = await app(t);
+  const catalog = a.api.getEquipmentCatalog().models;
+  const current = catalog.find(model => model.modelNumber === a.$('#coolingProduct .product-model').textContent);
+  assert.ok(current);
+  const alternatives = catalog.filter(model => model.kind === current.kind && model.capacity === current.capacity);
+  assert.ok(alternatives.length > 1);
+  assert.ok(a.$('#coolingProduct .model-alternatives'));
+  a.click('#coolingProduct .model-alternatives');
+  assert.equal(a.$('#catalogBrowser').open, true);
+  assert.equal(a.$('#catalogType').value, 'ac');
+  assert.equal(a.$('#catalogSearch').value, String(current.capacity));
+  assert.equal(a.window.document.activeElement, a.$('#catalogSearch'));
+  assert.deepEqual([...a.$('#catalogGrid').children].map(card => card.dataset.modelId), alternatives.slice(0, 6).map(model => model.id));
+  assert.equal(a.$('#coolingProduct .product-model').textContent, current.modelNumber);
+  assertProductActions(a, '#coolingProduct', [current]);
+});
+
+test('DOM: product actions remain consistent across single, furnace, identical-pair, mixed-pair and selected options', async t => {
+  const a = await app(t);
+  const checkCurrent = () => {
+    const ac = a.api.getAcSystems().find(system => system.id === a.api.getState().selectedAc);
+    const furnace = a.api.getFurnaceSystems().find(system => system.id === a.api.getState().selectedFurnace);
+    assertProductActions(a, '#coolingProduct', modelsFor(a, ac));
+    assertProductActions(a, '#heatingProduct', modelsFor(a, furnace));
+    assertProductActions(a, '#acModelReference', modelsFor(a, ac));
+    assertProductActions(a, '#furnaceModelReference', modelsFor(a, furnace));
+  };
+  a.click('[data-vehicle="van"]');
+  checkCurrent();
+  a.click('[data-vehicle="travel"]');
+  a.fill('#lengthNumber', 50, 'change');
+  assert.equal(a.$('#coolingProduct .pair-products').children.length, 1);
+  checkCurrent();
+  a.fill('#lengthNumber', 60, 'change');
+  a.click('#advancedShortcut'); a.fill('#advCoolTemp', 100); a.click('#applyAdvanced');
+  assert.equal(a.$('#coolingProduct .pair-products').children.length, 2);
+  checkCurrent();
+  const originalRecommendation = [...a.window.document.querySelectorAll('#coolingProduct .product-action')].map(link => link.href);
+  for (const selector of ['#acCompareOptions', '#furnaceCompareOptions']) {
+    a.click(selector + ' .capacity-card:not(.recommended):not(.unavailable)');
+    const isAc = selector === '#acCompareOptions';
+    const state = a.api.getState();
+    const chosen = (isAc ? a.api.getAcSystems() : a.api.getFurnaceSystems()).find(system => system.id === (isAc ? state.selectedAc : state.selectedFurnace));
+    assertProductActions(a, isAc ? '#acModelReference' : '#furnaceModelReference', modelsFor(a, chosen));
+  }
+  assert.deepEqual([...a.window.document.querySelectorAll('#coolingProduct .product-action')].map(link => link.href), originalRecommendation);
+});
+
+test('DOM: selecting cooling or furnace comparisons retains focus on the replacement button', async t => {
+  const a = await app(t);
+  for (const selector of ['#acCompareOptions', '#furnaceCompareOptions']) {
+    const original = a.$(selector + ' .capacity-card:not(.recommended):not(.unavailable)');
+    const id = original.dataset.systemId;
+    original.focus();
+    original.click();
+    const replacement = a.$(selector + ' [data-system-id="' + id + '"]');
+    assert.notEqual(replacement, original);
+    assert.equal(replacement.getAttribute('aria-pressed'), 'true');
+    assert.equal(a.window.document.activeElement, replacement);
+  }
 });

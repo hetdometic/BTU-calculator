@@ -1,0 +1,256 @@
+{
+  "checkedAt": "2026-10-26",
+  "scope": "Additional exact US-market Dometic rooftop RV air conditioners. Capacity is nominal cooling BTU/hr; heat-pump heating output remains unavailable.",
+  "records": [
+    {
+      "id": "fj3-135",
+      "modelNumber": "FJX3473M",
+      "sku": "9600028598",
+      "name": "Dometic FreshJet 3 Mechanical 13.5K",
+      "capacity": 13500,
+      "approximate": false,
+      "configuration": "White / mechanical controls / 115 V AC, 60 Hz / R410A / cool only",
+      "family": "FreshJet 3",
+      "heatPump": false,
+      "productUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "linkLabel": "View lineup on Dometic",
+      "ratingSourceUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "ratingBasis": "Official US AC lineup explicitly lists SKU 9600028598 as 13.5K BTU; official rebate schedule maps this SKU to FJX3473M.",
+      "ratingNote": "13,500 BTU/hr nominal cooling. Roof unit requires compatible interior air distribution and controls.",
+      "listingSourceUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "imageSrc": "assets/products/fjx3473m.webp",
+      "imageAlt": "Dometic FreshJet 3 white rooftop air conditioner, FJX3473M family photo",
+      "imageNote": "Manufacturer exterior family photo displayed beside this exact SKU on the official US AC lineup; markings and accessories are not verified by the image.",
+      "imageSource": "https://images.eu.ctfassets.net/tffwvw7unu8l/240N3f8v2xTAYF2JaNI0w9/0d1d27f81f188ade3b6cbc9c7c08d377/FJ3-White_4Col.png",
+      "imageDimensions": [
+        720,
+        900
+      ],
+      "sourceUrls": [
+        "https://www.dometic.com/en-us/lp/rv-ac",
+        "https://mediabank.dometic.com/deployedFiles/4510414325f2f5f0efab6bb8cb10162e.pdf?v=20260327204754",
+        "https://documents.dometic.com/documents/95771-dometic-freshjet-series-3-air-conditioners-brisk-ii",
+        "https://media.dometic.com/externalassets/dometic-freshjet-3-series-15k_9600028601_107740.pdf"
+      ],
+      "electricalBasis": "North American mechanical FreshJet family installation manual specifies 115 V AC; exact R410A SKU identity and capacity come from US lineup and manufacturer rebate schedule.",
+      "kind": "ac",
+      "market": "US",
+      "listingStatus": "listed",
+      "checkedAt": "2026-10-26",
+      "preferred": false,
+      "imageDownloadedAt": "2026-10-26",
+      "imageDownloadUrl": "https://images.eu.ctfassets.net/tffwvw7unu8l/240N3f8v2xTAYF2JaNI0w9/0d1d27f81f188ade3b6cbc9c7c08d377/FJ3-White_4Col.png?w=720&h=900&fit=fill&fm=webp&q=85"
+    },
+    {
+      "id": "fj3-15",
+      "modelNumber": "FJX3573M",
+      "sku": "9610007807",
+      "name": "Dometic FreshJet 3 Mechanical 15K",
+      "capacity": 15000,
+      "approximate": false,
+      "configuration": "White / mechanical controls / 115 V AC, 60 Hz / R32 / cool only",
+      "family": "FreshJet 3",
+      "heatPump": false,
+      "productUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "linkLabel": "View lineup on Dometic",
+      "ratingSourceUrl": "https://documents.dometic.com/files/205966-dometic-freshjet-3-4-5-7-air-distribution-box-electronic-display.pdf#page=31",
+      "ratingBasis": "Manufacturer electronic-controls installation manual, technical data page 31: FJX3573MWHCS, 15,000 BTU/hr, 115 V AC, 60 Hz, single phase. Exact SKU and R32 variant displayed on official US lineup.",
+      "ratingNote": "15,000 BTU/hr nominal cooling. Required air distribution box or ducted return grille/control equipment is separate.",
+      "listingSourceUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "imageSrc": "assets/products/fjx3573m.webp",
+      "imageAlt": "Dometic FreshJet 3 white rooftop air conditioner, FJX3573M family photo",
+      "imageNote": "Manufacturer exterior family photo displayed beside this exact SKU on the official US AC lineup; shared with the 13.5K model.",
+      "imageSource": "https://images.eu.ctfassets.net/tffwvw7unu8l/240N3f8v2xTAYF2JaNI0w9/0d1d27f81f188ade3b6cbc9c7c08d377/FJ3-White_4Col.png",
+      "imageDimensions": [
+        720,
+        900
+      ],
+      "sourceUrls": [
+        "https://www.dometic.com/en-us/lp/rv-ac",
+        "https://mediabank.dometic.com/deployedFiles/4510414325f2f5f0efab6bb8cb10162e.pdf?v=20260327204754",
+        "https://documents.dometic.com/files/205966-dometic-freshjet-3-4-5-7-air-distribution-box-electronic-display.pdf"
+      ],
+      "kind": "ac",
+      "market": "US",
+      "listingStatus": "listed",
+      "checkedAt": "2026-10-26",
+      "preferred": false,
+      "imageDownloadedAt": "2026-10-26",
+      "imageDownloadUrl": "https://images.eu.ctfassets.net/tffwvw7unu8l/240N3f8v2xTAYF2JaNI0w9/0d1d27f81f188ade3b6cbc9c7c08d377/FJ3-White_4Col.png?w=720&h=900&fit=fill&fm=webp&q=85"
+    },
+    {
+      "id": "fj3-commercial15",
+      "modelNumber": "FJXM3573M",
+      "sku": "9610007865",
+      "name": "Dometic FreshJet 3 Commercial 15K",
+      "capacity": 15000,
+      "approximate": false,
+      "configuration": "Black / commercial grade / mechanical controls / 115 V AC, 60 Hz / R32 / cool only",
+      "family": "FreshJet 3 Commercial",
+      "heatPump": false,
+      "productUrl": "https://www.dometic.com/en-us/product/dometic-freshjet-3-commercial-series-15k-4?v=9610007865",
+      "linkLabel": "View product on Dometic",
+      "ratingSourceUrl": "https://www.dometic.com/en-us/product/dometic-freshjet-3-commercial-series-15k-4?v=9610007865",
+      "ratingBasis": "Manufacturer exact-SKU product record: FJXM3573M, SKU 9610007865, Cooling Capacity Display 15000; technical data page 31 confirms 115 V AC, 60 Hz, single phase.",
+      "ratingNote": "15,000 BTU/hr nominal cooling. Commercial grade corrosion protection; no preinstalled controls. Requires compatible air distribution and controls.",
+      "listingSourceUrl": "https://www.dometic.com/en-us/category/rv-and-van/rv-air-conditioners",
+      "imageSrc": "assets/products/fjxm3573m.png",
+      "imageAlt": "Dometic FreshJet 3 Commercial black rooftop air conditioner, FJXM3573M",
+      "imageNote": "Manufacturer product photograph from the exact SKU product gallery.",
+      "imageSource": "https://www.dometic.com/media/catalog/product/cache/5e86c224dde0af116b83ea127ee979a6/7/8/78037-primary_1_2.png",
+      "imageDimensions": [
+        900,
+        900
+      ],
+      "sourceUrls": [
+        "https://www.dometic.com/en-us/product/dometic-freshjet-3-commercial-series-15k-4?v=9610007865",
+        "https://documents.dometic.com/files/205966-dometic-freshjet-3-4-5-7-air-distribution-box-electronic-display.pdf",
+        "https://mediabank.dometic.com/deployedFiles/4510414325f2f5f0efab6bb8cb10162e.pdf?v=20260327204754"
+      ],
+      "kind": "ac",
+      "market": "US",
+      "listingStatus": "listed",
+      "checkedAt": "2026-10-26",
+      "preferred": false,
+      "imageDownloadedAt": "2026-10-26",
+      "imageDownloadUrl": "https://www.dometic.com/media/catalog/product/cache/5e86c224dde0af116b83ea127ee979a6/7/8/78037-primary_1_2.png"
+    },
+    {
+      "id": "fj5-mhp15",
+      "modelNumber": "FJX5557MHP",
+      "sku": "9620015926",
+      "name": "Dometic FreshJet 5 Mechanical 15K Heat Pump",
+      "capacity": 15000,
+      "approximate": false,
+      "configuration": "White / mechanical controls / 115 V AC, 60 Hz / R32 / heat pump",
+      "family": "FreshJet 5",
+      "heatPump": true,
+      "heatingOutput": null,
+      "productUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "linkLabel": "View lineup on Dometic",
+      "ratingSourceUrl": "https://documents.dometic.com/files/184961-dometic-freshjet-5-fjx5557mhp.pdf#page=13",
+      "ratingBasis": "Manufacturer FJX5557MHP installation manual, technical data page 13: 15,000 BTU/hr cooling, 115 V AC, 60 Hz, single phase. Exact white SKU displayed on US lineup.",
+      "ratingNote": "15,000 BTU/hr is cooling capacity. Heat pump is included; no verified heating output is assigned, so heating sizing continues to use furnace output.",
+      "listingSourceUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "imageSrc": "assets/products/fjx5557mhp.webp",
+      "imageAlt": "Dometic FreshJet 5 white rooftop air conditioner, FJX5557MHP heat-pump family photo",
+      "imageNote": "Manufacturer exterior family photo displayed beside this exact SKU on the official US AC lineup; the exterior image does not verify heat-pump hardware.",
+      "imageSource": "https://images.eu.ctfassets.net/tffwvw7unu8l/4gg7TmzoZPn1UGu7q5Ht7v/bc8be5ab204aa7b345835b0530d6dd63/FJ5-white_4col.png",
+      "imageDimensions": [
+        720,
+        900
+      ],
+      "sourceUrls": [
+        "https://www.dometic.com/en-us/lp/rv-ac",
+        "https://mediabank.dometic.com/deployedFiles/4510414325f2f5f0efab6bb8cb10162e.pdf?v=20260327204754",
+        "https://documents.dometic.com/documents/184961-dometic-freshjet-5-fjx5557mhp",
+        "https://documents.dometic.com/files/184961-dometic-freshjet-5-fjx5557mhp.pdf"
+      ],
+      "kind": "ac",
+      "market": "US",
+      "listingStatus": "listed",
+      "checkedAt": "2026-10-26",
+      "preferred": false,
+      "imageDownloadedAt": "2026-10-26",
+      "imageDownloadUrl": "https://images.eu.ctfassets.net/tffwvw7unu8l/4gg7TmzoZPn1UGu7q5Ht7v/bc8be5ab204aa7b345835b0530d6dd63/FJ5-white_4col.png?w=720&h=900&fit=fill&fm=webp&q=85"
+    },
+    {
+      "id": "fj5-ehp15",
+      "modelNumber": "FJX5557EHP",
+      "sku": "9620017216",
+      "name": "Dometic FreshJet 5 Electronic 15K Heat Pump",
+      "capacity": 15000,
+      "approximate": false,
+      "configuration": "White / electronic controls / 115 V AC, 60 Hz / R32 / heat pump",
+      "family": "FreshJet 5",
+      "heatPump": true,
+      "heatingOutput": null,
+      "productUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "linkLabel": "View lineup on Dometic",
+      "ratingSourceUrl": "https://documents.dometic.com/files/205966-dometic-freshjet-3-4-5-7-air-distribution-box-electronic-display.pdf#page=32",
+      "ratingBasis": "Manufacturer electronic-controls installation manual, technical data pages 31-32: FJX5557EHPWHCS, 15,000 BTU/hr cooling, shared 115 V AC, 60 Hz, single-phase electrical rating; electronic heat-pump manual identifies exact SKU 9620017216.",
+      "ratingNote": "15,000 BTU/hr is cooling capacity. Electronic-control heat-pump variant; no verified heating output is assigned, so heating sizing continues to use furnace output.",
+      "listingSourceUrl": "https://www.dometic.com/en-us/lp/rv-ac",
+      "imageSrc": "assets/products/fjx5557ehp.webp",
+      "imageAlt": "Dometic FreshJet 5 white rooftop air conditioner, FJX5557EHP electronic heat-pump family photo",
+      "imageNote": "Manufacturer exterior family photo displayed beside this exact SKU on the official US AC lineup; appearance is shared with the mechanical variant.",
+      "imageSource": "https://images.eu.ctfassets.net/tffwvw7unu8l/55fE1Ut6oWbUtXgeiZWug5/7c844f1c39f3ca8ba7d9d0f8f19af5bb/FJ5-white_4col.png",
+      "imageDimensions": [
+        720,
+        900
+      ],
+      "sourceUrls": [
+        "https://www.dometic.com/en-us/lp/rv-ac",
+        "https://mediabank.dometic.com/deployedFiles/4510414325f2f5f0efab6bb8cb10162e.pdf?v=20260327204754",
+        "https://documents.dometic.com/files/205966-dometic-freshjet-3-4-5-7-air-distribution-box-electronic-display.pdf",
+        "https://documents.dometic.com/documents/155575-dometic-freshjet-5-electronic-heat-pump-series"
+      ],
+      "kind": "ac",
+      "market": "US",
+      "listingStatus": "listed",
+      "checkedAt": "2026-10-26",
+      "preferred": false,
+      "imageDownloadedAt": "2026-10-26",
+      "imageDownloadUrl": "https://images.eu.ctfassets.net/tffwvw7unu8l/55fE1Ut6oWbUtXgeiZWug5/7c844f1c39f3ca8ba7d9d0f8f19af5bb/FJ5-white_4col.png?w=720&h=900&fit=fill&fm=webp&q=85"
+    }
+  ],
+  "findings": [
+    {
+      "topic": "Live product links",
+      "note": "The official US RV AC landing page explicitly displays four added exact SKUs; current individual US/global PDP guesses either return 404 or select a different model, so these four records intentionally use the live lineup URL and View lineup on Dometic link label."
+    },
+    {
+      "topic": "Legacy models",
+      "note": "Several legacy Brisk II, Penguin II, and Blizzard URLs remain in the US sitemap but return HTTP 404 when fetched live. Stale cached search results are not sufficient to classify them as currently listed."
+    },
+    {
+      "topic": "FreshJet 4 and FreshJet 7",
+      "note": "Official Americas electronic-controls manual pages 31-32 includes FreshJet 4 13.5K/15K and FreshJet 7 FJX7537IHP 18,000 BTU/hr at a shared 115 V electrical rating. These were not added because no current exact-SKU product/photo record was verified during this bounded research. Do not substitute European/APAC FreshJet 7 photographs or 230 V SKUs."
+    },
+    {
+      "topic": "Excluded US 18K FreshJet 7 candidate",
+      "modelNumber": "FJX7537IHP",
+      "candidateSkus": [
+        "9620013330",
+        "9620013331"
+      ],
+      "candidateConfigurations": [
+        "FJX7537IHPWHCSL / white / 115 V AC / R32 / inverter / heat pump",
+        "FJX7537IHPBKCSL / black / 115 V AC / R32 / inverter / heat pump"
+      ],
+      "capacity": 18000,
+      "status": "Not added: current exact-SKU product listing and photograph not verified",
+      "evidence": [
+        {
+          "url": "https://documents.dometic.com/files/205966-dometic-freshjet-3-4-5-7-air-distribution-box-electronic-display.pdf#page=32",
+          "note": "Official Americas electronic-controls technical table lists FJX7537IHPWHCSL and FJX7537IHPBKCSL with 18,000 BTU/hr cooling. The electrical rating is shared with the 115 V AC, 60 Hz, single-phase table beginning on page 31."
+        },
+        {
+          "url": "https://documents.dometic.com/documents/183246-dometic-freshjet-3-4-5-7-brisk-ii-and-penguin-ii-return-air-grille-wall-thermostat-controls",
+          "note": "Official Americas support record includes exact candidate SKUs 9620013330 and 9620013331. Supporting installation records establish existence, not a current product listing."
+        },
+        {
+          "url": "https://www.dometic.com/en-us/search?q=FJX7537IHP",
+          "note": "Live official US search returned zero products on 2026-10-26."
+        },
+        {
+          "url": "https://www.dometic.com/sitemap/en-us.xml",
+          "note": "No FreshJet 7 product page was found in the current US sitemap."
+        },
+        {
+          "url": "https://www.dometic.com/en-us/lp/rv-ac",
+          "note": "The current US air-conditioner shopping lineup does not list the FreshJet 7 candidate."
+        }
+      ],
+      "voltageAmbiguity": {
+        "differentSku": "9620013382",
+        "differentModel": "FJX7537IHPGYCSL48",
+        "voltage": "48 V DC",
+        "sourceUrl": "https://documents.dometic.com/documents/183196-freshjet-7-48-v-roof-air-conditioner-freshjet-electronic-display-air-distribution-box",
+        "note": "This separate Americas 48 V FreshJet 7 model also uses the FJX7537IHP family designation. Do not substitute its specification, SKU, or image for the proposed 115 V AC white/black models."
+      },
+      "photoStatus": "No current official photograph tied to either exact 115 V candidate SKU was verified. European/APAC FreshJet 7 images and specifications were not substituted.",
+      "checkedAt": "2026-10-26"
+    }
+  ]
+}
