@@ -17,6 +17,7 @@
       --red: #e51d2a;
       --red-dark: #c91420;
       --warning: #ffce49;
+      --photo-bg: #f0f1f3;
       --radius: 4px;
       --shadow: 0 8px 24px rgba(13, 13, 13, 0.08);
       --page-pad: clamp(20px, 3.2vw, 52px);
@@ -979,19 +980,24 @@
 
     .capacity-card {
       position: relative;
-      min-height: 110px;
-      padding: 15px 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 2px;
+      min-width: 0;
+      min-height: 124px;
+      padding: 14px 14px 14px 12px;
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr);
+      grid-template-areas: "tier tier" "media text";
+      align-content: start;
+      gap: 8px 12px;
       background: #fff;
       border-left: 1px solid var(--line);
-      text-align: center;
+      text-align: left;
     }
 
     .capacity-card.unavailable {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
       color: var(--muted);
       background: var(--soft);
       cursor: default;
@@ -1013,14 +1019,8 @@
       box-shadow: inset 0 0 0 3px var(--red);
     }
 
-    .capacity-value {
-      font-size: 18px;
-      font-weight: 900;
-      line-height: 1.1;
-    }
-
     .capacity-tier {
-      margin-bottom: 5px;
+      grid-area: tier;
       color: var(--muted);
       font-size: 10px;
       font-weight: 900;
@@ -1028,23 +1028,59 @@
       text-transform: uppercase;
     }
 
-    .capacity-card.recommended .capacity-tier { color: var(--red); }
+    .capacity-card .capacity-image {
+      grid-area: media;
+      width: 72px;
+      height: auto;
+      aspect-ratio: 1;
+      background: var(--photo-bg);
+      border-radius: 3px;
+    }
+
+    .capacity-text {
+      grid-area: text;
+      min-width: 0;
+      display: grid;
+      align-content: start;
+      gap: 2px;
+    }
+
+    .capacity-value {
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 1.15;
+    }
 
     .capacity-detail {
       color: #383837;
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .capacity-sku {
+      color: var(--muted);
+      font-size: 11px;
     }
 
     .capacity-status {
-      margin-top: 5px;
+      margin-top: 3px;
       color: var(--muted);
       font-size: 11px;
-      font-weight: 600;
-      line-height: 1.2;
+      font-weight: 700;
+      line-height: 1.25;
     }
 
-    .recommended .capacity-status { color: var(--red); }
+    .capacity-card.recommended .capacity-tier,
+    .capacity-card.recommended .capacity-status { color: var(--red); }
+
+    .capacity-image .product-qty {
+      right: 4px;
+      bottom: 4px;
+      min-width: 24px;
+      padding: 1px 6px;
+      font-size: 11px;
+    }
 
     .product-cta {
       margin-top: 14px;
@@ -1426,6 +1462,19 @@
       font-size: 11px;
     }
 
+    .site-footer {
+      padding: 14px var(--page-pad);
+      color: #fff;
+      background: var(--ink);
+      text-align: center;
+    }
+
+    .site-footer small {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
     @media (max-width: 1080px) {
       .calculator-grid {
         grid-template-columns: 1fr;
@@ -1553,12 +1602,11 @@
       .range-group { grid-template-columns: minmax(120px, 1fr) 106px; gap: 14px; }
 
       .primary-cta { min-height: 56px; }
-      .result-panel { padding: 24px; }
-      .result-panel h2 { font-size: 20px; }
+      .result-panel { padding: 18px; }
+      .result-panel h2 { font-size: 26px; }
       .result-number { font-size: clamp(48px, 15vw, 68px); }
       .result-main { grid-template-columns: 36px minmax(0, 1fr); gap: 12px; }
       .result-unit { font-size: 15px; }
-      .result-advisory { margin-right: -24px; margin-bottom: -24px; margin-left: -24px; padding-right: 24px; padding-left: 24px; }
       .comparison-section { padding-top: 30px; }
       .section-heading { font-size: 31px; }
 
@@ -1585,33 +1633,49 @@
     }
 
 
+    /* Equipment results: every A/C and furnace product uses the same .product-card. */
     .result-model { margin: 12px 0; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
-    .recommended-product { min-width: 0; }
-    .product-visual { display: block; overflow: hidden; border-radius: 4px; background: #f0f1f3; }
+    .match-head { margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .match-kicker { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; }
+    .match-kicker .icon { width: 20px; height: 20px; color: var(--red); }
+    .match-units { flex: 0 0 auto; padding: 4px 10px; color: var(--ink); background: var(--soft-2); border-radius: 999px; font-size: 11px; font-weight: 800; white-space: nowrap; }
+    .match--multi .match-units { color: #fff; background: var(--ink); }
+    .match-capacity { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
+    .match-capacity strong { font-size: clamp(30px, 2.6vw, 38px); font-weight: 900; line-height: 1.05; letter-spacing: -.035em; }
+    .match-capacity span { color: var(--muted); font-size: 14px; font-weight: 700; }
+    .match-fit { margin: 6px 0 14px; display: flex; align-items: flex-start; gap: 6px; font-size: 13px; line-height: 1.4; }
+    .match-fit .icon { flex: 0 0 18px; width: 18px; height: 18px; color: #1d7a3e; stroke-width: 2.4; }
+    .match-products, .reference-products { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 10px; }
+    .match-notice { margin: 12px 0 0; padding: 11px 12px; border-left: 3px solid var(--red); background: var(--soft); font-size: 12px; line-height: 1.5; }
+    .match-method { margin-top: 10px; font-size: 12px; }
+    .match-method summary { min-height: 32px; padding: 6px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    .match-method p { margin: 4px 0 8px; color: var(--muted); }
+    .match-method a { display: inline-block; margin: 0 12px 6px 0; font-size: 11px; }
+
+    .product-card { min-width: 0; padding: 14px; display: grid; grid-template-columns: 148px minmax(0, 1fr); grid-template-rows: auto auto 1fr; grid-template-areas: "media body" "media actions" "credit credit"; align-items: start; gap: 8px 16px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); }
+    .product-card-media { grid-area: media; position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; background: var(--photo-bg); border-radius: 3px; }
+    .product-card-body { grid-area: body; min-width: 0; }
+    .product-card-actions { grid-area: actions; display: grid; justify-items: start; }
+    .product-card .product-image-credit { grid-area: credit; align-self: end; margin: 0; }
+    .product-model { margin: 0; font-size: 19px; font-weight: 900; line-height: 1.2; letter-spacing: -.02em; text-transform: none; overflow-wrap: anywhere; }
+    .product-family { margin: 1px 0 0; font-size: 13px; line-height: 1.35; }
+    .product-sku { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    .product-rating { margin: 6px 0 0; font-size: 14px; font-weight: 800; line-height: 1.35; }
+    .product-input { display: block; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .product-spec { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.4; overflow-wrap: anywhere; }
+    .product-qty { position: absolute; right: 6px; bottom: 6px; min-width: 28px; padding: 2px 7px; color: #fff; background: var(--ink); border-radius: 999px; font-size: 12px; font-weight: 900; line-height: 1.4; text-align: center; white-space: nowrap; }
     .product-image-wrap { position: relative; display: grid; place-items: center; width: 100%; height: 100%; overflow: hidden; }
-    .recommended-product-photo { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; }
-    .product-image-fallback { padding: 18px; color: var(--muted); font-size: 12px; text-align: center; }
-    .recommended-product--ac .product-visual { height: 210px; margin-bottom: 12px; }
-    .recommended-product--ac .recommended-product-photo { transform: translateY(-8%) scale(1.7); }
-    .product-category { display: block; margin-bottom: 1px; color: var(--muted); font-size: 12px; }
-    .product-model { margin: 0; font-size: 25px; font-weight: 900; line-height: 1.15; letter-spacing: -.025em; overflow-wrap: anywhere; }
-    .product-family { margin: 3px 0; font-size: 15px; line-height: 1.3; }
-    .product-sku { margin: 3px 0 10px; color: var(--muted); font-size: 12px; }
-    .product-rating { margin: 0 0 5px; font-size: 19px; font-weight: 800; line-height: 1.3; }
-    .product-input { display: block; margin-top: 3px; font-size: 13px; font-weight: 600; }
-    .product-fit { margin: 0 0 12px; font-size: 13px; line-height: 1.45; }
-    .product-action { min-height: 44px; padding: 10px 14px; display: flex; align-items: center; justify-content: center; gap: 10px; color: #fff; background: var(--red); border-radius: 4px; font-size: 14px; font-weight: 800; line-height: 1.3; text-align: center; text-decoration: none; }
-    .product-action:hover { color: #fff; background: var(--red-dark); }
+    /* Multiply blends white-background photos into the same frame as transparent ones. Cover trims only
+       empty background: every current photo keeps its product within the middle 60% of its height. */
+    .recommended-product-photo { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; mix-blend-mode: multiply; }
+    .product-image-fallback { padding: 8px; color: var(--muted); font-size: 11px; line-height: 1.3; text-align: center; }
+    .product-action { min-height: 44px; padding: 10px 18px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; color: #fff; background: var(--red); border-radius: var(--radius); font-size: 14px; font-weight: 800; line-height: 1.3; text-align: center; text-decoration: none; }
+    .product-action:hover, .product-action:focus-visible { color: #fff; background: var(--red-dark); }
     .product-action .icon { flex: 0 0 18px; width: 18px; height: 18px; }
+    .product-card .product-action { min-width: 190px; }
     .product-image-credit { margin: 7px 0 0; color: var(--muted); font-size: 10px; }
-    .recommended-product--furnace { display: grid; grid-template-columns: minmax(115px, .85fr) minmax(0, 1.15fr); align-items: center; gap: 18px; }
-    .recommended-product--furnace .product-visual { height: 158px; }
-    .recommended-product--furnace .recommended-product-photo { transform: scale(1.4); }
-    .recommended-product--furnace .product-model { font-size: 23px; }
-    .recommended-product--furnace .product-family { display: none; }
-    .recommended-product--furnace .product-rating { font-size: 15px; }
-    .recommended-product--furnace .product-fit { margin: 7px 0; font-size: 12px; }
-    .recommended-product--furnace .product-image-credit { grid-column: 1 / -1; margin-top: -10px; }
+    .rating-source { min-height: 32px; display: inline-flex; align-items: center; font-size: 12px; font-weight: 700; text-underline-offset: 3px; }
+
     .result-calculation { margin-top: 12px; border: 1px solid var(--line); border-radius: 4px; font-size: 12px; }
     .result-calculation > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; cursor: pointer; list-style: none; }
     .result-calculation > summary::-webkit-details-marker { display: none; }
@@ -1624,67 +1688,26 @@
     .result-calculation .result-number { font-size: 20px; letter-spacing: 0; line-height: 1.3; }
     .result-calculation .result-unit { font-size: 11px; }
     .result-calculation .scenario-header { margin-top: 10px; }
-    .product-empty { padding: 18px; background: #f5f5f5; border-radius: 4px; }
-    .product-empty .icon { width: 26px; height: 26px; margin-bottom: 12px; }
-    .product-empty h3 { margin: 0 0 7px; font-size: 20px; line-height: 1.2; text-transform: none; }
+    .product-empty { padding: 16px; display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 4px 12px; background: var(--soft); border-radius: var(--radius); }
+    .product-empty .icon { grid-row: span 2; width: 22px; height: 22px; color: var(--red); }
+    .product-empty h3 { margin: 0; font-size: 17px; line-height: 1.25; letter-spacing: -.01em; text-transform: none; }
     .product-empty p { margin: 0; color: var(--muted); font-size: 13px; }
-    .capacity-card { display: grid; grid-template-columns: 82px minmax(0, 1fr); justify-items: start; align-content: center; gap: 3px 10px; padding: 15px 12px; text-align: left; }
-    .capacity-card > :not(.capacity-image):not(.capacity-check) { grid-column: 2; }
-    .capacity-image { grid-column: 1; grid-row: 1 / 7; width: 82px; height: 82px; background: #f0f1f3; border-radius: 3px; }
-    .capacity-image img { transform: scale(1.15); }
-    .capacity-card .capacity-detail { font-size: 13px; font-weight: 800; }
-    .capacity-card .capacity-value { font-size: 15px; }
-    .capacity-sku { color: var(--muted); font-size: 10px; }
-    .capacity-card .capacity-model-type { display: none; }
-    .selected-products { display: grid; gap: 24px; }
-    .selected-product { display: grid; grid-template-columns: 140px minmax(0, 1fr); align-items: start; gap: 16px 20px; }
-    .selected-product-visual { height: 130px; background: #f0f1f3; border-radius: 4px; }
-    .selected-product-visual img { transform: scale(1.15); }
-    .selected-product .product-model { margin: 0 0 5px; font-size: 20px; }
-    .selected-product .product-sku { margin-bottom: 8px; }
-    .selected-product-link { grid-column: 1 / -1; }
-    .rating-source { display: inline-flex; min-height: 44px; align-items: center; margin-top: 3px; }
-    .pair-title { margin: 0 0 6px; font-size: 23px; line-height: 1.2; text-transform: none; }
-    .pair-total { margin: 0; font-size: 22px; font-weight: 800; line-height: 1.25; }
-    .pair-total-label { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; font-weight: 500; }
-    .pair-load { margin: 10px 0 14px; font-size: 13px; }
-    .pair-products { display: grid; gap: 14px; }
-    .pair-product { display: grid; grid-template-columns: minmax(110px, .7fr) minmax(0, 1fr); align-items: center; gap: 14px; }
-    .pair-product-visual { height: 135px; }
-    .pair-product-visual img { transform: translateY(-5%) scale(1.3); }
-    .pair-product .product-model { font-size: 21px; }
-    .pair-product .product-sku { margin: 4px 0 7px; }
-    .pair-unit-rating { margin: 0 0 8px; font-size: 12px; }
-    .pair-product .product-image-credit { grid-column: 1 / -1; margin-top: -8px; }
-    .pair-notice { margin: 14px 0 0; padding: 11px 12px; border-left: 3px solid var(--red); background: #f5f5f5; font-size: 12px; line-height: 1.5; }
-    .pair-method { margin-top: 10px; font-size: 12px; }
-    .pair-method summary { cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
-    .pair-method p { margin: 8px 0; color: var(--muted); }
-    .pair-method a { display: inline-block; margin: 0 12px 6px 0; font-size: 11px; }
-    @media (max-width: 1100px) and (min-width: 821px) { .capacity-card { grid-template-columns: 1fr; text-align: center; justify-items: center; } .capacity-card > :not(.capacity-check) { grid-column: 1; } .capacity-image { grid-row: auto; } }
+
+    .model-reference { grid-column: 2; min-width: 0; padding: 18px 20px 20px; border-top: 1px solid var(--line); background: var(--soft); font-size: 12px; }
+    .model-reference > h3 { margin: 0 0 4px; font-size: 14px; letter-spacing: -.01em; }
+    .model-reference > p { margin: 6px 0; }
+    .model-reference .capacity-deficit { color: #a21520; font-weight: 700; }
+    .model-reference .capacity-margin { font-weight: 700; }
+    .reference-products { margin: 12px 0; }
+    @media (max-width: 1180px) and (min-width: 821px) { .compare-row { grid-template-columns: 200px minmax(0, 1fr); } }
+    @media (max-width: 820px) { .model-reference { grid-column: 1 / -1; } }
     @media (max-width: 620px) {
-      .result-panel { padding: 18px; }
-      .result-panel h2 { font-size: 27px; }
-      .result-advisory { margin: 0; padding: 12px 0 0; }
-      .recommended-product--ac .product-visual { height: 180px; }
-      .recommended-product--furnace { grid-template-columns: minmax(100px, .85fr) minmax(0, 1.15fr); gap: 12px; }
-      .recommended-product--furnace .product-visual { height: 135px; }
-      .recommended-product--furnace .recommended-product-photo { transform: scale(1.25); }
-      .recommended-product--furnace .product-model { font-size: 20px; }
-      .recommended-product--furnace .product-rating { font-size: 13px; }
-      .capacity-card { display: grid; grid-template-columns: 76px minmax(0, 1fr); min-width: 0; padding: 15px 12px; align-items: center; justify-items: start; text-align: left; gap: 4px 12px; }
-      .capacity-image { width: 76px; height: 65px; }
-      .capacity-card .capacity-value { font-size: 14px; }
-      .capacity-card .capacity-detail { font-size: 11px; }
-      .capacity-card .capacity-status { font-size: 10px; }
-      .capacity-card .capacity-check { width: 16px; height: 16px; top: 6px; right: 6px; }
-      .selected-product { grid-template-columns: 92px minmax(0, 1fr); gap: 12px; }
-      .selected-product-visual { height: 100px; }
-      .pair-product { grid-template-columns: 100px minmax(0, 1fr); gap: 12px; }
-      .pair-product-visual { height: 115px; }
-      .pair-product-visual img { transform: translateY(-5%) scale(1.05); }
-      .pair-product .product-model { font-size: 18px; }
-      .pair-total { font-size: 20px; }
+      .product-card { grid-template-columns: 104px minmax(0, 1fr); grid-template-areas: "media body" "actions actions" "credit credit"; gap: 10px 12px; padding: 12px; }
+      .product-card-actions { justify-items: stretch; }
+      .product-model { font-size: 17px; }
+      .match-capacity strong { font-size: 30px; }
+      .capacity-card { grid-template-columns: 64px minmax(0, 1fr); }
+      .capacity-card .capacity-image { width: 64px; }
     }
     .catalog-note { margin: -4px 0 16px; color: var(--muted); font-size: 12px; }
     .catalog-browser { margin-top: 24px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
@@ -1699,8 +1722,7 @@
     .catalog-toolbar input, .catalog-toolbar select { width: 100%; min-width: 0; min-height: 44px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px; background: #fff; color: var(--ink); font: inherit; font-size: 16px; }
     .catalog-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
     .catalog-card { min-width: 0; display: flex; flex-direction: column; padding: 16px; border: 1px solid var(--line); border-radius: 4px; }
-    .catalog-card .catalog-photo { flex: 0 0 auto; width: 100%; height: auto; aspect-ratio: 4 / 3; margin-bottom: 16px; background: #f0f1f3; }
-    .catalog-card .catalog-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+    .catalog-card .catalog-photo { flex: 0 0 auto; width: 100%; height: auto; aspect-ratio: 4 / 3; margin-bottom: 16px; background: var(--photo-bg); }
     .catalog-card h3 { margin: 0 0 5px; font-size: 21px; overflow-wrap: anywhere; }
     .catalog-card p { margin: 0 0 10px; font-size: 13px; }
     .catalog-card .catalog-spec { font-weight: 800; font-size: 16px; }
@@ -1714,22 +1736,7 @@
       .catalog-browser > summary { align-items: flex-start; flex-direction: column; gap: 4px; }
       .catalog-toolbar, .catalog-grid { grid-template-columns: minmax(0, 1fr); }
       .catalog-browser-body { padding: 0 16px 16px; }
-      .recommended-product--furnace, .pair-product { grid-template-columns: minmax(0, 1fr); }
-      .recommended-product--furnace .product-visual, .pair-product-visual { height: 160px; }
-      .recommended-product--furnace .product-image-credit, .pair-product .product-image-credit { margin-top: 0; }
     }
-    .capacity-detail { overflow-wrap: anywhere; }
-    .capacity-model-type { color: var(--muted); font-size: 10px; }
-    .model-reference { grid-column: 2; padding: 16px 18px; border-top: 1px solid var(--line); background: var(--soft); font-size: 12px; min-width: 0; }
-    .model-reference h3 { margin: 0 0 8px; font-size: 14px; }
-    .model-reference p { margin: 6px 0; }
-    .model-reference ul { margin: 8px 0; padding-left: 18px; }
-    .model-reference li { margin: 8px 0; }
-    .model-reference a { font-weight: 700; text-underline-offset: 3px; }
-    .model-reference .model-code { display: block; color: var(--muted); overflow-wrap: anywhere; }
-    .model-reference .capacity-deficit { color: #a21520; font-weight: 700; }
-    .model-reference .capacity-margin { font-weight: 700; }
-    @media (max-width: 820px) { .model-reference { grid-column: 1 / -1; } }
 
     .slide-section { margin-top: 18px; border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
     .slide-heading, .slide-card-head, .slide-buttons, .slide-actions { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
@@ -1785,6 +1792,7 @@
     <symbol id="icon-snow" viewBox="0 0 24 24"><path d="M12 2v20M4.5 6.3l15 11.4M19.5 6.3l-15 11.4M9.5 3.5 12 6l2.5-2.5M9.5 20.5 12 18l2.5 2.5M3.8 9.3 7.2 9l.7-3.2M20.2 14.7l-3.4.3-.7 3.2M20.2 9.3 16.8 9l-.7-3.2M3.8 14.7l3.4.3.7 3.2"/></symbol>
     <symbol id="icon-flame" viewBox="0 0 24 24"><path d="M13.4 2.7c.4 3.1-1.2 4.5-2.4 5.8-1.5 1.7-2.6 3.1-1.4 5.4.3-2.1 1.7-3 3.2-4.5 3.1 2.2 4.7 5 3.6 8.1-.6 2.8-2.9 4.5-5.5 4.5-3.9 0-6.9-2.8-6.9-6.7 0-5 4.6-7.1 5.1-11.6 1.6.9 2.5 2.1 2.8 3.4.8-1.3 1.1-2.7 1.5-4.4Z"/></symbol>
     <symbol id="icon-check" viewBox="0 0 24 24"><path d="m6.5 12.4 3.4 3.4 7.7-8"/></symbol>
+    <symbol id="icon-both" viewBox="0 0 24 24"><path d="M10 13.6V5a2 2 0 1 1 4 0v8.6a4 4 0 1 1-4 0Z"/><path d="M12 9.5v6.3M17 6h3M17 10h3"/></symbol>
     <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10.7v5.6M12 7.5h.01"/></symbol>
     <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="m5 9 7 7 7-7"/></symbol>
     <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M4 12h15M14 6l6 6-6 6"/></symbol>
@@ -1833,6 +1841,7 @@
             <span>Furnace</span>
           </button>
           <button class="mode-button" type="button" data-mode="both" aria-pressed="true">
+            <svg class="icon mode-icon" aria-hidden="true"><use href="#icon-both"/></svg>
             <span class="mode-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg></span>
             <span>Size both</span>
           </button>
@@ -2007,7 +2016,7 @@
 
     <section class="comparison-section" id="comparison" aria-labelledby="compareTitle">
       <h2 class="section-heading" id="compareTitle">Explore the listed models</h2>
-      <p class="section-intro">Cooling uses the smallest fitting single unit, then the smallest two-unit capacity option when needed. Select an option to see the actual products. Furnace sizing uses delivered heat output.</p>
+      <p class="section-intro">Cooling uses one unit when it covers the load; otherwise it combines the fewest rooftop units, up to <span data-ac-max-units>4</span>, with the smallest total that does. Select an option to see the actual products. Furnace sizing uses delivered heat output.</p>
       <p class="catalog-note" id="catalogStatus"></p>
       <div class="compare-shell">
         <div class="compare-row" id="acCompareRow">
@@ -2016,7 +2025,7 @@
           <div class="model-reference" id="acModelReference" aria-live="polite"></div>
         </div>
         <div class="compare-row" id="furnaceCompareRow">
-          <div class="compare-label"><svg class="icon icon-lg" aria-hidden="true"><use href="#icon-flame"/></svg><div>Furnace<small>Input label and published output</small></div></div>
+          <div class="compare-label"><svg class="icon icon-lg" aria-hidden="true"><use href="#icon-flame"/></svg><div>Furnace<small>Published delivered heat output</small></div></div>
           <div class="compare-options" id="furnaceCompareOptions" role="group" aria-label="Compare furnace capacities"></div>
           <div class="model-reference" id="furnaceModelReference" aria-live="polite"></div>
         </div>
@@ -2148,6 +2157,10 @@
     <p class="footer-note">This is an RV planning estimate based on simplified geometry, weather, and construction assumptions. It is not an ACCA Manual J calculation, OEM approval, product quote, or installation/safety determination. A qualified RV HVAC installer should verify actual construction, leakage, local design weather, equipment performance, ducting, electrical or gas service, roof structure, venting, altitude requirements, and combustion safety.</p>
   </main>
 
+  <footer class="site-footer">
+    <small>© 2026 Dometic. All rights reserved.</small>
+  </footer>
+
   <dialog class="info-modal detail-modal" id="howModal" aria-labelledby="howModalTitle">
     <div class="info-modal-card">
       <div class="info-modal-head">
@@ -2160,7 +2173,7 @@
         <div class="how-step"><span class="how-step-number">Step 1</span><h3>Build the RV geometry</h3><p>RV type supplies starting dimensions and average main-body window size. Each measured slide adds floor, volume, three walls, roof and underside. Its attachment opening is removed from the main wall; slide glazing replaces slide wall area.</p></div>
         <div class="how-step"><span class="how-step-number">Step 2</span><h3>Calculate cooling</h3><p>The model adds shell and window conduction, fixed mixed-sun gain, air leakage, ventilation, people, appliances, humidity and cooling-duct loss.</p></div>
         <div class="how-step"><span class="how-step-number">Step 3</span><h3>Calculate heating</h3><p>The model adds heat loss through the shell and windows, cold outside air and heating-duct loss. It does not rely on temporary heat from people, cooking or sun.</p></div>
-        <div class="how-step"><span class="how-step-number">Step 4</span><h3>Suggest a capacity</h3><p>The expected cooling load is compared with A/C nameplate BTU/hr. Heating is compared with published furnace output, which can be lower than the input number in a model name.</p></div>
+        <div class="how-step"><span class="how-step-number">Step 4</span><h3>Suggest a capacity</h3><p>The expected cooling load is compared with A/C nameplate BTU/hr; loads above one unit get the fewest rooftop units, up to <span data-ac-max-units>4</span>, that cover it. Heating is compared with published furnace output, which can be lower than the input number in a model name.</p></div>
       </div>
 
       <div class="how-section">
@@ -2213,10 +2226,10 @@
         <button class="modal-close" type="button" data-close-modal aria-label="Close sizing guide"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 14 14M19 5 5 19"/></svg></button>
       </div>
       <ul>
-        <li><strong>A/C:</strong> first checks the listed FreshJet 5 ≈11K, 13.5K and 15K models individually. If one unit cannot meet the load, it checks all pairs of these models, including two of the same model, up to 30,000 BTU/hr combined nominal cooling.</li>
+        <li><strong>A/C:</strong> first checks the listed FreshJet 5 ≈11K, 13.5K and 15K models individually. If one unit cannot meet the load, it combines these models—repeats allowed—using the fewest rooftop units, up to <span data-ac-max-units>4</span> (<span data-ac-max-capacity>60,000</span> BTU/hr combined nominal cooling).</li>
         <li><strong>Furnace:</strong> compares required heat with published delivered output—not only the larger input number printed in the model class.</li>
-        <li><strong>Highlighted option:</strong> is the smallest fitting single A/C, then the smallest fitting pair, or the smallest delivered furnace output at or above the unrounded expected load. Each product keeps its model number, quantity, SKU and product link. A zero load has no equipment recommendation.</li>
-        <li><strong>Two-unit options:</strong> add nominal cooling capacities assuming simultaneous operation. They do not establish the load in each zone or confirm roof, controls, airflow and electrical compatibility. An installer must verify the installation. A total containing the ≈11K model remains approximate.</li>
+        <li><strong>Highlighted option:</strong> is the smallest fitting single A/C, then the smallest fitting combination with the fewest units, or the smallest delivered furnace output at or above the unrounded expected load. Each product keeps its model number, quantity, SKU and product link. A zero load has no equipment recommendation.</li>
+        <li><strong>Multi-unit options:</strong> add nominal cooling capacities assuming simultaneous operation. A combination is offered only when it gives more capacity than every option with fewer units. They do not establish the load in each zone or confirm roof space, controls, airflow and electrical compatibility. An installer must verify the installation. A total containing the ≈11K model remains approximate.</li>
         <li><strong>Heating:</strong> sizing uses verified furnace outputs, up to 30,400 BTU/hr delivered. Heat-pump variants can be browsed, but their cooling BTU ratings are not heating ratings. Heating performance at the outdoor design temperature must be verified before using a heat pump to meet a heating load.</li>
         <li><strong>Advanced:</strong> lets you apply known insulation, window, leakage, weather and duct information. An applied-status label and Clear action remain visible beside the Advanced button.</li>
       </ul>
@@ -2549,32 +2562,40 @@
     return sorted.filter((model, index) => index === 0 || model[key] !== sorted[index - 1][key]);
   }
   const acCapacityModels = capacityRepresentatives(acModels, "capacity");
-  const singleAcSystems = acCapacityModels.map((model) => ({
-    ...model, id: `ac-${model.id}`,
-    label: `${model.approximate ? "≈" : ""}${model.capacity / 1000}K BTU/hr`,
-    detail: model.modelNumber, staged: false, unitCount: 1,
-    components: [{ modelId: model.id, quantity: 1 }], planType: "Listed A/C model"
-  }));
-  // Prefer one unit, then the smallest nominal capacity sum of two listed units.
+  // Prefer the fewest rooftop units, then the smallest nominal capacity sum of the
+  // preferred model at each capacity tier. A combination is listed only when it beats
+  // every option with fewer units, so the list rises in both unit count and capacity.
   // This is a capacity-planning policy; zone loads and installation are not modeled.
-  const acPairs = [];
-  for (let first = 0; first < acCapacityModels.length; first += 1) {
-    for (let second = first; second < acCapacityModels.length; second += 1) {
-      const a = acCapacityModels[first], b = acCapacityModels[second];
-      const capacity = a.capacity + b.capacity;
-      const approximate = a.approximate || b.approximate;
-      const components = first === second ? [{ modelId: a.id, quantity: 2 }] : [{ modelId: a.id, quantity: 1 }, { modelId: b.id, quantity: 1 }];
-      const detail = components.map(({ modelId, quantity }) => `${quantity} × ${byId.get(modelId).modelNumber}`).join(" + ");
-      acPairs.push({
-        id: `ac-pair-${a.id}-${b.id}`, kind: "ac", capacity, approximate,
-        label: `${approximate ? "≈" : ""}${capacity / 1000}K BTU/hr`,
-        modelNumber: detail, detail, staged: true, unitCount: 2, components,
-        planType: "Two-unit capacity option"
-      });
-    }
+  const maxAcUnits = 4;
+  function acCombinations(unitCount, start = 0) {
+    if (unitCount === 0) return [[]];
+    return acCapacityModels.slice(start).flatMap((model, offset) =>
+      acCombinations(unitCount - 1, start + offset).map((rest) => [model, ...rest]));
   }
-  const allAcSystems = [...singleAcSystems, ...acPairs].sort((a, b) => a.unitCount - b.unitCount || a.capacity - b.capacity || a.id.localeCompare(b.id));
-  const acSystems = freeze(allAcSystems.filter((system, index) => !allAcSystems.slice(0, index).some((previous) => previous.capacity === system.capacity)));
+  function acSystem(units) {
+    const components = [];
+    for (const model of units) {
+      if (components.at(-1)?.modelId === model.id) components.at(-1).quantity += 1;
+      else components.push({ modelId: model.id, quantity: 1 });
+    }
+    const capacity = units.reduce((total, model) => total + model.capacity, 0);
+    const approximate = units.some((model) => model.approximate);
+    const label = `${approximate ? "≈" : ""}${capacity / 1000}K BTU/hr`;
+    if (units.length === 1) {
+      return { ...units[0], id: `ac-${units[0].id}`, label, detail: units[0].modelNumber, staged: false, unitCount: 1, components, planType: "Listed A/C model" };
+    }
+    const detail = components.map(({ modelId, quantity }) => `${quantity} × ${byId.get(modelId).modelNumber}`).join(" + ");
+    return { id: `ac-${units.map((model) => model.id).join("+")}`, kind: "ac", capacity, approximate, label,
+      modelNumber: detail, detail, staged: true, unitCount: units.length, components, planType: `${units.length}-unit capacity option` };
+  }
+  const acSystemList = [];
+  for (let unitCount = 1; unitCount <= maxAcUnits; unitCount += 1) {
+    const ceiling = acSystemList.at(-1)?.capacity ?? 0;
+    const tier = acCombinations(unitCount).map(acSystem).filter((system) => system.capacity > ceiling)
+      .sort((a, b) => a.capacity - b.capacity || a.components.length - b.components.length);
+    acSystemList.push(...tier.filter((system, index) => index === 0 || system.capacity !== tier[index - 1].capacity));
+  }
+  const acSystems = freeze(acSystemList);
   const furnaceSystems = freeze(capacityRepresentatives(furnaceModels, "output").map((model) => ({ ...model, label: `${model.input / 1000}K input`,
     detail: `${model.modelNumber} · ${model.output.toLocaleString("en-US")} BTU/hr delivered`,
     components: [{ modelId: model.id, quantity: 1 }], unitCount: 1 })));
@@ -2587,7 +2608,7 @@
   function modelsFor(system) {
     return system ? system.components.map(({ modelId, quantity }) => ({ model: byId.get(modelId), quantity })) : [];
   }
-  return freeze({ checkedAt, reviewedAt: "2026-10-26", models, acSystems, furnaceSystems, acListing, furnaceListing,
+  return freeze({ checkedAt, reviewedAt: "2026-10-26", models, acSystems, furnaceSystems, maxAcUnits, acListing, furnaceListing,
     acSizingSource: "https://www.dometic.com/en-us/lp/ac-buying-guide2",
     acInstallationSource: "https://media.dometic.com/externalassets/dometic-freshjet-3-series-13-5k_9600028598_107740.pdf",
     recommendAc: (load) => select(load, acSystems, "capacity"),
@@ -2849,31 +2870,45 @@
         ];
       }
 
-      function acFitText(system, results) {
-        const low = results.raw.low.coolingTotal;
-        const expected = results.raw.expected.coolingTotal;
-        const high = results.raw.high.coolingTotal;
-        if (system.unitCount > 1) return system.capacity < expected ? "Below expected load" : "Verify each cooling zone";
-        if (system.capacity < low) return "Likely undersized";
-        if (system.capacity < expected) return "Fair-weather coverage";
-        if (system.capacity < high) return "Typical-day fit";
-        if (system.capacity > expected * 1.4) return "Oversizing caution";
-        return "Conservative coverage";
+      const el = (tag, className, text) => {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text != null) node.textContent = text;
+        return node;
+      };
+
+      function icon(id) {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("class", "icon"); svg.setAttribute("aria-hidden", "true");
+        const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+        use.setAttribute("href", `#${id}`); svg.append(use);
+        return svg;
       }
 
-      function furnaceFitText(system, results) {
-        const low = results.raw.low.heatingTotal;
-        const expected = results.raw.expected.heatingTotal;
-        const high = results.raw.high.heatingTotal;
-        if (system.output < low) return "Likely undersized";
-        if (system.output < expected) return "Mild-weather coverage";
-        if (system.output < high) return "Typical-day fit";
-        if (system.output > expected * 1.4) return "Oversizing caution";
+      const approx = (system) => (system.approximate ? "≈" : "");
+      const ratedCapacity = (system, type) => (type === "ac" ? system.capacity : system.output);
+      const capacityText = (system, type) => type === "ac" ? `${approx(system)}${fmt(system.capacity)} BTU/hr` : `${fmt(system.output)} BTU/hr delivered`;
+      const unitText = (type, count) => type === "ac" ? `${count} rooftop ${count === 1 ? "unit" : "units"}` : `${count} ${count === 1 ? "furnace" : "furnaces"}`;
+      const modelList = (system) => Equipment.modelsFor(system).map(({ model, quantity }) => `${quantity > 1 ? `${quantity} × ` : ""}${model.modelNumber}`).join(" + ");
+      const familyName = (model) => model.name.replace(/^Dometic\s+/, "").replace(model.modelNumber, "").replace(/\s{2,}/g, " ").trim();
+      const acTiers = acSystems.filter((system) => system.unitCount === 1).map((system) => system.label.replace(" BTU/hr", ""));
+      const acTierNames = `${acTiers.slice(0, -1).join(", ")} and ${acTiers.at(-1)}`;
+
+      function fitText(system, type, results, recommended) {
+        const key = type === "ac" ? "coolingTotal" : "heatingTotal";
+        const capacity = ratedCapacity(system, type);
+        const expected = results.raw.expected[key];
+        if (capacity < results.raw.low[key]) return "Likely undersized";
+        if (capacity < expected) return type === "ac" ? "Fair-weather coverage" : "Mild-weather coverage";
+        if (capacity < results.raw.high[key]) return "Typical-day fit";
+        // The recommended multi-unit option is the smallest that fits and can run one unit at a
+        // time at part load, so only larger alternatives get the oversizing caution.
+        if (capacity > expected * 1.4 && !(recommended && system.unitCount > 1)) return "Oversizing caution";
         return "Conservative coverage";
       }
 
       function productImage(model, className = "", eager = false) {
-        const wrapper = document.createElement("div");
+        const wrapper = document.createElement("span");
         wrapper.className = `product-image-wrap ${className}`;
         const img = document.createElement("img");
         img.className = "recommended-product-photo";
@@ -2962,157 +2997,124 @@
         if (firstNew) { firstNew.tabIndex = -1; firstNew.focus({ preventScroll: true }); }
       });
 
-      function renderAcPair(container, system, load) {
-        const card = document.createElement("article"); card.className = "recommended-pair";
-        const title = document.createElement("h3"); title.className = "pair-title"; title.textContent = "Two-unit cooling option";
-        const total = document.createElement("p"); total.className = "pair-total";
-        total.textContent = `${system.approximate ? "≈" : ""}${fmt(system.capacity)} BTU/hr`;
-        const totalLabel = document.createElement("span"); totalLabel.className = "pair-total-label";
-        totalLabel.textContent = "Combined nominal cooling capacity · both units operating"; total.append(totalLabel);
-        const fit = document.createElement("p"); fit.className = "pair-load";
-        fit.textContent = `Smallest listed pair reaching your ${fmt(round100(load))} BTU/hr expected cooling load.`;
-        const products = document.createElement("div"); products.className = "pair-products";
-        Equipment.modelsFor(system).forEach(({ model, quantity }) => {
-          const row = document.createElement("div"); row.className = "pair-product";
-          const visual = productLink(model, "product-visual pair-product-visual", "");
-          visual.replaceChildren(productImage(model, "", true));
-          const info = document.createElement("div");
-          const name = document.createElement("h4"); name.className = "product-model"; name.textContent = `${quantity} × ${model.modelNumber}`;
-          const sku = document.createElement("p"); sku.className = "product-sku"; sku.textContent = `SKU ${model.sku}`;
-          const rating = document.createElement("p"); rating.className = "pair-unit-rating";
-          rating.textContent = `${model.approximate ? "≈" : ""}${fmt(model.capacity)} BTU/hr per unit`;
-          info.append(name, sku, rating, productLink(model, "recommended-product-link", "View product on Dometic"));
-          appendCapacityAlternatives(info, model);
-          const credit = document.createElement("p"); credit.className = "product-image-credit"; credit.textContent = model.imageNote;
-          row.append(visual, info, credit); products.append(row);
-        });
-        const note = document.createElement("p"); note.className = "pair-notice";
-        note.textContent = "Capacity sum only. An installer must size each cooling zone and verify two suitable roof positions, airflow, controls and power for simultaneous operation.";
-        const method = document.createElement("details"); method.className = "pair-method";
-        const summary = document.createElement("summary"); summary.textContent = "How this two-unit option is sized";
-        const explanation = document.createElement("p");
-        explanation.textContent = "The calculator uses one listed unit when it meets the load, then checks all two-unit combinations and selects the smallest combined nominal capacity at or above the unrounded load. This planning rule does not assume equal zones or replace installation design. Totals that include the approximate 11,000 model remain approximate.";
-        method.append(summary, explanation);
-        for (const [text, href] of [["Dometic sizing guidance", Equipment.acSizingSource], ["Dometic installation requirements", Equipment.acInstallationSource]]) {
-          const link = document.createElement("a"); link.href = href; link.textContent = text; link.target = "_blank"; link.rel = "noopener noreferrer"; method.append(link);
+      // One card layout for every A/C and furnace product, in results and comparison details.
+      function productCard(model, { quantity = 1, multiUnit = false, heading = "h3", detailed = false } = {}) {
+        const isAc = model.kind === "ac";
+        const card = el("article", "product-card"); card.dataset.modelId = model.id;
+        const media = productLink(model, "product-card-media", "");
+        media.setAttribute("aria-label", `View ${model.modelNumber} on Dometic (opens in a new tab)`);
+        media.replaceChildren(productImage(model, "", !detailed));
+        if (quantity > 1) media.append(el("span", "product-qty", `×${quantity}`));
+        const body = el("div", "product-card-body");
+        const rating = el("p", "product-rating", isAc ? `${capacityText(model, "ac")} cooling${multiUnit ? " per unit" : ""}` : capacityText(model, "furnace"));
+        if (!isAc) rating.append(el("span", "product-input", `${fmt(model.input)} BTU/hr input`));
+        body.append(el(heading, "product-model", multiUnit ? `${quantity} × ${model.modelNumber}` : model.modelNumber),
+          el("p", "product-family", familyName(model)), el("p", "product-sku", `SKU ${model.sku}`), rating);
+        if (detailed) {
+          body.append(el("p", "product-spec", model.configuration));
+          if (!isAc) body.append(el("p", "product-spec", `${fmt(model.input)} BTU/hr fuel input → ${fmt(model.output)} BTU/hr delivered heat.`));
+          const source = el("a", "rating-source", "Manufacturer rating source");
+          source.href = model.ratingSourceUrl; source.target = "_blank"; source.rel = "noopener noreferrer";
+          body.append(source);
         }
-        card.append(title, total, fit, products, note, method); container.append(card);
+        const actions = el("div", "product-card-actions");
+        actions.append(productLink(model, "product-card-link", "View product"));
+        appendCapacityAlternatives(actions, model);
+        card.append(media, body, actions, el("p", "product-image-credit", model.imageNote));
+        return card;
       }
 
-      function renderRecommendedProduct(container, system, type, load) {
+      function renderMatch(container, system, type, load) {
         container.replaceChildren();
         const isAc = type === "ac";
+        const multiUnit = system?.unitCount > 1;
+        const match = el("div", `match match--${type}${multiUnit ? " match--multi" : ""}`);
+        const head = el("div", "match-head");
+        const kicker = el("span", "match-kicker"); kicker.append(icon(isAc ? "icon-snow" : "icon-flame"), isAc ? "Air conditioning" : "Furnace");
+        head.append(kicker);
+        if (system) head.append(el("span", "match-units", unitText(type, system.unitCount)));
+        match.append(head);
         if (!system) {
-          const empty = document.createElement("div"); empty.className = "product-empty";
-          const heading = document.createElement("h3");
-          heading.textContent = load === 0 ? `No ${isAc ? "cooling" : "heating"} needed at these conditions` : isAc ? "No listed one- or two-unit option meets this load" : "No listed furnace meets this load";
-          const text = document.createElement("p");
-          const maximum = isAc ? acSystems.at(-1).capacity : furnaceSystems.at(-1).output;
-          text.textContent = load === 0 ? "The calculated load is zero, so no product is recommended." : isAc
-            ? `Your expected cooling load is ${fmt(round100(load))} BTU/hr. Two of the largest listed A/Cs provide ${fmt(maximum)} BTU/hr nominal cooling. Ask an RV HVAC installer about a larger or zoned system.`
-            : `Your expected heating load is ${fmt(round100(load))} BTU/hr. The largest listed furnace delivers ${fmt(maximum)} BTU/hr. Ask an installer about a larger or zoned heating system. Cooling BTU ratings cannot be used as heat-pump heating output.`;
-          empty.append(heading, text); container.append(empty); return;
+          const largest = isAc ? acSystems.at(-1) : furnaceSystems.at(-1);
+          const empty = el("div", "product-empty");
+          empty.append(icon("icon-info"),
+            el("h3", "", load === 0 ? `No ${isAc ? "cooling" : "heating"} needed at these conditions` : isAc ? `No listed combination of up to ${Equipment.maxAcUnits} units meets this load` : "No listed furnace meets this load"),
+            el("p", "", load === 0 ? "The calculated load is zero, so no product is recommended." : isAc
+              ? `Your expected cooling load is ${fmt(round100(load))} BTU/hr. The largest listed combination, ${largest.detail}, provides ${fmt(largest.capacity)} BTU/hr nominal cooling. Ask an RV HVAC installer about a larger or zoned system.`
+              : `Your expected heating load is ${fmt(round100(load))} BTU/hr. The largest listed furnace delivers ${fmt(largest.output)} BTU/hr. Ask an installer about a larger or zoned heating system. Cooling BTU ratings cannot be used as heat-pump heating output.`));
+          match.append(empty); container.append(match); return;
         }
-        if (isAc && system.unitCount > 1) { renderAcPair(container, system, load); return; }
-        const model = Equipment.modelsFor(system)[0].model;
-        const card = document.createElement("article");
-        card.className = `recommended-product recommended-product--${type}`;
-        const visual = productLink(model, "product-visual", "");
-        visual.setAttribute("aria-label", `View ${model.modelNumber} on Dometic (opens in a new tab)`);
-        visual.replaceChildren(productImage(model, "", true));
-        const info = document.createElement("div"); info.className = "product-info";
-        const category = document.createElement("span"); category.className = "product-category";
-        category.textContent = isAc ? "Air conditioning" : "Furnace";
-        const title = document.createElement("h3"); title.className = "product-model"; title.textContent = model.modelNumber;
-        const family = document.createElement("p"); family.className = "product-family"; family.textContent = model.name.replace(/^Dometic /, "");
-        const sku = document.createElement("p"); sku.className = "product-sku"; sku.textContent = `SKU ${model.sku}`;
-        const rating = document.createElement("p"); rating.className = "product-rating";
-        rating.textContent = isAc ? `${model.approximate ? "≈" : ""}${fmt(model.capacity)} BTU/hr cooling` : `${fmt(model.output)} BTU/hr delivered`;
-        if (!isAc) {
-          const input = document.createElement("span"); input.className = "product-input"; input.textContent = `${fmt(model.input)} BTU/hr input`; rating.append(input);
+        const capacity = ratedCapacity(system, type);
+        const total = el("p", "match-capacity");
+        total.append(el("strong", "", `${approx(system)}${fmt(capacity)}`), " ", el("span", "", isAc ? `BTU/hr ${multiUnit ? "combined cooling" : "cooling"}` : "BTU/hr delivered heat"));
+        const spare = round100(capacity - load);
+        const fit = el("p", "match-fit");
+        fit.append(icon("icon-check"), el("span", "", `Covers your expected ${fmt(round100(load))} BTU/hr ${isAc ? "cooling" : "heating"} load${spare > 0 ? ` with ${approx(system)}${fmt(spare)} BTU/hr to spare` : ""}.`));
+        const products = el("div", "match-products");
+        Equipment.modelsFor(system).forEach(({ model, quantity }) => products.append(productCard(model, { quantity, multiUnit })));
+        match.append(total, fit, products);
+        if (multiUnit) {
+          match.append(el("p", "match-notice", `Capacity sum only. An installer must size each cooling zone and verify ${system.unitCount} suitable roof positions, airflow, controls and power for simultaneous operation.`));
+          const method = el("details", "match-method");
+          method.append(el("summary", "", `How this ${system.unitCount}-unit option is sized`),
+            el("p", "", `The calculator uses one listed unit when it meets the load. Otherwise it uses the fewest rooftop units, up to ${Equipment.maxAcUnits}, and the smallest combined nominal capacity at or above the unrounded load. Combinations use the preferred ${acTierNames} models; same-capacity variants can be swapped in. This planning rule does not assume equal zones or replace installation design. Totals that include the approximate 11,000 model remain approximate.`));
+          for (const [text, href] of [["Dometic sizing guidance", Equipment.acSizingSource], ["Dometic installation requirements", Equipment.acInstallationSource]]) {
+            const link = el("a", "", text); link.href = href; link.target = "_blank"; link.rel = "noopener noreferrer"; method.append(link);
+          }
+          match.append(method);
         }
-        const fit = document.createElement("p"); fit.className = "product-fit";
-        fit.textContent = `Covers your ${fmt(round100(load))} BTU/hr ${isAc ? "cooling" : "heating"} load.`;
-        info.append(category, title, family, sku, rating, fit, productLink(model, "recommended-product-link", "View product on Dometic"));
-        appendCapacityAlternatives(info, model);
-        const credit = document.createElement("p"); credit.className = "product-image-credit"; credit.textContent = model.imageNote;
-        card.append(visual, info, credit); container.append(card);
+        container.append(match);
       }
 
       function renderCapacityCards(container, comparisons, recommended, selectedId, type, results) {
-        container.innerHTML = "";
+        container.replaceChildren();
         comparisons.forEach(({ system, tier, empty }) => {
           if (!system) {
-            const placeholder = document.createElement("div");
-            placeholder.className = "capacity-card unavailable";
+            const placeholder = el("div", "capacity-card unavailable");
             placeholder.setAttribute("role", "note");
-            placeholder.innerHTML = `<span class="capacity-tier">${tier}</span><span class="capacity-detail">${empty}</span>`;
-            container.appendChild(placeholder);
+            placeholder.append(el("span", "capacity-tier", tier), el("span", "capacity-detail", empty));
+            container.append(placeholder);
             return;
           }
-          const isRecommended = recommended && system.id === recommended.id;
-          const isSelected = system.id === selectedId;
-          const fit = type === "ac" ? acFitText(system, results) : furnaceFitText(system, results);
-          const button = document.createElement("button");
+          const isRecommended = recommended?.id === system.id;
+          const fit = fitText(system, type, results, isRecommended);
+          const button = el("button", `capacity-card${isRecommended ? " recommended" : ""}`);
           button.type = "button";
-          button.className = `capacity-card${isRecommended ? " recommended" : ""}`;
           button.dataset.systemId = system.id;
           button.dataset.systemType = type;
-          button.setAttribute("aria-pressed", String(isSelected));
-          button.setAttribute("aria-label", `${system.label}, ${system.detail}, ${fit}${isRecommended ? ", recommended" : ""}`);
-          button.innerHTML = `
-            <span class="capacity-check"><svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg></span>
-            <span class="capacity-tier">${tier}</span>
-            <span class="capacity-detail">${system.modelNumber}</span>
-            <span class="capacity-value">${type === "ac" ? system.label : `${fmt(system.output)} BTU/hr delivered`}</span>
-            <span class="capacity-sku">${system.unitCount > 1 ? `${system.unitCount} rooftop units` : `SKU ${system.sku}`}</span>
-            <span class="capacity-model-type">${type === "ac" ? system.planType : `${fmt(system.output)} BTU/hr delivered`}</span>
-            <span class="capacity-status">${isRecommended ? "Recommended · " : ""}${fit}</span>`;
-          button.prepend(productImage(Equipment.modelsFor(system)[0].model, "capacity-image"));
-          container.appendChild(button);
+          button.setAttribute("aria-pressed", String(system.id === selectedId));
+          button.setAttribute("aria-label", `${capacityText(system, type)}${type === "furnace" ? ` from ${fmt(system.input)} BTU/hr input` : ""}, ${modelList(system)}, ${unitText(type, system.unitCount)}, ${fit}${isRecommended ? ", recommended" : ""}`);
+          const check = el("span", "capacity-check"); check.append(icon("icon-check"));
+          const media = productImage(Equipment.modelsFor(system)[0].model, "capacity-image");
+          // A mixed combination shows only its first model's photo, so badge the unit total rather than "×N" of that model.
+          if (system.unitCount > 1) media.append(el("span", "product-qty", system.components.length === 1 ? `×${system.unitCount}` : `${system.unitCount} units`));
+          const text = el("span", "capacity-text");
+          text.append(el("span", "capacity-value", capacityText(system, type)), el("span", "capacity-detail", modelList(system)),
+            el("span", "capacity-sku", system.unitCount > 1 ? unitText(type, system.unitCount) : `SKU ${system.sku}`),
+            el("span", "capacity-status", `${isRecommended ? "Recommended · " : ""}${fit}`));
+          button.append(check, el("span", "capacity-tier", tier), media, text);
+          container.append(button);
         });
       }
 
       function renderModelReference(container, system, type, load) {
         container.replaceChildren();
-        const heading = document.createElement("h3");
-        heading.textContent = system?.unitCount > 1 ? "Selected two-unit capacity option" : "Selected catalog model";
-        container.append(heading);
-        const paragraph = (message, className) => {
-          const p = document.createElement("p"); p.textContent = message;
-          if (className) p.className = className;
-          container.append(p);
-        };
+        const isAc = type === "ac";
+        const paragraph = (message, className) => container.append(el("p", className, message));
+        container.append(el("h3", "", system ? `Selected option · ${capacityText(system, type)} · ${unitText(type, system.unitCount)}` : "Selected option"));
         if (!system) {
           paragraph(load === 0 ? "No equipment capacity is required for this calculated load at the selected conditions." : "No listed model selected.");
           return;
         }
-        const capacity = type === "ac" ? system.capacity : system.output;
+        const capacity = ratedCapacity(system, type);
         const difference = capacity - load;
-        paragraph(difference >= 0 ? `${type === "ac" ? system.unitCount > 1 ? "Combined nominal cooling capacity" : "Nominal cooling capacity" : "Delivered furnace output"} ${system.approximate ? "≈" : ""}${fmt(capacity)} BTU/hr; expected load ${fmt(load)} BTU/hr; ${fmt(difference)} BTU/hr capacity margin.` : `Below the expected calculated load by ${fmt(-difference)} BTU/hr. This selected option does not cover the expected load.`, difference < 0 ? "capacity-deficit" : "capacity-margin");
-        const detail = document.createElement("div"); detail.className = "selected-products";
-        Equipment.modelsFor(system).forEach(({ model, quantity }) => {
-          const row = document.createElement("article"); row.className = "selected-product";
-          const visual = productLink(model, "selected-product-visual", "");
-          visual.replaceChildren(productImage(model));
-          const info = document.createElement("div");
-          const name = document.createElement("h4"); name.className = "product-model"; name.textContent = `${system.unitCount > 1 ? `${quantity} × ` : ""}${model.modelNumber}`;
-          const family = document.createElement("p"); family.textContent = model.name;
-          const spec = document.createElement("span"); spec.className = "model-code";
-          spec.textContent = `${model.modelNumber} · SKU ${model.sku} · ${model.configuration}`;
-          const rating = document.createElement("span"); rating.className = "model-code";
-          rating.textContent = type === "ac" ? `${model.approximate ? "Approximately " : ""}${fmt(model.capacity)} BTU/hr cooling per unit.` : `${fmt(model.input)} BTU/hr fuel input → ${fmt(model.output)} BTU/hr delivered heat.`;
-          const source = document.createElement("a"); source.href = model.ratingSourceUrl; source.target = "_blank"; source.rel = "noopener noreferrer";
-          source.textContent = "Manufacturer rating source"; source.className = "rating-source";
-          const credit = document.createElement("p"); credit.className = "product-image-credit"; credit.textContent = model.imageNote;
-          info.append(name, family, spec, rating, source, credit);
-          row.append(visual, info, productLink(model, "selected-product-link", "View product on Dometic"));
-          detail.append(row);
-        });
-        container.append(detail);
-        if (system.unitCount > 1) paragraph("Both units must be able to operate together. An installer must check each zone's load, roof positions, air distribution, controls and electrical supply; the combined total alone does not confirm the installation.");
+        paragraph(difference >= 0 ? `${isAc ? system.unitCount > 1 ? "Combined nominal cooling capacity" : "Nominal cooling capacity" : "Delivered furnace output"} ${approx(system)}${fmt(capacity)} BTU/hr; expected load ${fmt(load)} BTU/hr; ${fmt(difference)} BTU/hr capacity margin.` : `Below the expected calculated load by ${fmt(-difference)} BTU/hr. This selected option does not cover the expected load.`, difference < 0 ? "capacity-deficit" : "capacity-margin");
+        const products = el("div", "reference-products");
+        Equipment.modelsFor(system).forEach(({ model, quantity }) => products.append(productCard(model, { quantity, multiUnit: system.unitCount > 1, heading: "h4", detailed: true })));
+        container.append(products);
+        if (system.unitCount > 1) paragraph(`All ${system.unitCount} units must be able to operate together. An installer must check each zone's load, roof positions, air distribution, controls and electrical supply; the combined total alone does not confirm the installation.`);
         if (system.approximate) paragraph("This option's cooling capacity and capacity margin are approximate. Verify performance at design weather.");
-        paragraph(type === "ac" ? "A/C distribution boxes, grilles and controls may be separate purchases. Confirm the correct configuration with a Dometic dealer." : "Verify door/doorless configuration, ducts, gas supply, venting and installation requirements with a qualified installer.");
+        paragraph(isAc ? "A/C distribution boxes, grilles and controls may be separate purchases. Confirm the correct configuration with a Dometic dealer." : "Verify door/doorless configuration, ducts, gas supply, venting and installation requirements with a qualified installer.");
       }
 
       function renderCompare(results, acRec, furnaceRec) {
@@ -3199,13 +3201,13 @@
         state.lastResults = results;
         const acRec = recommendAc(results.raw.expected.coolingTotal);
         const furnaceRec = recommendFurnace(results.raw.expected.heatingTotal);
-        renderRecommendedProduct($("#coolingProduct"), acRec, "ac", results.raw.expected.coolingTotal);
-        renderRecommendedProduct($("#heatingProduct"), furnaceRec, "furnace", results.raw.expected.heatingTotal);
+        renderMatch($("#coolingProduct"), acRec, "ac", results.raw.expected.coolingTotal);
+        renderMatch($("#heatingProduct"), furnaceRec, "furnace", results.raw.expected.heatingTotal);
         $("#coolingLoadSummary").textContent = `${fmt(results.expected.cooling)} BTU/hr`;
         $("#heatingLoadSummary").textContent = `${fmt(results.expected.heating)} BTU/hr`;
 
         els.coolingMatch.textContent = acRec ? `${acRec.approximate ? "≈" : ""}${fmt(acRec.capacity)}` : results.raw.expected.coolingTotal === 0 ? "0" : "—";
-        $("#coolingModelMatch").textContent = acRec ? acRec.unitCount > 1 ? `${acRec.detail} · 2-unit option · ${acRec.approximate ? "≈" : ""}${fmt(acRec.capacity)} BTU/hr combined nominal cooling` : `${acRec.modelNumber} · SKU ${acRec.sku}` : results.raw.expected.coolingTotal === 0 ? "No cooling demand at these conditions" : "No listed one- or two-unit option meets this load";
+        $("#coolingModelMatch").textContent = acRec ? acRec.unitCount > 1 ? `${acRec.detail} · ${acRec.unitCount}-unit option · ${approx(acRec)}${fmt(acRec.capacity)} BTU/hr combined nominal cooling` : `${acRec.modelNumber} · SKU ${acRec.sku}` : results.raw.expected.coolingTotal === 0 ? "No cooling demand at these conditions" : `No listed combination of up to ${Equipment.maxAcUnits} units meets this load`;
         els.coolingLow.textContent = fmt(results.low.cooling);
         els.coolingHigh.textContent = fmt(results.high.cooling);
         els.coolingExpected.textContent = fmt(results.expected.cooling);
@@ -3220,7 +3222,7 @@
 
         if (results.breakdown.slideResults.some((slide) => slide.deployed)) els.confidenceLabel.textContent = "Slide geometry / verify thermal assumptions";
         const alerts = [];
-        if (!acRec && results.raw.expected.coolingTotal > 0 && state.mode !== "furnace") alerts.push(`Cooling exceeds the largest two-unit option (${fmt(acSystems.at(-1).capacity)} BTU/hr nominal). No listed one- or two-unit option meets this load.`);
+        if (!acRec && results.raw.expected.coolingTotal > 0 && state.mode !== "furnace") alerts.push(`Cooling exceeds the largest listed combination (${acSystems.at(-1).detail}, ${fmt(acSystems.at(-1).capacity)} BTU/hr nominal). No listed combination of up to ${Equipment.maxAcUnits} units meets this load.`);
         if (results.inputs.coolOutdoor >= 100 && state.mode !== "furnace") alerts.push("Extreme cooling design temperature selected: verify actual FreshJet performance at the design condition; nameplate BTU/hr is nominal.");
         if (!furnaceRec && results.raw.expected.heatingTotal > 0 && state.mode !== "ac") alerts.push(`Heating exceeds the largest listed furnace output (${fmt(furnaceSystems.at(-1).output)} BTU/hr delivered). No listed model meets this load.`);
         if (results.inputs.altitude >= 5000) alerts.push("Elevation is included in outside-air load calculations; separately verify model-specific furnace combustion, installation, and altitude requirements.");
@@ -3512,6 +3514,8 @@
       }));
 
       $("#catalogTotal").textContent = `${Equipment.models.length} products · photos, specifications and links`;
+      $$("[data-ac-max-units]").forEach((node) => { node.textContent = Equipment.maxAcUnits; });
+      $$("[data-ac-max-capacity]").forEach((node) => { node.textContent = fmt(acSystems.at(-1).capacity); });
       $("#catalogStatus").textContent = `US catalog reviewed ${Equipment.reviewedAt} · ${Equipment.models.filter(model => model.kind === "ac").length} A/C models and ${Equipment.models.filter(model => model.kind === "furnace").length} 12 V LP furnaces · Official listings, not live stock. Same-capacity variants are available below; the supplied models remain the default capacity matches.`;
       const slideUI = window.RVBTUSlides.create({ state, currentInputs, render, fmt });
       function renderSlideResults(results) { slideUI.renderResults(results); }

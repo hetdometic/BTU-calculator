@@ -26,7 +26,7 @@ test('the supplied nine products retain their exact ratings within the expanded 
     ['furnace', 'DFMDH35121', '9610007794', null, 35000, 25840],
     ['furnace', 'DFLD40111', '9108923369', null, 40000, 30400]
   ]);
-  assert.equal(c.acSystems.length, 9);
+  assert.equal(c.acSystems.length, 33);
   assert.equal(c.furnaceSystems.length, 6);
   assert.equal(c.models.length, 20);
 });
@@ -60,25 +60,61 @@ test('same-capacity variants do not create duplicate lower or higher tiers or ch
   assert.ok(c.models.filter(model => model.heatPump).every(model => model.output === undefined));
 });
 
-test('cooling plans use only the three listed A/C models and preserve every component capacity', () => {
-  const pairs = [];
+test('cooling plans use only the three preferred A/C models and preserve every component capacity', () => {
+  assert.equal(c.maxAcUnits, 4);
+  const byUnits = { 1: [], 2: [], 3: [], 4: [] };
   for (const system of c.acSystems) {
-    assert.ok(system.unitCount === 1 || system.unitCount === 2);
+    assert.ok(Number.isInteger(system.unitCount) && system.unitCount >= 1 && system.unitCount <= c.maxAcUnits);
     const items = c.modelsFor(system);
     assert.equal(items.reduce((total, item) => total + item.quantity, 0), system.unitCount);
     assert.equal(items.reduce((total, { model, quantity }) => total + model.capacity * quantity, 0), system.capacity);
     assert.equal(system.approximate, items.some(({ model }) => model.approximate));
     for (const { model, quantity } of items) {
       assert.ok(c.models.includes(model));
-      assert.equal(model.kind, 'ac');
+      assert.ok(['fj11', 'fj135', 'fj15'].includes(model.id), model.modelNumber + ' is a preferred capacity model');
       assert.ok(Number.isInteger(quantity) && quantity > 0);
     }
-    if (system.unitCount === 2) {
-      assert.equal(system.staged, true);
-      pairs.push(system.capacity);
-    }
+    assert.equal(new Set(items.map(({ model }) => model.id)).size, items.length, 'repeated units are merged into one quantity');
+    assert.equal(system.staged, system.unitCount > 1);
+    byUnits[system.unitCount].push(system.capacity);
   }
-  assert.deepEqual(pairs, [22000, 24500, 26000, 27000, 28500, 30000]);
+  assert.deepEqual(byUnits, {
+    1: [11000, 13500, 15000],
+    2: [22000, 24500, 26000, 27000, 28500, 30000],
+    3: [33000, 35500, 37000, 38000, 39500, 40500, 41000, 42000, 43500, 45000],
+    // 4 x FJX5357MHE (44,000) is omitted: 3 x FJX5557M gives more capacity with fewer units.
+    4: [46500, 48000, 49000, 50500, 51500, 52000, 53000, 54000, 54500, 55500, 56000, 57000, 58500, 60000]
+  });
+});
+
+test('every listed combination beats all options with fewer units, so the list rises in capacity', () => {
+  c.acSystems.forEach((system, index) => {
+    if (index > 0) {
+      assert.ok(system.capacity > c.acSystems[index - 1].capacity, system.id + ' increases capacity');
+      assert.ok(system.unitCount >= c.acSystems[index - 1].unitCount, system.id + ' never needs fewer units');
+    }
+    const fewer = c.acSystems.filter(other => other.unitCount < system.unitCount);
+    assert.ok(fewer.every(other => other.capacity < system.capacity), system.id + ' is not dominated');
+  });
+});
+
+test('recommendations match a brute-force search for the fewest units, then the smallest total', () => {
+  const preferred = c.models.filter(model => ['fj11', 'fj135', 'fj15'].includes(model.id));
+  const options = [];
+  (function build(units, start) {
+    if (units.length) options.push({ unitCount: units.length, capacity: units.reduce((total, model) => total + model.capacity, 0) });
+    if (units.length === c.maxAcUnits) return;
+    for (let i = start; i < preferred.length; i++) build([...units, preferred[i]], i);
+  })([], 0);
+  for (let load = 0.5; load <= 62000; load += 97.3) {
+    const fitting = options.filter(option => option.capacity >= load);
+    const units = Math.min(...fitting.map(option => option.unitCount));
+    const best = fitting.filter(option => option.unitCount === units).sort((a, b) => a.capacity - b.capacity)[0];
+    const result = c.recommendAc(load);
+    if (!best) { assert.equal(result, null, 'load ' + load); continue; }
+    assert.equal(result.unitCount, best.unitCount, 'units for load ' + load);
+    assert.equal(result.capacity, best.capacity, 'capacity for load ' + load);
+  }
 });
 
 test('furnace recommendations remain single listed products sized by delivered output', () => {
@@ -112,14 +148,14 @@ test('heating demand uses delivered output rather than fuel input or the model i
   assert.equal(c.recommendFurnace(25840.01).modelNumber, 'DFLD40111');
 });
 
-test('zero load requires no equipment and demand beyond two units does not invent a larger plan', () => {
+test('zero load requires no equipment and demand beyond four units does not invent a larger plan', () => {
   assert.equal(c.recommendAc(0), null);
   assert.equal(c.recommendFurnace(0), null);
-  assert.equal(c.recommendAc(30000.01), null);
+  assert.equal(c.recommendAc(60000.01), null);
   assert.equal(c.recommendFurnace(30400.01), null);
 });
 
-test('one fitting unit is preferred, then the smallest fitting unordered two-unit combination', () => {
+test('one fitting unit is preferred, then the smallest fitting combination with the fewest units', () => {
   for (const [load, capacity, components] of [
     [15000, 15000, [['FJX5557M', 1]]],
     [15000.01, 22000, [['FJX5357MHE', 2]]],
@@ -133,14 +169,24 @@ test('one fitting unit is preferred, then the smallest fitting unordered two-uni
     [27000.01, 28500, [['FJX5457M', 1], ['FJX5557M', 1]]],
     [28500, 28500, [['FJX5457M', 1], ['FJX5557M', 1]]],
     [28500.01, 30000, [['FJX5557M', 2]]],
-    [30000, 30000, [['FJX5557M', 2]]]
+    [30000, 30000, [['FJX5557M', 2]]],
+    [30000.01, 33000, [['FJX5357MHE', 3]]],
+    [33000.01, 35500, [['FJX5357MHE', 2], ['FJX5457M', 1]]],
+    [39500, 39500, [['FJX5357MHE', 1], ['FJX5457M', 1], ['FJX5557M', 1]]],
+    [40000, 40500, [['FJX5457M', 3]]],
+    [44000, 45000, [['FJX5557M', 3]]],
+    [45000, 45000, [['FJX5557M', 3]]],
+    [45000.01, 46500, [['FJX5357MHE', 3], ['FJX5457M', 1]]],
+    [53500, 54000, [['FJX5457M', 4]]],
+    [60000, 60000, [['FJX5557M', 4]]]
   ]) {
     const system = c.recommendAc(load);
     assert.equal(system.capacity, capacity, 'cooling load ' + load);
     assert.deepEqual(c.modelsFor(system).map(({ model, quantity }) => [model.modelNumber, quantity]), components);
-    assert.equal(system.unitCount, load <= 15000 ? 1 : 2);
+    assert.equal(system.unitCount, components.reduce((total, [, quantity]) => total + quantity, 0));
+    assert.equal(system.detail, components.map(([modelNumber, quantity]) => quantity + ' × ' + modelNumber).join(' + ').replace(/^1 × (\S+)$/, '$1'));
   }
-  assert.equal(c.recommendAc(30000.01), null);
+  assert.equal(c.recommendAc(60000.01), null);
 });
 
 for (const bad of [-1, Infinity, NaN, undefined, null, '13800']) {
@@ -182,12 +228,12 @@ test('the first cooling model keeps its explicitly approximate 11K rating', () =
 
 test('increasing loads select equal or greater capacity until the supplied catalog is exceeded', () => {
   let lastAc = 0, lastHeat = 0;
-  for (let load = .1; load <= 45000; load += 137.27) {
+  for (let load = .1; load <= 70000; load += 137.27) {
     const ac = c.recommendAc(load);
     if (ac) {
       assert.ok(ac.capacity >= load && ac.capacity >= lastAc);
       lastAc = ac.capacity;
-    } else assert.ok(load > 30000);
+    } else assert.ok(load > 60000);
     const heat = c.recommendFurnace(load);
     if (heat) {
       assert.ok(heat.output >= load && heat.output >= lastHeat);
@@ -243,5 +289,7 @@ test('the inline catalog is immutable and works in a browser without CommonJS or
   assert.equal(browser.RVBTUEquipment.recommendFurnace(20000).modelNumber, 'DFMD30121');
   assert.equal(browser.RVBTUEquipment.recommendAc(13800).capacity, 15000);
   assert.equal(browser.RVBTUEquipment.recommendAc(30000).capacity, 30000);
-  assert.equal(browser.RVBTUEquipment.recommendAc(30000.01), null);
+  assert.equal(browser.RVBTUEquipment.recommendAc(30000.01).capacity, 33000);
+  assert.equal(browser.RVBTUEquipment.recommendAc(60000).capacity, 60000);
+  assert.equal(browser.RVBTUEquipment.recommendAc(60000.01), null);
 });

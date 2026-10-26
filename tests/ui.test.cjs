@@ -73,9 +73,13 @@ test('DOM: initial screen has no inferred slides and retains Dometic equipment c
   const a = await app(t);
   assert.match(a.window.document.title, /Dometic/);
   assert.match(a.$('h1').textContent, /comfort system/);
+  assert.equal(a.$('footer.site-footer').textContent.trim(), '© 2026 Dometic. All rights reserved.');
+  const copy = selector => [...a.window.document.querySelectorAll(selector)].map(node => node.textContent);
+  assert.deepEqual(copy('[data-ac-max-units]'), ['4', '4', '4'], 'unit-cap copy follows the catalog');
+  assert.deepEqual(copy('[data-ac-max-capacity]'), ['60,000']);
   assert.equal(a.api.getState().slideOuts.length, 0);
   assert.equal(a.$('#slideResult').hidden, true);
-  assert.equal(a.api.getAcSystems().at(-1).capacity, 30000);
+  assert.equal(a.api.getAcSystems().at(-1).capacity, 60000);
   assert.equal(a.api.getFurnaceSystems().at(-1).output, 30400);
   assert.equal(a.window.document.querySelectorAll('.capacity-card').length, 6);
 });
@@ -223,7 +227,7 @@ test('DOM: recommendations show model codes and separate calculated load from ca
     assert.equal(photo.getAttribute('src'), model.imageSrc);
     assert.equal(photo.alt, model.imageAlt);
     assert.equal(photo.closest('a').href, model.productUrl);
-    const product = card.querySelector('.recommended-product-link');
+    const product = card.querySelector('.product-card-link');
     assert.equal(product.href, model.productUrl);
     assert.equal(product.target, '_blank');
     assert.ok(product.rel.includes('noopener'));
@@ -235,7 +239,7 @@ test('DOM: a failed product photo exposes an accessible fallback and keeps the o
   const photo = a.$('#coolingProduct .recommended-product-photo');
   const fallback = a.$('#coolingProduct .product-image-fallback');
   const modelNumber = a.$('#coolingProduct .product-model').textContent;
-  const productUrl = a.$('#coolingProduct .recommended-product-link').href;
+  const productUrl = a.$('#coolingProduct .product-card-link').href;
   assert.equal(photo.hidden, false);
   assert.equal(fallback.hidden, true);
   photo.dispatchEvent(new a.window.Event('error'));
@@ -244,12 +248,12 @@ test('DOM: a failed product photo exposes an accessible fallback and keeps the o
   assert.equal(fallback.getAttribute('role'), 'img');
   assert.equal(fallback.getAttribute('aria-label'), modelNumber + ': product image unavailable');
   assert.match(fallback.textContent, /Product image unavailable/);
-  assert.equal(a.$('#coolingProduct .recommended-product-link').href, productUrl);
+  assert.equal(a.$('#coolingProduct .product-card-link').href, productUrl);
 });
 
 test('DOM: selecting a different capacity updates linked models and labels an undersized selection', async t => {
   const a = await app(t);
-  const originalPhoto = a.$('#acModelReference .selected-product-visual img').getAttribute('src');
+  const originalPhoto = a.$('#acModelReference .product-card-media img').getAttribute('src');
   const lower = a.$('#acCompareOptions .capacity-card:not(.recommended):not(.unavailable)');
   assert.ok(lower); lower.click();
   const chosen = a.api.getAcSystems().find(s => s.id === lower.dataset.systemId);
@@ -258,11 +262,11 @@ test('DOM: selecting a different capacity updates linked models and labels an un
   const model = a.api.getEquipmentCatalog().models.find(m => m.id === code);
   assert.equal(lower.querySelector('.capacity-image img').getAttribute('src'), model.imageSrc);
   assert.ok(lower.querySelector('.capacity-sku').textContent.includes(model.sku));
-  const photo = a.$('#acModelReference .selected-product-visual img');
+  const photo = a.$('#acModelReference .product-card-media img');
   assert.equal(photo.getAttribute('src'), model.imageSrc);
   assert.notEqual(photo.getAttribute('src'), originalPhoto);
   assert.equal(photo.alt, model.imageAlt);
-  assert.equal(a.$('#acModelReference .selected-product-link').href, model.productUrl);
+  assert.equal(a.$('#acModelReference .product-card-link').href, model.productUrl);
   const product = a.$('#acModelReference a');
   assert.equal(product.href, model.productUrl);
   assert.equal(product.target, '_blank'); assert.ok(product.rel.includes('noopener'));
@@ -286,7 +290,8 @@ test('DOM: zero heating load gives no furnace recommendation or false capacity-e
   assert.match(a.$('#furnaceModelReference').textContent, /No equipment capacity/);
   assert.ok(a.$('#heatingProduct .product-empty'));
   assert.equal(a.$('#heatingProduct .recommended-product-photo'), null);
-  assert.equal(a.$('#heatingProduct .recommended-product-link'), null);
+  assert.equal(a.$('#heatingProduct .product-card'), null);
+  assert.equal(a.$('#heatingProduct .product-card-link'), null);
 });
 test('DOM: beyond-catalog loads remain explicit and the highest option is labeled insufficient', async t => {
   const a = await app(t);
@@ -296,16 +301,17 @@ test('DOM: beyond-catalog loads remain explicit and the highest option is labele
   a.fill('#lengthNumber', 60, 'change'); a.fill('#widthNumber', 10, 'change'); a.fill('#heightNumber', 10, 'change'); a.fill('#construction', 'older', 'change');
   a.click('#advancedShortcut'); a.fill('#advCoolTemp', 125); a.fill('#advOutdoorRh', 90); a.fill('#advHeatTemp', -40); a.click('#applyAdvanced');
   const r = a.api.getResults().raw.expected;
-  assert.ok(r.coolingTotal > 30000 && r.heatingTotal > 30400);
+  assert.ok(r.coolingTotal > 60000 && r.heatingTotal > 30400);
   assert.equal(a.window.document.querySelectorAll('.capacity-card.recommended').length, 0);
-  assert.match(a.$('#coolingModelMatch').textContent, /No listed one- or two-unit option meets this load/);
+  assert.match(a.$('#coolingModelMatch').textContent, /No listed combination of up to 4 units meets this load/);
+  assert.match(a.$('#coolingProduct .product-empty').textContent, /4 × FJX5557M, provides 60,000 BTU\/hr/);
   assert.match(a.$('#furnaceMatch').textContent, /No listed furnace meets this load/);
   assert.match(a.$('#acModelReference').textContent, /does not cover/);
   assert.match(a.$('#furnaceModelReference').textContent, /does not cover/);
   for (const selector of ['#coolingProduct', '#heatingProduct']) {
     assert.ok(a.$(selector + ' .product-empty'));
     assert.equal(a.$(selector + ' .recommended-product-photo'), null);
-    assert.equal(a.$(selector + ' .recommended-product-link'), null);
+    assert.equal(a.$(selector + ' .product-card-link'), null);
   }
 });
 test('DOM: cooling above a single unit shows actual quantities, photos, SKUs and links for a two-unit option', async t => {
@@ -313,66 +319,137 @@ test('DOM: cooling above a single unit shows actual quantities, photos, SKUs and
   a.fill('#lengthNumber', 50, 'change');
   const load = a.api.getResults().raw.expected.coolingTotal;
   assert.ok(load > 15000 && load < 22000);
-  assert.equal(a.api.getAcSystems().length, 9);
+  assert.equal(a.api.getAcSystems().length, 33);
   assert.equal(a.window.document.querySelectorAll('#acCompareOptions .recommended').length, 1);
-  const pair = a.$('#coolingProduct .recommended-pair');
+  const pair = a.$('#coolingProduct .match--multi');
   assert.ok(pair);
-  assert.match(pair.querySelector('.pair-total').textContent, /≈22,000 BTU\/hr/);
-  assert.match(pair.querySelector('.pair-total').textContent, /Combined nominal cooling/);
+  assert.match(pair.querySelector('.match-capacity').textContent, /≈22,000 BTU\/hr combined cooling/);
+  assert.equal(pair.querySelector('.match-units').textContent, '2 rooftop units');
   assert.match(pair.querySelector('.product-model').textContent, /2 × FJX5357MHE/);
   assert.match(pair.querySelector('.product-sku').textContent, /9620015929/);
-  assert.match(pair.querySelector('.pair-unit-rating').textContent, /≈11,000 BTU\/hr per unit/);
+  assert.match(pair.querySelector('.product-rating').textContent, /≈11,000 BTU\/hr cooling per unit/);
+  assert.equal(pair.querySelector('.product-qty').textContent, '×2');
+  assert.equal(a.$('#acCompareOptions .recommended .product-qty').textContent, '×2', 'identical units keep the multiplier badge');
   const model = a.api.getEquipmentCatalog().models.find(m => m.modelNumber === 'FJX5357MHE');
   assert.equal(pair.querySelector('img').getAttribute('src'), model.imageSrc);
-  assert.equal(pair.querySelector('.recommended-product-link').href, model.productUrl);
-  assert.match(pair.querySelector('.pair-notice').textContent, /each cooling zone.*power for simultaneous operation/);
+  assert.equal(pair.querySelector('.product-card-link').href, model.productUrl);
+  assert.match(pair.querySelector('.match-notice').textContent, /each cooling zone.*2 suitable roof positions.*power for simultaneous operation/);
   assert.match(a.$('#coolingModelMatch').textContent, /2 × FJX5357MHE.*2-unit option.*22,000/);
   assert.match(a.$('#acModelReference').textContent, /2 × FJX5357MHE/);
   assert.doesNotMatch(a.$('#results').textContent, /undefined/);
   a.click('[data-vehicle="van"]');
-  assert.equal(a.$('#coolingProduct .recommended-pair'), null);
+  assert.equal(a.$('#coolingProduct .match--multi'), null);
   assert.equal(a.$('#coolingProduct .product-model').textContent, 'FJX5357MHE');
   assert.match(a.$('#coolingMatch').textContent, /11,000/);
 });
 
-test('DOM: mixed two-unit options list each exact product and update comparison details without stale units', async t => {
+test('DOM: mixed two-unit options and loads beyond two units list each exact product without stale units', async t => {
   const a = await app(t);
   a.fill('#lengthNumber', 60, 'change');
   a.click('#advancedShortcut'); a.fill('#advCoolTemp', 100); a.click('#applyAdvanced');
   const load = a.api.getResults().raw.expected.coolingTotal;
   assert.ok(load > 22000 && load < 24500);
-  const rows = [...a.window.document.querySelectorAll('#coolingProduct .pair-product')];
+  const rows = [...a.window.document.querySelectorAll('#coolingProduct .product-card')];
   assert.equal(rows.length, 2);
   for (const [index, number] of ['FJX5357MHE', 'FJX5457M'].entries()) {
     const model = a.api.getEquipmentCatalog().models.find(m => m.modelNumber === number);
     assert.equal(rows[index].querySelector('.product-model').textContent, '1 × ' + number);
     assert.ok(rows[index].querySelector('.product-sku').textContent.includes(model.sku));
     assert.equal(rows[index].querySelector('img').getAttribute('src'), model.imageSrc);
-    assert.equal(rows[index].querySelector('.recommended-product-link').href, model.productUrl);
-    assert.equal(rows[index].querySelector('.recommended-product-link').target, '_blank');
+    assert.equal(rows[index].querySelector('.product-card-link').href, model.productUrl);
+    assert.equal(rows[index].querySelector('.product-card-link').target, '_blank');
+    assert.equal(rows[index].querySelector('.product-qty'), null, 'single units carry no quantity badge');
   }
-  assert.match(a.$('#coolingProduct .pair-total').textContent, /≈24,500/);
+  assert.match(a.$('#coolingProduct .match-capacity').textContent, /≈24,500/);
   const recommended = a.$('#acCompareOptions .recommended');
   assert.match(recommended.querySelector('.capacity-sku').textContent, /2 rooftop units/);
+  assert.equal(recommended.querySelector('.capacity-detail').textContent, 'FJX5357MHE + FJX5457M');
+  assert.equal(recommended.querySelector('.product-qty').textContent, '2 units');
   const lower = a.$('#acCompareOptions .capacity-card:not(.recommended):not(.unavailable)');
   lower.click();
   assert.match(a.$('#acModelReference .capacity-deficit').textContent, /does not cover/);
-  assert.equal(a.window.document.querySelectorAll('#acModelReference .selected-product-visual').length, 1);
+  assert.equal(a.window.document.querySelectorAll('#acModelReference .product-card-media').length, 1);
   a.click('#acCompareOptions .recommended');
-  assert.equal(a.window.document.querySelectorAll('#acModelReference .selected-product-visual').length, 2);
-  const detailLinks = [...a.window.document.querySelectorAll('#acModelReference .selected-product-link')];
-  assert.deepEqual(detailLinks.map(link => link.href), rows.map(row => row.querySelector('.recommended-product-link').href));
+  assert.equal(a.window.document.querySelectorAll('#acModelReference .product-card-media').length, 2);
+  const detailLinks = [...a.window.document.querySelectorAll('#acModelReference .product-card-link')];
+  assert.deepEqual(detailLinks.map(link => link.href), rows.map(row => row.querySelector('.product-card-link').href));
   assert.doesNotMatch(a.$('#acModelReference').textContent, /undefined/);
 
   a.click('#advancedShortcut'); a.fill('#advCoolTemp', 110); a.click('#applyAdvanced');
-  assert.match(a.$('#coolingProduct .pair-total').textContent, /^30,000/);
-  assert.equal(a.window.document.querySelectorAll('#coolingProduct .pair-product').length, 1);
+  assert.match(a.$('#coolingProduct .match-capacity').textContent, /^30,000/);
+  assert.equal(a.window.document.querySelectorAll('#coolingProduct .product-card').length, 1);
   assert.equal(a.$('#coolingProduct .product-model').textContent, '2 × FJX5557M');
   a.click('#advancedShortcut'); a.fill('#advCoolTemp', 115); a.click('#applyAdvanced');
-  assert.ok(a.api.getResults().raw.expected.coolingTotal > 30000);
-  assert.equal(a.$('#coolingProduct .recommended-pair'), null);
-  assert.equal(a.$('#coolingProduct .recommended-product-link'), null);
-  assert.match(a.$('#coolingProduct .product-empty').textContent, /No listed one- or two-unit option.*30,000/s);
+  const tripleLoad = a.api.getResults().raw.expected.coolingTotal;
+  assert.ok(tripleLoad > 30000 && tripleLoad <= 33000, 'beyond two units: ' + tripleLoad);
+  assert.equal(a.$('#coolingProduct .product-empty'), null, 'loads above two units still get a recommendation');
+  assert.equal(a.$('#coolingProduct .match-units').textContent, '3 rooftop units');
+  assert.match(a.$('#coolingProduct .match-capacity').textContent, /^≈33,000 BTU\/hr combined cooling/);
+  assert.equal(a.$('#coolingProduct .product-model').textContent, '3 × FJX5357MHE');
+  assert.equal(a.$('#coolingProduct .product-qty').textContent, '×3');
+  assert.match(a.$('#coolingProduct .match-notice').textContent, /3 suitable roof positions/);
+  assert.match(a.$('#coolingModelMatch').textContent, /3 × FJX5357MHE · 3-unit option · ≈33,000/);
+  assert.equal(a.$('#capacityAlert').textContent.includes('Cooling exceeds'), false);
+});
+
+test('DOM: four-unit cooling lists every exact product with its own quantity, photo and link', async t => {
+  const a = await app(t);
+  a.click('[data-vehicle="motorhome"]');
+  a.fill('#lengthNumber', 60, 'change'); a.fill('#construction', 'older', 'change');
+  a.click('#advancedShortcut'); a.fill('#advCoolTemp', 115); a.fill('#advOutdoorRh', 40); a.click('#applyAdvanced');
+  const load = a.api.getResults().raw.expected.coolingTotal;
+  assert.ok(load > 52000 && load <= 53000, 'four-unit load ' + load);
+  const system = a.api.getAcSystems().find(s => s.id === a.api.getState().selectedAc);
+  assert.equal(system.unitCount, 4);
+  assert.equal(a.$('#coolingProduct .match-units').textContent, '4 rooftop units');
+  assert.match(a.$('#coolingProduct .match-capacity').textContent, /≈53,000/);
+  const cards = [...a.window.document.querySelectorAll('#coolingProduct .product-card')];
+  assert.deepEqual(cards.map(card => card.querySelector('.product-model').textContent), ['1 × FJX5357MHE', '2 × FJX5457M', '1 × FJX5557M']);
+  assert.deepEqual(cards.map(card => card.querySelector('.product-qty')?.textContent ?? null), [null, '×2', null]);
+  const models = modelsFor(a, system);
+  cards.forEach((card, index) => assert.equal(card.querySelector('img').getAttribute('src'), models[index].imageSrc));
+  assertProductActions(a, '#coolingProduct', models);
+  assertProductActions(a, '#acModelReference', models);
+  assert.equal(a.$('#acCompareOptions .recommended .capacity-sku').textContent, '4 rooftop units');
+  assert.equal(a.$('#acCompareOptions .recommended .product-qty').textContent, '4 units', 'a mixed combination is not badged as copies of its first model');
+  assert.match(a.$('#acModelReference').textContent, /All 4 units must be able to operate together/);
+});
+
+test('DOM: a much larger two-unit alternative keeps the oversizing caution; furnace labels state input once', async t => {
+  const a = await app(t);
+  a.fill('#lengthNumber', 36, 'change');
+  const raw = a.api.getResults().raw;
+  const higher = a.window.document.querySelectorAll('#acCompareOptions .capacity-card')[2];
+  const system = a.api.getAcSystems().find(s => s.id === higher.dataset.systemId);
+  assert.equal(a.api.getAcSystems().find(s => s.id === a.api.getState().selectedAc).unitCount, 1, 'one unit is recommended');
+  assert.equal(system.unitCount, 2);
+  assert.ok(system.capacity > raw.high.coolingTotal && system.capacity > raw.expected.coolingTotal * 1.4, 'precondition: far above the load');
+  assert.equal(higher.querySelector('.capacity-status').textContent, 'Oversizing caution');
+  for (const card of a.window.document.querySelectorAll('#furnaceCompareOptions .capacity-card[data-system-id]')) {
+    const furnace = a.api.getFurnaceSystems().find(s => s.id === card.dataset.systemId);
+    const label = card.getAttribute('aria-label');
+    assert.equal(label.split('BTU/hr delivered').length - 1, 1, 'delivered output is announced once: ' + label);
+    assert.match(label, new RegExp(furnace.input.toLocaleString('en-US') + ' BTU/hr input'));
+  }
+});
+
+test('DOM: A/C and furnace results share one product card layout with the same action', async t => {
+  const a = await app(t);
+  const layout = card => [...card.children].map(child => child.className);
+  for (const [cooling, heating] of [['#coolingProduct', '#heatingProduct'], ['#acModelReference', '#furnaceModelReference']]) {
+    const ac = a.$(cooling + ' .product-card'), furnace = a.$(heating + ' .product-card');
+    assert.ok(ac && furnace, cooling + ' and ' + heating + ' render product cards');
+    assert.deepEqual(layout(ac), ['product-card-media', 'product-card-body', 'product-card-actions', 'product-image-credit']);
+    assert.deepEqual(layout(furnace), layout(ac));
+    assert.equal(furnace.querySelector('.product-action').className, ac.querySelector('.product-action').className);
+    assert.equal(furnace.querySelector('.product-model').tagName, ac.querySelector('.product-model').tagName);
+  }
+  for (const selector of ['#coolingProduct', '#heatingProduct']) {
+    const head = a.$(selector + ' .match-head');
+    assert.ok(head.querySelector('.match-kicker svg'));
+    assert.match(head.querySelector('.match-units').textContent, /^1 (rooftop unit|furnace)$/);
+    assert.match(a.$(selector + ' .match-fit').textContent, /^Covers your expected [\d,]+ BTU\/hr (cooling|heating) load/);
+  }
 });
 
 test('DOM: heating overflow never substitutes cooling capacity for heating output or suppresses a valid cooling pair', async t => {
@@ -380,9 +457,9 @@ test('DOM: heating overflow never substitutes cooling capacity for heating outpu
   a.fill('#lengthNumber', 60, 'change');
   a.click('#advancedShortcut'); a.fill('#advCoolTemp', 100); a.fill('#advHeatTemp', -20); a.click('#applyAdvanced');
   assert.ok(a.api.getResults().raw.expected.heatingTotal > 30400);
-  assert.ok(a.$('#coolingProduct .recommended-pair'));
+  assert.ok(a.$('#coolingProduct .match--multi'));
   assert.ok(a.$('#heatingProduct .product-empty'));
-  assert.equal(a.$('#heatingProduct .recommended-product-link'), null);
+  assert.equal(a.$('#heatingProduct .product-card-link'), null);
   assert.match(a.$('#heatingProduct').textContent, /Cooling BTU ratings cannot be used as heat-pump heating output/);
   assert.ok(a.api.getFurnaceSystems().every(system => system.unitCount === 1));
   a.click('[data-mode="furnace"]');
@@ -498,11 +575,11 @@ test('DOM: product actions remain consistent across single, furnace, identical-p
   checkCurrent();
   a.click('[data-vehicle="travel"]');
   a.fill('#lengthNumber', 50, 'change');
-  assert.equal(a.$('#coolingProduct .pair-products').children.length, 1);
+  assert.equal(a.$('#coolingProduct .match-products').children.length, 1);
   checkCurrent();
   a.fill('#lengthNumber', 60, 'change');
   a.click('#advancedShortcut'); a.fill('#advCoolTemp', 100); a.click('#applyAdvanced');
-  assert.equal(a.$('#coolingProduct .pair-products').children.length, 2);
+  assert.equal(a.$('#coolingProduct .match-products').children.length, 2);
   checkCurrent();
   const originalRecommendation = [...a.window.document.querySelectorAll('#coolingProduct .product-action')].map(link => link.href);
   for (const selector of ['#acCompareOptions', '#furnaceCompareOptions']) {

@@ -1,6 +1,6 @@
 # Match calculated loads to Dometic equipment
 
-The calculator keeps the calculated RV load and equipment suggestion separate. A calculated load such as 13,800 BTU/hr comes from the heat-transfer model. Suggestions use verified products hardcoded in `index.html`: one A/C where sufficient, a two-A/C planning combination for higher cooling loads, or one furnace matched by delivered heat output. Products at the same capacity appear as alternatives; they do not create extra recommendation tiers.
+The calculator keeps the calculated RV load and equipment suggestion separate. A calculated load such as 13,800 BTU/hr comes from the heat-transfer model. Suggestions use verified products hardcoded in `index.html`: one A/C where sufficient, a planning combination of up to four A/Cs for higher cooling loads, or one furnace matched by delivered heat output. Products at the same capacity appear as alternatives; they do not create extra recommendation tiers.
 
 The inline `<script id="equipmentCatalog">` in `index.html` contains **20 products: eight A/C configurations and 12 furnace models**. The original nine records retain their **2026-10-20** `checkedAt` date. Additional verified records use **2026-10-26**. The catalog's **2026-10-26** `reviewedAt` date identifies this expansion and review; it does not replace each product's source-check date. Official manufacturer pages and furnace technical-data tables support the records. The slide-out and base-load equations in `calculator.js` are unchanged.
 
@@ -22,7 +22,7 @@ These original three FreshJet 5 models remain the preferred cooling suggestions.
 
 The [US rooftop category at the snapshot date](https://www.dometic.com/en-us/category/rv-and-van/rv-air-conditioners/rooftop-rv-air-conditioners) lists these FreshJet 5 capacity classes. The HE product's official global-English detail page supplies its code, SKU and approximate capacity; its 115 V / 60 Hz configuration and US family listing were cross-checked. Dometic's [2026 model/SKU sheet, page 3](https://mediabank.dometic.com/deployedFiles/4510414325f2f5f0efab6bb8cb10162e.pdf?v=20260327204754#page=3) independently pairs these model numbers with their item numbers. That sheet's rebate period has expired; no rebate is represented as current.
 
-The HE capacity is explicitly approximate in Dometic's description. Its display, any pair containing it, and its capacity margin carry the approximation. The two other listed capacities are nominal ratings; actual design-condition performance still needs verification. Selected configurations need the appropriate distribution box or return grille and control kit; these may be sold separately.
+The HE capacity is explicitly approximate in Dometic's description. Its display, any combination containing it, and its capacity margin carry the approximation. The two other listed capacities are nominal ratings; actual design-condition performance still needs verification. Selected configurations need the appropriate distribution box or return grille and control kit; these may be sold separately.
 
 ## Additional rooftop cooling configurations
 
@@ -77,13 +77,13 @@ The [furnace research manifest](furnace-research.json) retains per-product sourc
 The product browser includes all 20 models with photos, capacities, model numbers, SKUs and official source links. Search by model, SKU or capacity, or filter by equipment type. It initially loads six cards; Show all loads the remaining models. Same-capacity choices beside a recommendation open the matching alternatives in the browser.
 
 1. Read the **unrounded expected load** from the existing physics model. Rounded display values do not decide a capacity threshold.
-2. For positive cooling loads up to 15,000 BTU/hr, select the smallest listed single A/C capacity at or above the load. Only when no single model covers the load, consider every unordered pair of the three preferred cooling capacity tiers, allowing two of the same model. Same-capacity product alternatives do not add separate pair combinations. Select the pair with the smallest summed nominal capacity at or above the load.
-3. Above 30,000 cooling BTU/hr, no combination in this two-unit planning scope covers the load. Show no recommended cooling match and identify the remaining shortfall.
+2. For positive cooling loads up to 15,000 BTU/hr, select the smallest listed single A/C capacity at or above the load. Only when no single model covers the load, consider every unordered combination of two, then three, then four units drawn from the three preferred cooling capacity tiers, allowing repeats of the same model. Use the fewest units that can cover the load, and among those the combination with the smallest summed nominal capacity at or above the load. Same-capacity product alternatives do not add separate combinations.
+3. A combination is listed only when its total exceeds every option with fewer units, so the option list rises in both unit count and capacity and the neighbouring "lower" and "higher" choices stay meaningful. For example, 4 × FJX5357MHE (≈44,000) is not offered because 3 × FJX5557M gives 45,000 with fewer units. Above 60,000 cooling BTU/hr (4 × FJX5557M), no combination in this four-unit planning scope covers the load. Show no recommended cooling match and identify the remaining shortfall. The cap is the `maxAcUnits` constant in the inline catalog.
 4. For heating, select the smallest of the six furnace capacity tiers whose **delivered output** meets the load, using the original preferred model at each tier. Above 30,400 delivered heating BTU/hr, show no listed furnace match and call for a professional assessment of a larger or zoned heating system. Do not generate furnace combinations.
 5. Show neighboring capacity choices and label any selected insufficient choice explicitly. For an exactly zero load, show no equipment recommendation. Reject negative/nonfinite/non-numeric loads.
-6. Display each selected product's quantity, model number and SKU, with its product and rating-source links. A pair is a planning sum of two listed products, not a new model or an installed-zone sizing guarantee. Keep the per-product `checkedAt` dates, catalog `reviewedAt` date and scope visible.
+6. Display each selected product's quantity, model number and SKU, with its product and rating-source links. A multi-unit option is a planning sum of listed products, not a new model or an installed-zone sizing guarantee. Keep the per-product `checkedAt` dates, catalog `reviewedAt` date and scope visible.
 
-The available pair totals are:
+The available two-unit totals are:
 
 | A/C combination | Combined cooling BTU/hr |
 | --- | ---: |
@@ -94,13 +94,20 @@ The available pair totals are:
 | FJX5457M + FJX5557M | 28,500 |
 | 2 x FJX5557M | 30,000 |
 
-Examples: 13,800 cooling selects one FJX5557M. A 27,000 cooling load selects two FJX5457M units; 28,000 selects FJX5457M plus FJX5557M. A 20,000 heating load selects DFMD30121 (22,800 delivered), because DFMD25121 delivers 19,000 despite its 25K input label.
+Three- and four-unit totals (≈ marks totals containing FJX5357MHE):
 
-## Basis and limits of the two-A/C policy
+| Units | Combined cooling BTU/hr offered |
+| ---: | --- |
+| 3 | ≈33,000 · ≈35,500 · ≈37,000 · ≈38,000 · ≈39,500 · 40,500 · ≈41,000 · 42,000 · 43,500 · 45,000 |
+| 4 | ≈46,500 · ≈48,000 · ≈49,000 · ≈50,500 · ≈51,500 · ≈52,000 · ≈53,000 · 54,000 · ≈54,500 · 55,500 · ≈56,000 · 57,000 · 58,500 · 60,000 |
 
-The single-first rule and sorted pair sums are this calculator's transparent planning policy. They are not a manufacturer-prescribed combination list or a universal sizing rule. Dometic's [RV A/C buying guide](https://www.dometic.com/en-us/lp/ac-buying-guide2) explains that vehicle size, insulation and air distribution affect the choice and that some RVs need more than one unit. The [FreshJet mechanical installation manual](https://media.dometic.com/externalassets/dometic-freshjet-3-series-13-5k_9600028598_107740.pdf) requires suitable roof support/openings and electrical provision; adding capacities does not verify those requirements or each zone's load and airflow.
+Examples: 13,800 cooling selects one FJX5557M. A 27,000 cooling load selects two FJX5457M units; 28,000 selects FJX5457M plus FJX5557M. A 31,000 load selects three FJX5357MHE (≈33,000); 44,000 selects three FJX5557M (45,000) rather than four smaller units; 53,500 selects four FJX5457M (54,000). Because the rule minimizes the total, a three- or four-unit option can mix up to three models, for example FJX5357MHE + 2 x FJX5457M + FJX5557M (≈53,000). A 20,000 heating load selects DFMD30121 (22,800 delivered), because DFMD25121 delivers 19,000 despite its 25K input label.
 
-Mixed-capacity designs exist in OEM practice: the [2026 Jayco Precept](https://www.jayco.com/rvs/class-a-motorhomes/2026-precept/) lists a 15,000 BTU A/C with heat pump and a second 13,500 BTU A/C. That is a different vehicle and equipment configuration, not certification of any Dometic pair proposed here.
+## Basis and limits of the multi-A/C policy
+
+The single-first rule, fewest-units preference and sorted combination sums are this calculator's transparent planning policy. The four-unit cap is a planning limit, not a manufacturer rule; every added unit needs roof space, structural support and electrical capacity that the calculator does not check. They are not a manufacturer-prescribed combination list or a universal sizing rule. Dometic's [RV A/C buying guide](https://www.dometic.com/en-us/lp/ac-buying-guide2) explains that vehicle size, insulation and air distribution affect the choice and that some RVs need more than one unit. The [FreshJet mechanical installation manual](https://media.dometic.com/externalassets/dometic-freshjet-3-series-13-5k_9600028598_107740.pdf) requires suitable roof support/openings and electrical provision; adding capacities does not verify those requirements or each zone's load and airflow.
+
+Mixed-capacity designs exist in OEM practice: the [2026 Jayco Precept](https://www.jayco.com/rvs/class-a-motorhomes/2026-precept/) lists a 15,000 BTU A/C with heat pump and a second 13,500 BTU A/C. That is a different vehicle and equipment configuration, not certification of any Dometic combination proposed here.
 
 The exact [FJX5357MHE](https://www.dometic.com/en/product/dometic-freshjet-5-series-mechanical-high-efficiency-75), [FJX5457M](https://www.dometic.com/en-us/product/dometic-freshjet-5-series-mechanical-13-5k-4) and [FJX5557M](https://www.dometic.com/en-us/product/dometic-freshjet-5-series-15k-4) product pages specify cooling-only configurations. Their cooling capacities are never counted toward heating. A/C and furnace recommendations are independent capacity matches. The app does not certify a compatible thermostat/control pairing, roof opening, electrical service, gas system, duct/static-pressure setup, venting, installation, staging or performance at the chosen weather/altitude. An installer must verify those details. Higher-than-needed capacities retain the existing oversizing cautions.
 
@@ -110,6 +117,6 @@ Product images are sourced from exact SKU pages or the official US lineup beside
 
 The website has no runtime network or catalog service dependency. Publish `index.html`, `calculator.js`, `slide-outs.js` and the `assets/products` folder together. Edit the inline catalog in `index.html` to change the allowed products. Reverify the official listing and rating sources before updating records, adding variants or treating the snapshot as current at a later date; update that record's `checkedAt` and source documentation together. Update `reviewedAt` when reviewing the catalog as a whole, without changing dates on records whose sources were not rechecked. Remove a delisted/unverified record from automatic matching rather than guessing its replacement or delivered output. Keep capacity class, SKU variant, approximate status and source distinct.
 
-Run `npm ci`, `npm run check` and `npm test` with Node 24.15+. Catalog and interaction checks cover the supplied product ratings, exact capacity thresholds, invalid/zero/excess loads, model/SKU/source provenance, approximate HE ratings, single-first and two-unit cooling suggestions, selected-product links, insufficient-selection messaging, equipment modes and immutable API snapshots. Use the current test output for pass counts.
+Run `npm ci`, `npm run check` and `npm test` with Node 24.15+. Catalog and interaction checks cover the supplied product ratings, exact capacity thresholds, invalid/zero/excess loads, model/SKU/source provenance, approximate HE ratings, single-first and up-to-four-unit cooling suggestions (cross-checked against a brute-force search), the shared A/C and furnace product-card layout, selected-product links, insufficient-selection messaging, equipment modes and immutable API snapshots. Use the current test output for pass counts.
 
 DOM tests validate script loading and interactions. They do not establish dealer stock or empirical HVAC performance.
