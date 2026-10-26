@@ -25,19 +25,40 @@ test('the supplied nine products and their exact ratings are the complete catalo
     ['furnace', 'DFMDH35121', '9610007794', null, 35000, 25840],
     ['furnace', 'DFLD40111', '9108923369', null, 40000, 30400]
   ]);
-  assert.equal(c.acSystems.length, 3);
+  assert.equal(c.acSystems.length, 9);
   assert.equal(c.furnaceSystems.length, 6);
 });
 
-test('every suggested system is one listed product with quantity one', () => {
-  for (const system of [...c.acSystems, ...c.furnaceSystems]) {
+test('cooling plans use only the three listed A/C models and preserve every component capacity', () => {
+  const pairs = [];
+  for (const system of c.acSystems) {
+    assert.ok(system.unitCount === 1 || system.unitCount === 2);
+    const items = c.modelsFor(system);
+    assert.equal(items.reduce((total, item) => total + item.quantity, 0), system.unitCount);
+    assert.equal(items.reduce((total, { model, quantity }) => total + model.capacity * quantity, 0), system.capacity);
+    assert.equal(system.approximate, items.some(({ model }) => model.approximate));
+    for (const { model, quantity } of items) {
+      assert.ok(c.models.includes(model));
+      assert.equal(model.kind, 'ac');
+      assert.ok(Number.isInteger(quantity) && quantity > 0);
+    }
+    if (system.unitCount === 2) {
+      assert.equal(system.staged, true);
+      pairs.push(system.capacity);
+    }
+  }
+  assert.deepEqual(pairs, [22000, 24500, 26000, 27000, 28500, 30000]);
+});
+
+test('furnace recommendations remain single listed products sized by delivered output', () => {
+  for (const system of c.furnaceSystems) {
     assert.equal(system.unitCount, 1);
     assert.equal(system.components.length, 1);
     const [{ model, quantity }] = c.modelsFor(system);
     assert.equal(quantity, 1);
     assert.ok(c.models.includes(model));
-    assert.equal(system.kind === 'furnace' ? system.output : system.capacity,
-      model.kind === 'furnace' ? model.output : model.capacity);
+    assert.equal(model.kind, 'furnace');
+    assert.equal(system.output, model.output);
   }
 });
 
@@ -60,12 +81,35 @@ test('heating demand uses delivered output rather than fuel input or the model i
   assert.equal(c.recommendFurnace(25840.01).modelNumber, 'DFLD40111');
 });
 
-test('zero load requires no equipment and excess demand does not invent units or combinations', () => {
+test('zero load requires no equipment and demand beyond two units does not invent a larger plan', () => {
   assert.equal(c.recommendAc(0), null);
   assert.equal(c.recommendFurnace(0), null);
-  assert.equal(c.recommendAc(15000.01), null);
-  assert.equal(c.recommendAc(30000), null);
+  assert.equal(c.recommendAc(30000.01), null);
   assert.equal(c.recommendFurnace(30400.01), null);
+});
+
+test('one fitting unit is preferred, then the smallest fitting unordered two-unit combination', () => {
+  for (const [load, capacity, components] of [
+    [15000, 15000, [['FJX5557M', 1]]],
+    [15000.01, 22000, [['FJX5357MHE', 2]]],
+    [22000, 22000, [['FJX5357MHE', 2]]],
+    [22000.01, 24500, [['FJX5357MHE', 1], ['FJX5457M', 1]]],
+    [24500, 24500, [['FJX5357MHE', 1], ['FJX5457M', 1]]],
+    [24500.01, 26000, [['FJX5357MHE', 1], ['FJX5557M', 1]]],
+    [26000, 26000, [['FJX5357MHE', 1], ['FJX5557M', 1]]],
+    [26000.01, 27000, [['FJX5457M', 2]]],
+    [27000, 27000, [['FJX5457M', 2]]],
+    [27000.01, 28500, [['FJX5457M', 1], ['FJX5557M', 1]]],
+    [28500, 28500, [['FJX5457M', 1], ['FJX5557M', 1]]],
+    [28500.01, 30000, [['FJX5557M', 2]]],
+    [30000, 30000, [['FJX5557M', 2]]]
+  ]) {
+    const system = c.recommendAc(load);
+    assert.equal(system.capacity, capacity, 'cooling load ' + load);
+    assert.deepEqual(c.modelsFor(system).map(({ model, quantity }) => [model.modelNumber, quantity]), components);
+    assert.equal(system.unitCount, load <= 15000 ? 1 : 2);
+  }
+  assert.equal(c.recommendAc(30000.01), null);
 });
 
 for (const bad of [-1, Infinity, NaN, undefined, null, '13800']) {
@@ -98,6 +142,11 @@ test('the first cooling model keeps its explicitly approximate 11K rating', () =
   assert.ok(result.label.startsWith('\u2248'));
   assert.match(c.modelsFor(result)[0].model.ratingNote, /approximately/);
   assert.equal(c.recommendAc(15000).approximate, false);
+  assert.equal(c.recommendAc(22000).approximate, true);
+  assert.equal(c.recommendAc(24500).approximate, true);
+  assert.equal(c.recommendAc(26000).approximate, true);
+  assert.equal(c.recommendAc(27000).approximate, false);
+  assert.equal(c.recommendAc(30000).approximate, false);
 });
 
 test('increasing loads select equal or greater capacity until the supplied catalog is exceeded', () => {
@@ -107,7 +156,7 @@ test('increasing loads select equal or greater capacity until the supplied catal
     if (ac) {
       assert.ok(ac.capacity >= load && ac.capacity >= lastAc);
       lastAc = ac.capacity;
-    } else assert.ok(load > 15000);
+    } else assert.ok(load > 30000);
     const heat = c.recommendFurnace(load);
     if (heat) {
       assert.ok(heat.output >= load && heat.output >= lastHeat);
@@ -162,5 +211,6 @@ test('the inline catalog is immutable and works in a browser without CommonJS or
   vm.runInNewContext(source, browser);
   assert.equal(browser.RVBTUEquipment.recommendFurnace(20000).modelNumber, 'DFMD30121');
   assert.equal(browser.RVBTUEquipment.recommendAc(13800).capacity, 15000);
-  assert.equal(browser.RVBTUEquipment.recommendAc(30000), null);
+  assert.equal(browser.RVBTUEquipment.recommendAc(30000).capacity, 30000);
+  assert.equal(browser.RVBTUEquipment.recommendAc(30000.01), null);
 });

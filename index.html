@@ -1644,6 +1644,24 @@
     .selected-product .product-sku { margin-bottom: 8px; }
     .selected-product-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 8px; font-size: 12px; }
     .selected-product-link .icon { width: 15px; height: 15px; }
+    .pair-title { margin: 0 0 6px; font-size: 23px; line-height: 1.2; text-transform: none; }
+    .pair-total { margin: 0; font-size: 22px; font-weight: 800; line-height: 1.25; }
+    .pair-total-label { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; font-weight: 500; }
+    .pair-load { margin: 10px 0 14px; font-size: 13px; }
+    .pair-products { display: grid; gap: 14px; }
+    .pair-product { display: grid; grid-template-columns: minmax(110px, .7fr) minmax(0, 1fr); align-items: center; gap: 14px; }
+    .pair-product-visual { height: 135px; }
+    .pair-product-visual img { transform: translateY(-5%) scale(1.3); }
+    .pair-product .product-model { font-size: 21px; }
+    .pair-product .product-sku { margin: 4px 0 7px; }
+    .pair-unit-rating { margin: 0 0 8px; font-size: 12px; }
+    .pair-product .recommended-product-link { min-height: 32px; padding: 5px 0; justify-content: flex-start; color: var(--ink); background: none; text-align: left; text-decoration: underline; text-underline-offset: 3px; font-size: 12px; }
+    .pair-product .product-image-credit { grid-column: 1 / -1; margin-top: -8px; }
+    .pair-notice { margin: 14px 0 0; padding: 11px 12px; border-left: 3px solid var(--red); background: #f5f5f5; font-size: 12px; line-height: 1.5; }
+    .pair-method { margin-top: 10px; font-size: 12px; }
+    .pair-method summary { cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    .pair-method p { margin: 8px 0; color: var(--muted); }
+    .pair-method a { display: inline-block; margin: 0 12px 6px 0; font-size: 11px; }
     @media (max-width: 1100px) and (min-width: 821px) { .capacity-card { grid-template-columns: 1fr; text-align: center; justify-items: center; } .capacity-card > :not(.capacity-check) { grid-column: 1; } .capacity-image { grid-row: auto; } }
     @media (max-width: 620px) {
       .result-panel { padding: 18px; }
@@ -1664,6 +1682,11 @@
       .capacity-card .capacity-check { width: 16px; height: 16px; top: 6px; right: 6px; }
       .selected-product { grid-template-columns: 92px minmax(0, 1fr); gap: 12px; }
       .selected-product-visual { height: 100px; }
+      .pair-product { grid-template-columns: 100px minmax(0, 1fr); gap: 12px; }
+      .pair-product-visual { height: 115px; }
+      .pair-product-visual img { transform: translateY(-5%) scale(1.05); }
+      .pair-product .product-model { font-size: 18px; }
+      .pair-total { font-size: 20px; }
     }
     .catalog-note { margin: -4px 0 16px; color: var(--muted); font-size: 12px; }
     .capacity-detail { overflow-wrap: anywhere; }
@@ -1896,7 +1919,7 @@
             <div class="result-calculation-body">
           <div class="result-main">
             <div>
-              <span class="result-kicker">Recommended cooling capacity</span>
+              <span class="result-kicker">Selected nominal cooling capacity</span>
               <div class="result-number-line"><span class="result-number" id="coolingMatch">15,000</span><span class="result-unit">BTU/hr</span></div>
             </div>
           </div>
@@ -1951,7 +1974,7 @@
 
     <section class="comparison-section" id="comparison" aria-labelledby="compareTitle">
       <h2 class="section-heading" id="compareTitle">Explore the listed models</h2>
-      <p class="section-intro">Your recommendation is the smallest listed model that covers the expected load. Select another model to see its photo, specs and product page. Furnace sizing uses delivered heat output.</p>
+      <p class="section-intro">Cooling uses the smallest fitting single unit, then the smallest two-unit capacity option when needed. Select an option to see the actual products. Furnace sizing uses delivered heat output.</p>
       <p class="catalog-note" id="catalogStatus"></p>
       <div class="compare-shell">
         <div class="compare-row" id="acCompareRow">
@@ -2144,10 +2167,11 @@
         <button class="modal-close" type="button" data-close-modal aria-label="Close sizing guide"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 14 14M19 5 5 19"/></svg></button>
       </div>
       <ul>
-        <li><strong>A/C:</strong> compares the expected continuous cooling load with only the listed FreshJet 5 ≈11K, 13.5K and 15K models.</li>
+        <li><strong>A/C:</strong> first checks the listed FreshJet 5 ≈11K, 13.5K and 15K models individually. If one unit cannot meet the load, it checks all pairs of these models, including two of the same model, up to 30,000 BTU/hr combined nominal cooling.</li>
         <li><strong>Furnace:</strong> compares required heat with published delivered output—not only the larger input number printed in the model class.</li>
-        <li><strong>Highlighted model:</strong> is the smallest compared nominal A/C capacity or delivered furnace output at or above the expected calculated load. Every option lists actual model numbers; product links, SKUs and rating sources appear below the selected option. A zero load has no equipment recommendation.</li>
-        <li><strong>Catalog scope:</strong> only the three FreshJet 5 A/C models and six 12 V LP furnaces listed in this calculator. The 11K rating is approximate. If no listed model meets the load, no model is recommended. A/C and furnace choices are independent capacity matches.</li>
+        <li><strong>Highlighted option:</strong> is the smallest fitting single A/C, then the smallest fitting pair, or the smallest delivered furnace output at or above the unrounded expected load. Each product keeps its model number, quantity, SKU and product link. A zero load has no equipment recommendation.</li>
+        <li><strong>Two-unit options:</strong> add nominal cooling capacities assuming simultaneous operation. They do not establish the load in each zone or confirm roof, controls, airflow and electrical compatibility. An installer must verify the installation. A total containing the ≈11K model remains approximate.</li>
+        <li><strong>Heating:</strong> these three A/C models are cooling-only. Heating uses only the six listed furnace outputs, up to 30,400 BTU/hr delivered. Larger heating loads need an installer-designed system rather than a cooling-capacity substitution.</li>
         <li><strong>Advanced:</strong> lets you apply known insulation, window, leakage, weather and duct information. An applied-status label and Clear action remain visible beside the Advanced button.</li>
       </ul>
       <div class="info-modal-note">BTU sizing alone does not confirm roof fit, duct compatibility, electrical or gas service, controls, venting or safe installation. Have the final equipment choice verified by a qualified RV HVAC installer.</div>
@@ -2258,12 +2282,31 @@
   const models = freeze([...acModels, ...furnaceModels]);
   const byId = new Map(models.map((model) => [model.id, model]));
 
-  const acSystems = freeze(acModels.map((model) => ({
+  const singleAcSystems = acModels.map((model) => ({
     ...model, id: `ac-${model.id}`,
     label: `${model.approximate ? "≈" : ""}${model.capacity / 1000}K BTU/hr`,
     detail: model.modelNumber, staged: false, unitCount: 1,
     components: [{ modelId: model.id, quantity: 1 }], planType: "Listed A/C model"
-  })));
+  }));
+  // Prefer one unit, then the smallest nominal capacity sum of two listed units.
+  // This is a capacity-planning policy; zone loads and installation are not modeled.
+  const acPairs = [];
+  for (let first = 0; first < acModels.length; first += 1) {
+    for (let second = first; second < acModels.length; second += 1) {
+      const a = acModels[first], b = acModels[second];
+      const capacity = a.capacity + b.capacity;
+      const approximate = a.approximate || b.approximate;
+      const components = first === second ? [{ modelId: a.id, quantity: 2 }] : [{ modelId: a.id, quantity: 1 }, { modelId: b.id, quantity: 1 }];
+      const detail = components.map(({ modelId, quantity }) => `${quantity} × ${byId.get(modelId).modelNumber}`).join(" + ");
+      acPairs.push({
+        id: `ac-pair-${a.id}-${b.id}`, kind: "ac", capacity, approximate,
+        label: `${approximate ? "≈" : ""}${capacity / 1000}K BTU/hr`,
+        modelNumber: detail, detail, staged: true, unitCount: 2, components,
+        planType: "Two-unit capacity option"
+      });
+    }
+  }
+  const acSystems = freeze([...singleAcSystems, ...acPairs].sort((a, b) => a.unitCount - b.unitCount || a.capacity - b.capacity));
   const furnaceSystems = freeze(furnaceModels.map((model) => ({ ...model, label: `${model.input / 1000}K input`,
     detail: `${model.modelNumber} · ${model.output.toLocaleString("en-US")} BTU/hr delivered`,
     components: [{ modelId: model.id, quantity: 1 }], unitCount: 1 })));
@@ -2277,6 +2320,8 @@
     return system ? system.components.map(({ modelId, quantity }) => ({ model: byId.get(modelId), quantity })) : [];
   }
   return freeze({ checkedAt, models, acSystems, furnaceSystems, acListing, furnaceListing,
+    acSizingSource: "https://www.dometic.com/en-us/lp/ac-buying-guide2",
+    acInstallationSource: "https://media.dometic.com/externalassets/dometic-freshjet-3-series-13-5k_9600028598_107740.pdf",
     recommendAc: (load) => select(load, acSystems, "capacity"),
     recommendFurnace: (load) => select(load, furnaceSystems, "output"), modelsFor });
 });
@@ -2540,6 +2585,7 @@
         const low = results.raw.low.coolingTotal;
         const expected = results.raw.expected.coolingTotal;
         const high = results.raw.high.coolingTotal;
+        if (system.unitCount > 1) return system.capacity < expected ? "Below expected load" : "Verify each cooling zone";
         if (system.capacity < low) return "Likely undersized";
         if (system.capacity < expected) return "Fair-weather coverage";
         if (system.capacity < high) return "Typical-day fit";
@@ -2592,18 +2638,57 @@
         return link;
       }
 
+      function renderAcPair(container, system, load) {
+        const card = document.createElement("article"); card.className = "recommended-pair";
+        const title = document.createElement("h3"); title.className = "pair-title"; title.textContent = "Two-unit cooling option";
+        const total = document.createElement("p"); total.className = "pair-total";
+        total.textContent = `${system.approximate ? "≈" : ""}${fmt(system.capacity)} BTU/hr`;
+        const totalLabel = document.createElement("span"); totalLabel.className = "pair-total-label";
+        totalLabel.textContent = "Combined nominal cooling capacity · both units operating"; total.append(totalLabel);
+        const fit = document.createElement("p"); fit.className = "pair-load";
+        fit.textContent = `Smallest listed pair reaching your ${fmt(round100(load))} BTU/hr expected cooling load.`;
+        const products = document.createElement("div"); products.className = "pair-products";
+        Equipment.modelsFor(system).forEach(({ model, quantity }) => {
+          const row = document.createElement("div"); row.className = "pair-product";
+          const visual = productLink(model, "product-visual pair-product-visual", "");
+          visual.replaceChildren(productImage(model, "", true));
+          const info = document.createElement("div");
+          const name = document.createElement("h4"); name.className = "product-model"; name.textContent = `${quantity} × ${model.modelNumber}`;
+          const sku = document.createElement("p"); sku.className = "product-sku"; sku.textContent = `SKU ${model.sku}`;
+          const rating = document.createElement("p"); rating.className = "pair-unit-rating";
+          rating.textContent = `${model.approximate ? "≈" : ""}${fmt(model.capacity)} BTU/hr per unit`;
+          info.append(name, sku, rating, productLink(model, "recommended-product-link", "View product on Dometic"));
+          const credit = document.createElement("p"); credit.className = "product-image-credit"; credit.textContent = model.imageNote;
+          row.append(visual, info, credit); products.append(row);
+        });
+        const note = document.createElement("p"); note.className = "pair-notice";
+        note.textContent = "Capacity sum only. An installer must size each cooling zone and verify two suitable roof positions, airflow, controls and power for simultaneous operation.";
+        const method = document.createElement("details"); method.className = "pair-method";
+        const summary = document.createElement("summary"); summary.textContent = "How this two-unit option is sized";
+        const explanation = document.createElement("p");
+        explanation.textContent = "The calculator uses one listed unit when it meets the load, then checks all two-unit combinations and selects the smallest combined nominal capacity at or above the unrounded load. This planning rule does not assume equal zones or replace installation design. Totals that include the approximate 11,000 model remain approximate.";
+        method.append(summary, explanation);
+        for (const [text, href] of [["Dometic sizing guidance", Equipment.acSizingSource], ["Dometic installation requirements", Equipment.acInstallationSource]]) {
+          const link = document.createElement("a"); link.href = href; link.textContent = text; link.target = "_blank"; link.rel = "noopener noreferrer"; method.append(link);
+        }
+        card.append(title, total, fit, products, note, method); container.append(card);
+      }
+
       function renderRecommendedProduct(container, system, type, load) {
         container.replaceChildren();
         const isAc = type === "ac";
         if (!system) {
           const empty = document.createElement("div"); empty.className = "product-empty";
           const heading = document.createElement("h3");
-          heading.textContent = load === 0 ? `No ${isAc ? "cooling" : "heating"} needed at these conditions` : `No listed ${isAc ? "A/C" : "furnace"} meets this load`;
+          heading.textContent = load === 0 ? `No ${isAc ? "cooling" : "heating"} needed at these conditions` : isAc ? "No listed one- or two-unit option meets this load" : "No listed furnace meets this load";
           const text = document.createElement("p");
           const maximum = isAc ? acSystems.at(-1).capacity : furnaceSystems.at(-1).output;
-          text.textContent = load === 0 ? "The calculated load is zero, so no product is recommended." : `Your expected ${isAc ? "cooling" : "heating"} load is ${fmt(round100(load))} BTU/hr. The largest listed ${isAc ? "A/C provides" : "furnace delivers"} ${fmt(maximum)} BTU/hr. Review the conditions or ask an RV HVAC installer about your options.`;
+          text.textContent = load === 0 ? "The calculated load is zero, so no product is recommended." : isAc
+            ? `Your expected cooling load is ${fmt(round100(load))} BTU/hr. Two of the largest listed A/Cs provide ${fmt(maximum)} BTU/hr nominal cooling. Ask an RV HVAC installer about a larger or zoned system.`
+            : `Your expected heating load is ${fmt(round100(load))} BTU/hr. The largest listed furnace delivers ${fmt(maximum)} BTU/hr. Ask an installer about a larger or zoned heating system. These listed A/Cs are cooling-only; their BTU ratings cannot be used for heating.`;
           empty.append(heading, text); container.append(empty); return;
         }
+        if (isAc && system.unitCount > 1) { renderAcPair(container, system, load); return; }
         const model = Equipment.modelsFor(system)[0].model;
         const card = document.createElement("article");
         card.className = `recommended-product recommended-product--${type}`;
@@ -2654,7 +2739,7 @@
             <span class="capacity-tier">${tier}</span>
             <span class="capacity-detail">${system.modelNumber}</span>
             <span class="capacity-value">${type === "ac" ? system.label : `${fmt(system.output)} BTU/hr delivered`}</span>
-            <span class="capacity-sku">SKU ${system.sku}</span>
+            <span class="capacity-sku">${system.unitCount > 1 ? `${system.unitCount} rooftop units` : `SKU ${system.sku}`}</span>
             <span class="capacity-model-type">${type === "ac" ? system.planType : `${fmt(system.output)} BTU/hr delivered`}</span>
             <span class="capacity-status">${isRecommended ? "Recommended · " : ""}${fit}</span>`;
           button.prepend(productImage(Equipment.modelsFor(system)[0].model, "capacity-image"));
@@ -2665,7 +2750,7 @@
       function renderModelReference(container, system, type, load) {
         container.replaceChildren();
         const heading = document.createElement("h3");
-        heading.textContent = "Selected catalog model";
+        heading.textContent = system?.unitCount > 1 ? "Selected two-unit capacity option" : "Selected catalog model";
         container.append(heading);
         const paragraph = (message, className) => {
           const p = document.createElement("p"); p.textContent = message;
@@ -2678,13 +2763,13 @@
         }
         const capacity = type === "ac" ? system.capacity : system.output;
         const difference = capacity - load;
-        paragraph(difference >= 0 ? `${type === "ac" ? "Nominal cooling capacity" : "Delivered furnace output"} ${system.approximate ? "≈" : ""}${fmt(capacity)} BTU/hr; expected load ${fmt(load)} BTU/hr; ${fmt(difference)} BTU/hr capacity margin.` : `Below the expected calculated load by ${fmt(-difference)} BTU/hr. This selected option does not cover the expected load.`, difference < 0 ? "capacity-deficit" : "capacity-margin");
+        paragraph(difference >= 0 ? `${type === "ac" ? system.unitCount > 1 ? "Combined nominal cooling capacity" : "Nominal cooling capacity" : "Delivered furnace output"} ${system.approximate ? "≈" : ""}${fmt(capacity)} BTU/hr; expected load ${fmt(load)} BTU/hr; ${fmt(difference)} BTU/hr capacity margin.` : `Below the expected calculated load by ${fmt(-difference)} BTU/hr. This selected option does not cover the expected load.`, difference < 0 ? "capacity-deficit" : "capacity-margin");
         const detail = document.createElement("div"); detail.className = "selected-product";
-        Equipment.modelsFor(system).forEach(({ model }) => {
+        Equipment.modelsFor(system).forEach(({ model, quantity }) => {
           const visual = productLink(model, "selected-product-visual", "");
           visual.replaceChildren(productImage(model));
           const info = document.createElement("div");
-          const name = document.createElement("h4"); name.className = "product-model"; name.textContent = model.modelNumber;
+          const name = document.createElement("h4"); name.className = "product-model"; name.textContent = `${system.unitCount > 1 ? `${quantity} × ` : ""}${model.modelNumber}`;
           const family = document.createElement("p"); family.textContent = model.name;
           const spec = document.createElement("span"); spec.className = "model-code";
           spec.textContent = `${model.modelNumber} · SKU ${model.sku} · ${model.configuration}`;
@@ -2697,7 +2782,8 @@
           detail.append(visual, info);
         });
         container.append(detail);
-        if (system.approximate) paragraph("This model's cooling capacity and capacity margin are approximate. Verify performance at design weather.");
+        if (system.unitCount > 1) paragraph("Both units must be able to operate together. An installer must check each zone's load, roof positions, air distribution, controls and electrical supply; the combined total alone does not confirm the installation.");
+        if (system.approximate) paragraph("This option's cooling capacity and capacity margin are approximate. Verify performance at design weather.");
         paragraph(type === "ac" ? "A/C distribution boxes, grilles and controls may be separate purchases. Confirm the correct configuration with a Dometic dealer." : "Verify door/doorless configuration, ducts, gas supply, venting and installation requirements with a qualified installer.");
       }
 
@@ -2791,7 +2877,7 @@
         $("#heatingLoadSummary").textContent = `${fmt(results.expected.heating)} BTU/hr`;
 
         els.coolingMatch.textContent = acRec ? `${acRec.approximate ? "≈" : ""}${fmt(acRec.capacity)}` : results.raw.expected.coolingTotal === 0 ? "0" : "—";
-        $("#coolingModelMatch").textContent = acRec ? `${acRec.modelNumber} · SKU ${acRec.sku}` : results.raw.expected.coolingTotal === 0 ? "No cooling demand at these conditions" : "No listed A/C meets this load";
+        $("#coolingModelMatch").textContent = acRec ? acRec.unitCount > 1 ? `${acRec.detail} · 2-unit option · ${acRec.approximate ? "≈" : ""}${fmt(acRec.capacity)} BTU/hr combined nominal cooling` : `${acRec.modelNumber} · SKU ${acRec.sku}` : results.raw.expected.coolingTotal === 0 ? "No cooling demand at these conditions" : "No listed one- or two-unit option meets this load";
         els.coolingLow.textContent = fmt(results.low.cooling);
         els.coolingHigh.textContent = fmt(results.high.cooling);
         els.coolingExpected.textContent = fmt(results.expected.cooling);
@@ -2806,7 +2892,7 @@
 
         if (results.breakdown.slideResults.some((slide) => slide.deployed)) els.confidenceLabel.textContent = "Slide geometry / verify thermal assumptions";
         const alerts = [];
-        if (!acRec && results.raw.expected.coolingTotal > 0 && state.mode !== "furnace") alerts.push(`Cooling exceeds the largest listed A/C (${fmt(acSystems.at(-1).capacity)} BTU/hr). No listed model meets this load.`);
+        if (!acRec && results.raw.expected.coolingTotal > 0 && state.mode !== "furnace") alerts.push(`Cooling exceeds the largest two-unit option (${fmt(acSystems.at(-1).capacity)} BTU/hr nominal). No listed one- or two-unit option meets this load.`);
         if (results.inputs.coolOutdoor >= 100 && state.mode !== "furnace") alerts.push("Extreme cooling design temperature selected: verify actual FreshJet performance at the design condition; nameplate BTU/hr is nominal.");
         if (!furnaceRec && results.raw.expected.heatingTotal > 0 && state.mode !== "ac") alerts.push(`Heating exceeds the largest listed furnace output (${fmt(furnaceSystems.at(-1).output)} BTU/hr delivered). No listed model meets this load.`);
         if (results.inputs.altitude >= 5000) alerts.push("Elevation is included in outside-air load calculations; separately verify model-specific furnace combustion, installation, and altitude requirements.");
@@ -3094,7 +3180,7 @@
         if (event.target === dialog) dialog.close();
       }));
 
-      $("#catalogStatus").textContent = `US catalog snapshot checked ${Equipment.checkedAt} · Three FreshJet 5 model types and six 12 V LP furnace models · Official listings, not live stock. Cooling and furnace choices are independent capacity matches; installation compatibility needs verification.`;
+      $("#catalogStatus").textContent = `US catalog snapshot checked ${Equipment.checkedAt} · Three FreshJet 5 models, six two-unit cooling combinations and six 12 V LP furnaces · Official listings, not live stock. Cooling and furnace choices are independent capacity matches; zoning and installation compatibility need verification.`;
       const slideUI = window.RVBTUSlides.create({ state, currentInputs, render, fmt });
       function renderSlideResults(results) { slideUI.renderResults(results); }
 
